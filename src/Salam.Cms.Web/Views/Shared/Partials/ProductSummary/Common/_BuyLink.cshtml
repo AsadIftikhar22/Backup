@@ -1,0 +1,33 @@
+﻿@using Castle.Core.Internal
+@using Salam.Cms.Shared.Models.Catalogue.Data
+@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+
+@model (ProductSku productSku, string? handoffUrl, string? ButtonText)
+
+@{
+    bool hasCorrelatedValue = Model.productSku != null
+        && !string.IsNullOrEmpty(Model.productSku.CorrelatedId);
+
+    bool hasHandoff = !string.IsNullOrEmpty(Model.handoffUrl);
+
+    bool hasFallback = !string.IsNullOrEmpty(Model.productSku.BuyButtonRedirection);
+}
+
+@if ((hasCorrelatedValue && hasHandoff) || hasFallback)
+{
+    <div class="plan-card__footer">
+        @{
+            var href = (hasCorrelatedValue && hasHandoff)
+            ? $"{Model.handoffUrl}{Model.productSku!.CorrelatedId}"
+            : Model.productSku.BuyButtonRedirection!;
+        }
+        <a href="@href" class="button button-theme--simple-outlined plan-card__footer-details-button">
+            <span>@(Model.ButtonText ?? "Buy Now")</span>
+            <div class="arrow">
+                <span></span><span></span><span></span>
+                <span></span><span></span>
+            </div>
+        </a>
+    </div>
+}

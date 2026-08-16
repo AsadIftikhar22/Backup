@@ -1,0 +1,21 @@
+﻿@using PictureRenderer
+@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.VideoCarouselCard.ViewModels
+
+@model VideoCarouselCardBlockViewModel
+<div class="video-card">
+    <div class="video-container">
+        @if(Model.CurrentBlock.CardVideoCMP != null)
+        {
+            @Model.CurrentBlock.CardVideoCMP
+        }
+
+        @if (Model.CurrentBlock.IframeEmbed != null)
+        {
+            @Html.Raw(Model.CurrentBlock.IframeEmbed)
+        }
+    </div>
+    <div class="video-content">
+        <p>@Html.PropertyFor(x=>x.CurrentBlock.Heading)</p>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+﻿@using Salam.Cms.Web.Features.VideoCarousel.ViewModels
+
+@model VideoCarouselBlockViewModel
+
+
+<section class="video-section" @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle)>
+    <div class="video-header">
+        @if (!String.IsNullOrEmpty(Model.CurrentBlock.Heading))
+        {
+            <h2>@Html.PropertyFor(x => x.CurrentBlock.Heading)</h2>
+        }
+
+        @if (Model.CurrentBlock.Description != null)
+        {
+            <h2>@Html.PropertyFor(x => x.CurrentBlock.Description)</h2>
+        }
+
+    </div>
+    <div id="videoCarousel" class="video-cards-wrapper">
+        @Html.PropertyFor(x => x.CurrentBlock.VideoCarouselCards, new { HasContainer = false,
+        HasItemContainer = false,
+                HasEditContainer = false })
+</section>

@@ -1,0 +1,79 @@
+﻿@using Salam.Cms.Web.Features.Forms.B2BFormHintBlock
+@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using EPiServer.Forms.UI.SelectionFactory
+@model B2BFormTextHintBlock
+
+@{
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var cssClasses = Model.GetValidationCssClasses();
+    var autoComplete = AutoCompleteSelectionFactory.GetStringValue(Model.AutoComplete);
+    bool IsFormInfoMessageVisible = Model.ShowIconHint || !String.IsNullOrEmpty(Model.HintTextFullSize);
+    bool IsLabelTextAvailable = !String.IsNullOrEmpty(Model.Label);
+    string HintTextFontColor = Model.HintTextFontColor ?? " #1976D2";
+    string HintTextFontSize = Model.HintTextFontSize ?? "14px";
+}
+
+@if (IsFormInfoMessageVisible && !IsLabelTextAvailable)
+{
+    <div class="form-info-message">
+        @if (Model.ShowIconHint)
+        {
+            <span class="info-icon">i</span>
+        }
+        @Model.HintTextFullSize
+    </div>
+}
+<style>
+    .bluebox {
+        background-color: #f0f8ff;
+        border: 1px solid #b3d9ff;
+        border-radius: 12px;
+        margin-top: 16px;
+        padding: 20px;
+        transition: all .3s ease;
+    }
+
+    .form-info-message{
+        font-size: @HintTextFontSize;
+        color: @HintTextFontColor;
+    }
+
+</style>
+@if (IsLabelTextAvailable)
+{
+    @using (Html.BeginElement(Model, new { @class = "FormTextbox bluebox" + cssClasses, data_f_type = "textbox" }))
+    {
+        <div class="form-field">
+            <label for="@formElement.Guid" class="Form__Element__Caption">@labelText</label>
+            <input name="@formElement.ElementName" id="@formElement.Guid" type="text" class="form-input FormTextbox__Input"
+                   aria-describedby="@Util.GetAriaDescribedByElementName(formElement.ElementName)"
+                   placeholder="@Html.FilterHtml(Model.PlaceHolder ?? "")"
+                   value="@Model.GetDefaultValue()" @Html.Raw(Model.AttributesString) data-f-datainput
+                   autocomplete="@autoComplete" />
+
+            @if (IsFormInfoMessageVisible)
+            {
+                <div class="form-info-message">
+                    @if (Model.ShowIconHint)
+                    {
+                        <span class="info-icon">i</span>
+                    }
+                    @Model.HintTextFullSize
+                </div>
+            }
+
+            <span id="@formElement.Guid-error" class="error-message">
+                @Html.ValidationMessageFor(Model)
+            </span>
+            @Model.RenderDataList()
+
+        </div>
+
+        @if (!String.IsNullOrEmpty(Model.SmallHintMsg))
+        {
+            <small class="form-hint">@Model.SmallHintMsg</small>
+        }
+    }
+}

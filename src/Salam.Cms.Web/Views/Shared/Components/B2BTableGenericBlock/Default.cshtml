@@ -1,0 +1,194 @@
+﻿@using Salam.Cms.Web.Features.DXPB2BTable.Models
+@using Salam.Cms.Web.Features.DXPB2BTable.ViewModels
+@model DXPB2BTableBlockViewModel
+
+@{
+    var tableGuid = Guid.NewGuid().ToString("N");
+
+    // Get the first header's HalfCellBlock (if any)
+    var firstHeaderCellBlock = Model.HeaderRows.FirstOrDefault()?.Cells.FirstOrDefault().HalfCellBlock;
+    var firstHeaderContent = firstHeaderCellBlock?.HalfCellContent;
+    var firstHeaderBg = firstHeaderCellBlock?.RowBackgroundColor;
+
+    var tableBgColor = Model?.CurrentBlock?.TableBodyBackGroundColor ?? "#fff";
+    var isFirstCellHalfLength = firstHeaderBg != null && firstHeaderContent !=null;
+
+    var fullWidth = Model.CurrentBlock.FullWidthTable;
+    var tableFontSize = Model.CurrentBlock?.CellFontSize ?? "18px";
+    var tableFontWeight = Model.CurrentBlock?.CellFontWeight ?? "400";
+    var tableContentColor = Model.CurrentBlock?.CellFontColor ?? "#002318";
+
+    var footerFontWeight = Model?.CurrentBlock?.FooterFontWeight ?? "400";
+    var footerFontColor = Model?.CurrentBlock?.FooterFontColor ?? "#fff";
+    var footerFontSize = Model?.CurrentBlock?.FooterFontSize ?? "18px";
+}
+
+<style>
+    /* Full width table */
+    @if (fullWidth)
+    {
+        <text>
+        .pricing-table-container-@tableGuid {
+            flex: 0 0 100%;
+        }
+        .pricing-text-@tableGuid {
+            display:none;
+        }
+        </text>
+    }
+
+    /* Table font styling */
+    .pricing-table-@tableGuid td {
+        font-size: @tableFontSize;
+        font-weight: @tableFontWeight;
+        color: @tableContentColor;
+    }
+
+    .pricing-table-@tableGuid th {
+        font-size: @tableFontSize;
+        font-weight: @tableFontWeight;
+        color: #fff;
+    }
+
+    /* Table body background */
+    .tbody-@tableGuid {
+        background: @tableBgColor;
+    }
+
+    /* First header cell half overlay */
+    @if (!string.IsNullOrWhiteSpace(firstHeaderBg) && isFirstCellHalfLength)
+    {
+        <text>
+        #table-@tableGuid .pricing-table tr:first-child th:first-child {
+            background:@firstHeaderBg;
+            color: transparent;
+        }
+        </text>
+    }
+
+    /* Overlay and inner wrapper */
+    #table-@tableGuid .pricing-table th.first-header .header-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #33605A;
+        color: white;
+        font-weight: @tableFontWeight;
+        font-size: @tableFontSize;
+        line-height: 20px;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+        z-index: 1;
+    }
+
+    #table-@tableGuid .pricing-table th.first-header .header-inner {
+        position: relative;
+        z-index: 2;
+        padding: 8px;
+    }
+
+    /* Footer styling */
+    .footnote-@tableGuid {
+        font-size: @footerFontSize;
+        font-weight: @footerFontWeight;
+        color: @footerFontColor;
+    }
+</style>
+
+<section class="pricing-section">
+    <div class="pricing-wrapper">
+        <div class="pricing-text pricing-text-@tableGuid">
+            <h2>@Html.PropertyFor(x => x.CurrentBlock.Heading)</h2>
+        </div>
+
+        <div class="pricing-table-container pricing-table-container-@tableGuid full-table" id="table-@tableGuid">
+            <table class="pricing-table pricing-table-@tableGuid first-table">
+
+                @* ---------- HEADER ROW ---------- *@
+                @if(Model.HeaderRows.Any())
+                {
+                    <thead>
+                            @foreach (var row in Model.HeaderRows)
+                            {  
+                                <tr style="@(row.RowBackgroundColor != null ? 
+                                $"background:{row.RowBackgroundColor};" : "")">
+                                @foreach (var cell in row.Cells){ 
+                                var isFirst = cell == row.Cells.FirstOrDefault();
+                                var bgColor = isFirst && !string.IsNullOrWhiteSpace(firstHeaderBg)
+                                    ? firstHeaderBg
+                                    : (cell.CellBackgroundColor ?? "#001815");
+                                var thClass = isFirst ? "first-header" : "";
+
+                                <th class="@thClass"
+                                    @Html.Raw((cell.RowSpan > 1 ? $"rowspan=\"{cell.RowSpan}\" " : "") +
+                                              (cell.ColSpan > 1 ? $"colspan=\"{cell.ColSpan}\"" : ""))
+                                   style="
+                                          @(cell.CellBackgroundColor  != null ? $"background:{cell.CellBackgroundColor};" : "")
+                                          @(cell.CellFontColor        != null ? $"color:{cell.CellFontColor};"           : "")
+                                          @(cell.CellFontSize         != null ? $"font-size:{cell.CellFontSize};"         : "")
+                                          @(cell.CellFontWeight       != null ? $"font-weight:{cell.CellFontWeight};"     : "")
+                                ">
+
+                                    @if (isFirst && !string.IsNullOrEmpty(firstHeaderContent))
+                                    {
+                                        <div class="header-wrapper">
+                                            <div class="header-overlay">@firstHeaderContent</div>
+                                            <div class="header-inner">@Html.Raw(cell.Content)</div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(cell.Content)
+                                    }
+                         
+                                    </th>
+                                    }
+                                 </tr>
+                            }
+                       
+                    </thead>
+                }
+
+                @* ---------- BODY ROWS ---------- *@
+                <tbody class="tbody-@tableGuid">
+                    @foreach (var row in Model.TableRows)
+                    {
+                        <tr style="@(row.RowBackgroundColor != null ? $"background:{row.RowBackgroundColor};" : "")">
+                            @foreach (var cell in row.Cells)
+                            {
+                                <td @Html.Raw((cell.RowSpan > 1 ? $"rowspan=\"{cell.RowSpan}\" " : "") +
+                                              (cell.ColSpan > 1 ? $"colspan=\"{cell.ColSpan}\"" : ""))
+                                      style="
+                                          @(cell.CellBackgroundColor  != null ? $"background:{cell.CellBackgroundColor};" : "")
+                                          @(cell.CellFontColor        != null ? $"color:{cell.CellFontColor};"           : "")
+                                          @(cell.CellFontSize         != null ? $"font-size:{cell.CellFontSize};"         : "")
+                                          @(cell.CellFontWeight       != null ? $"font-weight:{cell.CellFontWeight};"     : "")
+                                ">
+                                    @Html.Raw(cell.Content)
+                                    @if (string.IsNullOrWhiteSpace(cell.Content) && cell.CheckBoxIsSVGVisible)
+                                    {
+                                        <svg style="height: 29px; max-width: 100%;" version="1.0" xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+                                            <g transform="translate(0 512) scale(0.1 -0.1)" fill="#000000" stroke="none">
+                                                <path d="M4165 4493 c-647 -448 -1395 -1180 -2024 -1981 -45 -58 -77 -89 -84 -85 -7 4 -223 155 -481 335 l-469 327 -26 -19 c-14 -10 -83 -76 -153 -147 l-127 -128 156 -215 c381 -524 808 -1143 999 -1446 58 -93 109 -173 113 -177 4 -4 56 75 116 175 547 927 1234 1917 1786 2578 227 272 323 377 576 628 l234 232 -253 0 -253 -1 -110 -76z"></path>
+                                            </g>
+                                        </svg>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @if (!string.IsNullOrWhiteSpace(Model.CurrentBlock?.FooterNote))
+            {
+                <p class="footnote footnote-@tableGuid">@Model.CurrentBlock.FooterNote</p>
+            }
+        </div>
+    </div>
+</section>

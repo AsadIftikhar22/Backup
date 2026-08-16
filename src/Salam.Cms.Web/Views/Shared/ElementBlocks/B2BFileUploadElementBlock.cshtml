@@ -1,0 +1,192 @@
+﻿@using EPiServer.Forms.Helpers.Internal
+@using Salam.Cms.Web.Features.Forms.B2BFileUploadElementBlock
+@model B2BFileUploadElementBlock
+
+@{
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var allowMultiple = Model.AllowMultiple ? "multiple" : string.Empty;
+    var cssClasses = Model.GetValidationCssClasses();
+    var accept = !string.IsNullOrEmpty(Model.FileExtensions) ? Model.FileExtensions : string.Empty;
+}
+
+@using (Html.BeginElement(Model, new { @class = "FormFileUpload" + cssClasses, data_f_type = "fileupload" }))
+{
+    <div class="attachments form-field">
+        <label for="@formElement.Guid" class="Form__Element__Caption">@labelText</label>
+
+        <label class="upload-box">
+            <input name="@formElement.ElementName"
+                   id="@formElement.Guid"
+                   type="file"
+                   class="FormFileUpload__Input"
+                   accept="@accept" @allowMultiple
+                   @Html.Raw(Model.AttributesString)
+                   data-f-datainput
+                   aria-describedby="@Util.GetAriaDescribedByElementName(formElement.ElementName)" />
+
+            <div class="icon-wrapper" data-f-postedfile="">
+                <svg width="96" height="40" viewBox="0 0 96 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="96" height="40" rx="8" fill="#F2F4F7"></rect>
+                    <g clip-path="url(#clip0_4415_2710)">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M41.83 13.106C41.9959 12.774 42.2509 12.4947 42.5665 12.2994C42.8821 12.104 43.2458 12.0004 43.617 12H52.381C52.7525 12 53.1166 12.1035 53.4326 12.2988C53.7486 12.4942 54.0039 12.7737 54.17 13.106L57.682 20.131C57.8905 20.547 57.9993 21.0057 58 21.471V27C58 27.5304 57.7893 28.0391 57.4142 28.4142C57.0391 28.7893 56.5304 29 56 29H40C39.4696 29 38.9609 28.7893 38.5858 28.4142C38.2107 28.0391 38 27.5304 38 27V21.472C38.0002 21.0065 38.1087 20.5473 38.317 20.131L41.83 13.106ZM52.381 14H43.618L40.12 21H43.5C43.8978 21 44.2794 21.158 44.5607 21.4393C44.842 21.7206 45 22.1022 45 22.5V23.5C45 23.6326 45.0527 23.7598 45.1464 23.8536C45.2402 23.9473 45.3674 24 45.5 24H50.5C50.6326 24 50.7598 23.9473 50.8536 23.8536C50.9473 23.7598 51 23.6326 51 23.5V22.5C51 22.1022 51.158 21.7206 51.4393 21.4393C51.7206 21.158 52.1022 21 52.5 21H55.88L52.381 14Z" fill="#8AA3A0"></path>
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_4415_2710">
+                            <rect width="24" height="24" fill="white" transform="translate(36 8)"></rect>
+                        </clipPath>
+                    </defs>
+                </svg>
+            </div>
+
+            <p class="upload-text">
+                <span class="highlight">@Model.HighlightedText</span>
+                <span>@Model.HighlightedTextSpan</span>
+            </p>
+
+            @Html.ValidationMessageFor(Model)
+        </label>
+
+        <!-- 🔥 IMPORTANT: preview OUTSIDE upload-box -->
+        <div id="file-preview"></div>
+    </div>
+}
+
+<style>
+    .upload-text {
+        font-size: 20px;
+        font-weight: 500;
+        color: #000; /* normal text */
+    }
+
+        .upload-text .highlight {
+            color: #00E000; /* green highlight */
+            font-weight: 600;
+        }
+    .upload-box {
+        border: 2px dashed #9EC5BC;
+        border-radius: 14px;
+        padding: 56px 20px;
+        background: #fff;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+        .upload-box:hover {
+            background: #f7fbfa;
+            border-color: #6FAE9F;
+        }
+
+        .upload-box input[type="file"] {
+            position: absolute;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+        }
+
+    .icon-wrapper {
+        width: 96px;
+        height: 60px;
+        margin: 0 auto 18px;
+        background: #F4F6F7;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .upload-text {
+        font-size: 20px;
+        font-weight: 500;
+    }
+
+    #file-preview {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 20px;
+    }
+
+    .file-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #fff;
+    }
+
+    .file-name {
+        font-size: 14px;
+        color: #333;
+        word-break: break-all;
+    }
+
+    .remove-btn {
+        border: none;
+        background: red;
+        color: white;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 20px;
+    }
+</style>
+
+<script>
+    const input = document.getElementById("@formElement.Guid");
+    const preview = document.getElementById("file-preview");
+
+    const dt = new DataTransfer();
+
+    input.addEventListener("change", function () {
+
+        Array.from(this.files).forEach((file, index) => {
+
+            dt.items.add(file);
+
+            const row = document.createElement("div");
+            row.classList.add("file-row");
+
+            const name = document.createElement("span");
+            name.classList.add("file-name");
+            name.textContent = file.name;
+
+            const removeBtn = document.createElement("button");
+            removeBtn.type = "button";
+            removeBtn.classList.add("remove-btn");
+            removeBtn.innerHTML = "×";
+
+            removeBtn.addEventListener("click", function () {
+
+                // remove UI
+                row.remove();
+
+                // rebuild DataTransfer safely
+                const newDt = new DataTransfer();
+
+                Array.from(dt.files).forEach(f => {
+                    if (f !== file) {
+                        newDt.items.add(f);
+                    }
+                });
+
+                dt.clearData();
+                Array.from(newDt.files).forEach(f => dt.items.add(f));
+
+                input.files = dt.files;
+            });
+
+            row.appendChild(name);
+            row.appendChild(removeBtn);
+
+            preview.appendChild(row);
+        });
+
+        input.files = dt.files;
+    });
+</script>

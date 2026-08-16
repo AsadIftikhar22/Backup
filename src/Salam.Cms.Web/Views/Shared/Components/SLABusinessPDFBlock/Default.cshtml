@@ -1,0 +1,24 @@
+﻿@using Salam.Cms.Web.Features.SLABusinessPDFBlock.ViewModels
+@using EPiServer.Web.Routing
+@inject UrlResolver urlResolver
+@model SLABusinessPDFBlockViewModel
+
+<div class="qos-background" @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle)>
+    <section class="sla-business-section">
+        <div class="sla-business-container">
+            <div class="sla-business-heading">
+                <div class="qos-accent-line">
+                    <p><br></p>
+                </div>
+                <h2>@Html.PropertyFor(x => x.CurrentBlock.Heading)</h2>
+            </div>
+            <div class="sla-business-content">
+                <p>@Html.PropertyFor(x=>x.CurrentBlock.Description)</p>
+                @if(Model.CurrentBlock.CTAUrl != null)
+                {
+                    <a class="sla-business-btn" href="@urlResolver.GetUrl(Model.CurrentBlock?.CTAUrl?.Href)" target="@Model.CurrentBlock.CTAUrl.Target">@Model.CurrentBlock?.CTAUrl?.Text</a>
+                }
+            </div>
+        </div>
+    </section>
+</div>

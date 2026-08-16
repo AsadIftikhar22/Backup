@@ -1,0 +1,66 @@
+﻿@using Salam.Cms.Web.Features.Accordion.ViewModels
+@using EPiServer.Core
+@using Salam.Cms.Web.Features.Common.Extensions
+
+@model B2BAccordionBlockViewModel
+
+@{
+    var blockCssId = "accordion-item-" + Guid.NewGuid().ToString("N");
+    var bgColor = Model.CurrentBlock.SelectedHexColor;
+}
+<style>
+    #@blockCssId {
+        background-color: @bgColor;
+    }
+</style>
+
+<section class="sla-section">
+<div @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle) class ="sla-container">
+    <div class="sla-title-panel">
+            <h2>   @Html.PropertyFor(m => m.CurrentBlock.Heading)</h2>
+            @if (Model.CurrentBlock.Description != null)
+            {
+                <p>
+                    @Html.Raw(Model.CurrentBlock.Description)
+                </p>
+            }
+    
+        @if (LinkItemExtensions.IsValid(Model.CurrentBlock.ViewMoreLink))
+        {
+            <a href="@Url.ContentUrl(Model.CurrentBlock.ViewMoreLink?.Href)"
+               class="button button-theme--transparent-secondary"
+               target="@Model.CurrentBlock.ViewMoreLink?.Target">
+                <span>@Html.PropertyFor(m => m.CurrentBlock.ViewMoreLink.Text)</span>
+                <div class="arrow">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </a>
+        }        
+    </div>
+    <div class="accordion-block__item">
+        @{
+            var index = 0;
+            foreach (var item in Model.CurrentBlock.Items.FilteredItems)
+            {
+                var content = item.GetContent();
+                index=++index;
+                var displayIndex = index.ToString("D2");
+                    <div id="@blockCssId" class="accordion-item">
+                    <div class="accordion-item__number" data-number="@displayIndex">@displayIndex</div>
+                        @await Html.PartialAsync("~/Views/Shared/Blocks/B2BAccordionItemBlock.cshtml", content)
+                    <button class="accordion-item__icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15" fill="none">
+                            <path class="accordion-item__icon-plus" fill-rule="evenodd" clip-rule="evenodd" d="M8.41032 1.06068C8.41032 0.646463 8.07454 0.310677 7.66032 0.310677C7.24611 0.310676 6.91032 0.646463 6.91032 1.06068L6.91032 6.91034L1.06077 6.91034C0.64656 6.91034 0.310774 7.24613 0.310774 7.66034C0.310773 8.07455 0.64656 8.41034 1.06077 8.41034L6.91032 8.41034L6.91032 14.26C6.91032 14.6742 7.24611 15.01 7.66032 15.01C8.07454 15.01 8.41032 14.6742 8.41032 14.26L8.41032 8.41034L14.2601 8.41034C14.6743 8.41034 15.0101 8.07455 15.0101 7.66034C15.0101 7.24612 14.6743 6.91034 14.2601 6.91034L8.41032 6.91034L8.41032 1.06068Z" fill="currentColor"></path>
+                            <path class="accordion-item__icon-minus" fill-rule="evenodd" clip-rule="evenodd" d="M1 7C1 6.72386 1.22386 6.5 1.5 6.5H13.5C13.7761 6.5 14 6.72386 14 7C14 7.27614 13.7761 7.5 13.5 7.5H1.5C1.22386 7.5 1 7.27614 1 7Z" fill="currentColor"></path>
+                        </svg>
+                    </button>
+                </div>
+            }
+        }
+    </div>
+</div>
+</section>

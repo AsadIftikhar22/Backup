@@ -1,0 +1,258 @@
+﻿@using Salam.Cms.Shared.Models
+@using Salam.Cms.Shared.Models.Catalogue.Data
+@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Catalogue.ViewModels
+@using Salam.Cms.Web.Features.Common.Extensions
+@using Salam.Cms.Web.Features.Common.Helpers
+
+@using static Salam.Cms.Shared.Models.SalamConstants
+
+@model ProductAddOnBoostViewModel
+
+<style>
+    .tabs-navigation__content .tab-content.active {
+        display: block;
+    }
+
+    .tabs-navigation__labels.banner-tabs .tab-label {
+        width: 414px;
+    }
+    .tabs-navigation__content .tab-content .plancards {
+        margin-top: 30px;
+    }
+    @@media(max-width: 768px) {
+        .tabs-navigation__labels-wrapper {
+            max-width: max-content;
+        }
+
+        .tabs-navigation__labels.banner-tabs .tab-label {
+            width: unset;
+        }
+        .tabs-navigation {
+            display: contents;
+        }
+    }
+
+
+</style>
+<div id="product-addon-boost-tabs" class="section-wrapper product-addon-boost-tabs">
+    <div @Html.PageNavigatorAnchorAttribute(Model.NavigationTitle)
+         class="product-selector product-selector__wrapper product-selector__wrapper--bg-light">
+
+        <div class="heading-and-description heading-and-description--secondary">
+            <div class="heading-and-description__title">
+                @Html.PropertyFor(m => m.Title)
+            </div>
+            <p class="heading-and-description__text">
+                @Html.PropertyFor(model => model.Description)
+            </p>
+        </div>
+
+        @{
+            var CardstabNumber = 1;
+            var BannertabNumber = 1;
+            var BannerSecondtabNumber = 1;
+            var DaystabNumber = 1;
+
+            var bannerGroups = Model.AddOns
+            .Where(x => !string.IsNullOrWhiteSpace(x.Banner))
+            .GroupBy(x => x.Banner)
+            .ToList();
+
+            var planscards = bannerGroups
+            .SelectMany(g => g)
+            .OrderBy(x => int.Parse(x.Validity.Split(' ')[0]));
+        }
+
+        <nav class="tabs-navigation" id="banner-cards">
+
+            <!-- ===================== -->
+            <!-- BANNER TABS -->
+            <!-- ===================== -->
+            <div class="tabs-navigation__labels-wrapper">
+                <div class="tabs-navigation__labels banner-tabs">
+
+                    @foreach (var bannerGroup in bannerGroups)
+                    {
+                        var banner = bannerGroup.Key;
+                        <button class="tab-label @(BannertabNumber == 1 ? "active" : "")"
+                                data-tab-target="tab@(BannertabNumber)">
+                            @banner
+                        </button>
+
+                        BannertabNumber++;
+                    }
+
+                </div>
+            </div>
+
+            <!-- ===================== -->
+            <!-- CONTENT -->
+            <!-- ===================== -->
+            <div class="tabs-navigation__content product-cards">
+                <nav class="tabs-navigation js-product-addon-tabs">
+                    @foreach (var bannerGroup in bannerGroups)
+                    {
+                        var banner = bannerGroup.Key;
+                        var days = bannerGroup
+                        .OrderBy(x => int.Parse(x.Validity.Split(' ')[0]))
+                        .Select(x => x.Validity).Distinct();
+
+
+                        <div class="tab-content @(BannerSecondtabNumber == 1 ? "active" : "")"
+                             id="tab@(BannerSecondtabNumber)"
+                             data-tab-content="tab@(BannerSecondtabNumber)">
+
+                            <!-- ===================== -->
+                            <!-- DAYS -->
+                            <!-- ===================== -->
+                            <div class="tabs-navigation__labels-wrapper">
+                                <div class="tabs-navigation__labels">
+                                    @foreach (var day in days)
+                                    {
+                                        <button class="tab-label @(DaystabNumber == 1 ? "active" : "")"
+                                                data-tab-target="daytab@(DaystabNumber)">
+                                            @($"{day}")
+                                        </button>
+                                        DaystabNumber++;
+                                    }
+
+                                </div>
+                            </div>
+                            <!-- ===================== -->
+                            <!-- PLAN CARDS -->
+                            <!-- ===================== -->
+                            <div class="tabs-navigation__content">
+                                @foreach (var validity in bannerGroup
+                                                            .OrderBy(x => int.Parse(x.Validity.Split(' ')[0]))
+                                                            .Select(x => x.Validity)
+                                                            .Distinct())
+                                {
+                                    <div class="tab-content plancards @(CardstabNumber == 1 ? "active" : "")"
+                                         id="daytab@(CardstabNumber)"
+                                         data-tab-content="daytab@(CardstabNumber)">
+
+
+                                        <div class="plan-cards">
+                                            @foreach (var item in bannerGroup.Where(x => x.Validity == validity))
+                                            {
+                                                <div class="plan-card-wrapper">
+                                                    <div class="plan-card">
+
+                                                        <p class="plan-card__heading">
+                                                            @if (!string.IsNullOrWhiteSpace(item.Data))
+                                                            {
+                                                                @item.Data
+                                                            }
+                                                            else if (!string.IsNullOrWhiteSpace(item.CallsMinutes))
+                                                            {
+                                                                @item.CallsMinutes
+                                                            }
+                                                        </p>
+
+                                                        <div class="plan-card__header">
+                                                            <h3 class="plan-card__price">
+                                                                @item.PriceString.Split(' ')[0]
+                                                            </h3>
+                                                            <p class="plan-card__price-pm">
+                                                                @Model.Span @item.Validity
+                                                            </p>
+                                                        </div>
+
+                                                        <p class="plan-card__vat">
+                                                            @Model.VatText
+                                                        </p>
+                                                    </div>
+                                                    @if (LinkItemExtensions.IsValid(Model?.BuyNowStaticURL))
+                                                    {
+                                                        <div class="plan-card__footer">
+                                                            <a href="@Url.ContentUrl(Model?.BuyNowStaticURL.Href)"
+                                                               class="button button-theme--simple-outlined plan-card__footer-button"
+                                                               target="@Model?.BuyNowStaticURL?.Target">
+                                                                <span>@Model?.BuyNowStaticURL?.Text</span>
+                                                                <div class="arrow"><span></span><span></span><span></span><span></span><span></span></div>
+                                                            </a>
+                                                        </div>
+                                                    }
+                                                    @if (!String.IsNullOrEmpty(item.BuyNowURL))
+                                                    {
+                                                        <div class="plan-card__footer">
+                                                            <a href="@(item.BuyNowURL)" class="button button-theme--simple-outlined plan-card__footer-button">
+                                                                <span>Buy Now</span>
+                                                                <div class="arrow"><span></span><span></span><span></span><span></span><span></span></div>
+                                                            </a>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+   
+                                    </div>
+
+                                    CardstabNumber++;
+                                }
+                            </div>
+                        </div>
+                        BannerSecondtabNumber++;
+                    }
+                </nav>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const root = document.getElementById('product-addon-boost-tabs');
+        if (!root) return;
+        root.querySelectorAll('.js-product-addon-tabs').forEach(dayNav => {
+            dayNav.querySelectorAll('.tab-label').forEach(tab => {
+                tab.addEventListener('click', function () {
+                    const parent = this.closest('.js-product-addon-tabs');
+                    if (!parent) return;
+                    parent.querySelectorAll('.tab-label')
+                        .forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    parent.querySelectorAll('.plancards')
+                             .forEach(c => c.classList.remove('active'));
+                    const target = parent.querySelector('#' + this.dataset.tabTarget);
+                    if (target) target.classList.add('active');
+                });
+            });
+        });
+
+        const bannerTabs = root.querySelectorAll('.banner-tabs .tab-label');
+           function resetInnerDays(container) {
+            container.querySelectorAll('.js-product-addon-tabs').forEach(nav => {
+                 nav.querySelectorAll('.tab-label')
+                    .forEach(t => t.classList.remove('active'));
+                 nav.querySelectorAll('.plancards')
+                    .forEach(c => c.classList.remove('active'));
+                const first = nav.querySelector('.tabs-navigation__labels .tab-label');
+                const firstContent = nav.querySelector('.plancards');
+                if (first) first.classList.add('active');
+                if (firstContent) firstContent.classList.add('active');
+            });
+        }
+
+        bannerTabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                bannerTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const banners = root.querySelectorAll('.tab-content');
+                banners.forEach(b => b.classList.remove('active'));
+                const target = root.querySelector('#' + this.dataset.tabTarget);
+                if (!target) return;
+                const wrapper = target.closest('.tab-content');
+                if (wrapper) wrapper.classList.add('active');
+                resetInnerDays(target);
+                const firstDay = target.querySelector('.tabs-navigation__labels .tab-label');
+                if (firstDay) firstDay.click();
+            });
+        });
+
+        if (bannerTabs.length) {
+            bannerTabs[0].click();
+        }
+    });
+</script>

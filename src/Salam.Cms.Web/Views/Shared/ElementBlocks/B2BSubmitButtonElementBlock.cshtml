@@ -1,0 +1,51 @@
+﻿@using EPiServer.Forms.Implementation.Elements
+@using EPiServer.Forms.Helpers.Internal
+@using Salam.Cms.Web.Features.Forms.B2BSubmitButtonElementBlock
+@model B2BSubmitButtonElementBlock
+
+@{
+    var formElement = Model.FormElement;
+    var buttonText = Model.Label;
+    var buttonDisableState = Model.GetFormSubmittableStatus(ViewContext.HttpContext);
+    var cssClasses = Model.GetValidationCssClasses();
+}
+<style>
+    p.btn-above-text {
+        margin-left: 5px;
+        margin-bottom: 14px;
+    }
+</style>
+
+@if (!String.IsNullOrEmpty(Model?.SndBtnAboveTxt))
+{
+    <p class="btn-above-text">@Model?.SndBtnAboveTxt</p>
+}
+
+<button id="@formElement.Guid"
+        name="submit"
+        type="submit"
+        value="@formElement.Guid"
+        data-f-is-finalized="@Model.FinalizeForm.ToString().ToLower()"
+        data-f-is-progressive-submit="true"
+        data-f-type="submitbutton"
+        data-f-element-name="@formElement.ElementName"
+        @Html.Raw(Model.AttributesString)
+        @buttonDisableState
+        class="form-submit-btn disabled-class @(Model.Image == null ? "Form__Element FormExcludeDataRebind FormSubmitButton " + cssClasses : "Form__Element FormExcludeDataRebind FormSubmitButton FormImageSubmitButton " + cssClasses)">
+    @if (Model.Image == null)
+    {
+        @buttonText
+        <span class="btn-arrow-svg">
+            <svg width="82" height="30" viewbox="0 0 82 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g opacity="0.3">
+                    <path opacity="0.2" d="M3 3L15 15.1644L3.32432 27" stroke="#E6FDE7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path opacity="0.4" d="M19 3L31 15.1644L19.3243 27" stroke="#B0F9B4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path opacity="0.6" d="M35 3L47 15.1644L35.3243 27" stroke="#8AF690" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path opacity="0.8" d="M51 3L63 15.1644L51.3243 27" stroke="#55F25D" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M67 3L79 15.1644L67.3243 27" stroke="#34F03D" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+            </svg>
+        </span>
+    }
+
+</button>

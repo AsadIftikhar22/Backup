@@ -1,0 +1,19 @@
+﻿@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.IconLinks.Models
+
+@model IconLinkItemBlock
+
+@if(Model.Link != null)
+{
+    <a class="quick-link" href="@Url.ContentUrl(Model.Link.Href)">
+        <div class="quick-link__text">
+            @Html.PropertyFor(m => m.Link.Text)
+        </div>
+        @if(!Model.IsB2bLayout)
+        {
+            <div class="quick-link__icon">
+                <vc:image-renderer image-reference="@Model.Icon" svg-render-mode="@SvgRenderMode.Inline" />
+            </div>
+        }
+    </a>
+}

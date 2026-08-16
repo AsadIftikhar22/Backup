@@ -1,0 +1,311 @@
+﻿@using EPiServer.Core
+@using EPiServer.Core.Internal
+@using EPiServer.Forms.UI.SelectionFactory
+@using EPiServer.Shell.ObjectEditing
+@using EPiServer.Shell.Web.Mvc.Html
+@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using Salam.Cms.Web.Features.Forms.B2BSelectDropdownBlock
+@using EPiServer.Globalization
+
+@model B2BSelectDependentDropdownBlock
+
+@{
+    @inject ContentLoader _contentLoader;
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var subCategoryLabel = Model.SubCategoryLabel;
+    var placeholderText = Html.FilterHtml(Model.PlaceHolder);
+    var defaultOptionSelected = !Model.AllowMultiSelect && !Model.Items.Any(x => x.Checked.HasValue && x.Checked.Value) ? "selected=\"selected\"" : "";
+    var items = Model.GetItems();
+    var defaultValue = Model.GetDefaultValue();
+    var cssClasses = Model.GetValidationCssClasses();
+    var autoComplete = AutoCompleteSelectionFactory.GetStringValue(Model.AutoComplete);
+    var lang = ContentLanguage.PreferredCulture.TwoLetterISOLanguageName;
+    var categoryItems = Model.GetItems();
+    var subCategoryItems = new List<SelectListItem>();
+}
+
+<style>
+    .form-input {
+        font-size: 16px !important;
+    }
+
+    .complaint-row {
+        display: flex;
+        gap: 20px;
+    }
+
+        .complaint-row .form-field {
+            flex: 1;
+        }
+</style>
+@using (Html.BeginElement(Model, new { @class = "FormSelection complaint-row" + cssClasses, data_f_type = "selection" }))
+{
+    <div class="form-field">
+        <label for="@formElement.Guid" class="Form__Element__Caption">@labelText</label>
+        <select name="@formElement.ElementName" id="categoryDropdown @formElement.Guid" @(Model.AllowMultiSelect ? "multiple" : "") @Html.Raw(Model.AttributesString) data-f-datainput
+                aria-describedby="@Util.GetAriaDescribedByElementName(formElement.ElementName)"
+                autocomplete="@autoComplete"
+                class="form-input">
+            <!option disabled="disabled" @defaultOptionSelected value="">
+            @(!string.IsNullOrWhiteSpace(placeholderText) ? placeholderText
+                    : Html.Translate(string.Format("/episerver/forms/viewmode/selection/{0}", Model.AllowMultiSelect ? "selectoptions" : "selectanoption")))
+        </!option>
+        @foreach (var item in items)
+            {
+                var defaultSelectedString = Model.GetDefaultSelectedString(item, defaultValue);
+                var selectedString = string.IsNullOrEmpty(defaultSelectedString) ? string.Empty : "selected";
+
+                <!option value="@item.Value" @selectedString @defaultSelectedString data-f-datainput>@item.Caption</!option>
+            }
+    </select>
+
+    <span class="error-message"> @Html.ValidationMessageFor(Model)</span>
+</div>
+
+<div class="form-field">
+    <label id="subCategoryLabel @formElement.Guid" for="@formElement.Guid" class="Form__Element__Caption">@subCategoryLabel</label>
+    <select name="SubCategory" id="subCategoryDropdown @formElement.Guid" @(Model.AllowMultiSelect ? "multiple" : "") @Html.Raw(Model.AttributesString) data-f-datainput
+            aria-describedby="@Util.GetAriaDescribedByElementName(formElement.ElementName)"
+            autocomplete="@autoComplete"
+            class="form-input">
+        <!option disabled="disabled" @defaultOptionSelected value="">
+        @(!string.IsNullOrWhiteSpace(placeholderText) ? placeholderText
+                : Html.Translate(string.Format("/episerver/forms/viewmode/selection/{0}", Model.AllowMultiSelect ? "selectoptions" : "selectanoption")))
+        </!option>
+        @foreach (var item in items)
+            {
+                var defaultSelectedString = Model.GetDefaultSelectedString(item, defaultValue);
+                var selectedString = string.IsNullOrEmpty(defaultSelectedString) ? string.Empty : "selected";
+
+                <!option value="@item.Value" @selectedString @defaultSelectedString data-f-datainput>@item.Caption</!option>
+            }
+        </select>
+
+        <span class="error-message"> @Html.ValidationMessageFor(Model)</span>
+    </div>
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    var lang = "@lang";
+    var Category = document.querySelector('[name="@formElement.ElementName"]');
+    var SubCategory = document.querySelector('[name="SubCategory"]');
+            var subCategoryLabel = document.getElementById("subCategoryLabel @formElement.Guid");
+
+    var messageTextbox = document.querySelector(
+        '.Form__Element.FormTextbox.FormTextbox--Textarea.ValidationRequired'
+    );
+
+    var mobileInputField= document.querySelector('.b2bnumberelementblock .Form__Element.FormTextbox.hide');
+
+           if (!Category || !SubCategory) return;
+
+    SubCategory.style.display = "none";
+    subCategoryLabel.style.display = "none";
+    const baseCategory = Category.value;
+
+      function updateValue() {
+          var val2 = SubCategory.value || "";
+
+          if (baseCategory && val2) {
+              Category.value = baseCategory + " - " + val2;
+          }
+      }
+    function handleVisibility() {
+          let fraudulentWrapper=document.querySelector('.fraudulent-name');
+          let isSenderWrapper=document.querySelector('.senderField');
+          var categoryVal = Category.value.trim().toLowerCase();
+          var subCategoryVal = SubCategory.value.trim().toLowerCase();
+
+          if (categoryVal) {
+              SubCategory.style.display = "";
+              subCategoryLabel.style.display = "";
+          } else {
+              SubCategory.style.display = "none";
+              SubCategory.value = "";
+              subCategoryLabel.style.display = "none";
+          }
+
+          if (mobileInputField) {
+               if(lang == "en"){
+                  if (categoryVal.includes("call") && subCategoryVal !="") {
+                        mobileInputField.classList.remove("hide");
+                        mobileInputField.style.display = "";
+                    }
+                     else {
+                        mobileInputField.classList.add("hide");
+                   }
+               }
+
+               if(lang == "ar"){
+                  if (categoryVal.includes("المكالمات") && subCategoryVal !="") {
+                        mobileInputField.classList.remove("hide");
+                        mobileInputField.style.display = "";
+                    }
+                     else {
+                        mobileInputField.classList.add("hide");
+                   }
+               }
+          }
+
+          if (messageTextbox) {
+              if(lang == "en"){
+                    if (categoryVal.includes("messages") && subCategoryVal !="") {
+                        messageTextbox.classList.remove("hide");
+                        messageTextbox.style.display = "";
+                        mobileInputField.classList.remove("hide");
+                        mobileInputField.style.display = "";
+                   }
+                   else {
+                        messageTextbox.classList.add("hide");
+                  }
+              }
+              
+              if(lang == "ar"){
+                    if (categoryVal.includes("الرسائل") && subCategoryVal !="") {
+                        messageTextbox.classList.remove("hide");
+                        messageTextbox.style.display = "";
+                        mobileInputField.classList.remove("hide");
+                        mobileInputField.style.display = "";
+                   }
+                   else {
+                        messageTextbox.classList.add("hide");
+                  }
+              }
+              
+
+               if(fraudulentWrapper){
+                let fradulentsender  = fraudulentWrapper.closest('.b2bnumberelementblock');
+                fraudulentWrapper.style.display = 'none';
+                let senderInput = document.createElement('input');
+                senderInput.setAttribute('name', 'senderField');
+                senderInput.setAttribute('type', 'text');
+                senderInput.setAttribute('class', 'form-input senderField MobileNumber');
+                senderInput.setAttribute('placeholder', 'Sender Name');
+                fraudulentWrapper.parentNode.insertBefore(senderInput, fraudulentWrapper.nextSibling);
+             }else{
+                 @*  *@
+
+                 if(isSenderWrapper){
+                     isSenderWrapper.remove();
+                     var senderInput=document.querySelector('.MobileNumber.form-input.FormTextbox__Input');
+                     senderInput.style.display = 'block';
+                 }
+             }
+          }
+    }
+
+
+    Category.addEventListener("change", function () {
+           handleVisibility();
+           updateValue();
+       });
+    var previousClass = "";
+    SubCategory.addEventListener("change", function () {
+       var selected = this.options[this.selectedIndex];
+       var newLabelText = selected.getAttribute("data-label") || "";
+       var newPlaceholderText = selected.getAttribute("data-placeholder") || "";
+       var classAttributes=selected.getAttribute("data-classname") || "";
+       var maxlength=selected.getAttribute("data-maxlength") || "";
+       var typeOfComplaint=selected.getAttribute("data-typeOfComplaint") || "";
+       var tier3=selected.getAttribute("data-tier3") || "";
+       var pattern="[0-9]{" + maxlength + "}";
+        const visibleStep = document.querySelector(
+          "section.Form__Element.FormStep.Form__Element--NonData:not(.hide)"
+        );
+
+       var phoneNumberLabel = visibleStep.querySelector(
+           ".b2bnumberelementblock .Form__Element.FormTextbox .Form__Element__Caption:not(.salam_mobile_number)"
+       );
+
+       var phoneNumberInput = visibleStep.querySelector(
+          ".b2bnumberelementblock .MobileNumber.form-input.FormTextbox__Input:not(.salam_mobile_number)"
+       );
+
+       if (phoneNumberLabel) {
+           phoneNumberLabel.textContent = newLabelText;
+       }
+@*                    function showLoader(){
+                document.getElementById("formLoader").style.display = "flex";
+            }
+
+            function hideLoader(){
+                document.getElementById("formLoader").style.display = "none";
+            } *@
+       if(phoneNumberInput){
+           phoneNumberInput.placeholder = newPlaceholderText;
+           phoneNumberInput.setAttribute("placeholder", newPlaceholderText);
+
+           if (previousClass) {
+               phoneNumberInput.classList.remove(previousClass);
+           }
+
+           if (classAttributes) {
+               phoneNumberInput.classList.add(classAttributes);
+               previousClass = classAttributes;
+           }
+
+           phoneNumberInput.setAttribute("maxlength", maxlength);
+           phoneNumberInput.setAttribute("pattern", pattern);
+           phoneNumberInput.setAttribute("typeOfComplaint", typeOfComplaint);
+       }
+           handleVisibility();
+           updateValue();
+       });
+
+        handleVisibility();
+        var categoryDropdown = document.getElementById("categoryDropdown @formElement.Guid");
+        var subCategoryDropdown = document.getElementById("subCategoryDropdown @formElement.Guid");
+
+
+        categoryDropdown.addEventListener("change", function() {
+            var selectedValue = this.value;
+            if (!selectedValue) return;
+            var url = '@Url.Action("GetSubCategoryItems", "B2BSelectApi")' +
+                      '?folderRef=@Model.SubCategoryFolderrReference' +
+                      '&categoryValue=' + encodeURIComponent(selectedValue) +
+                      '&lang=@lang';
+
+
+            fetch(url)
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    subCategoryDropdown.innerHTML = '';
+                    var defaultOption = document.createElement("option");
+                    defaultOption.value = "";
+
+                    if (lang === "ar") {
+                        defaultOption.textContent = "الرجاء اختيار نوع البلاغ";
+                    } else {
+                        defaultOption.textContent = "Select your Report Type";
+                    }
+                    subCategoryDropdown.appendChild(defaultOption);
+
+                    // populate new items
+                    data.forEach(function(x) {
+                        var opt = document.createElement("option");
+                        opt.value = x.value;
+                        opt.textContent = x.text;
+                         if (x.labels) opt.setAttribute("data-label", x.labels);
+                         if (x.placeholder) opt.setAttribute("data-placeholder", x.placeholder);
+                         if (x.className) opt.setAttribute("data-classname", x.className);
+                         if (x.maxlength) opt.setAttribute("data-maxlength", x.maxlength);
+                         if (x.typeOfComplaint) opt.setAttribute("data-typeOfComplaint", x.typeOfComplaint);
+                         if (x.tier3) opt.setAttribute("data-tier3", x.tier3);
+                         if (x.tier1) opt.setAttribute("data-tier1", x.tier1);
+                        subCategoryDropdown.appendChild(opt);
+                    });
+
+                })
+                .catch(function(error) {
+                    console.error("Error loading sub categories:", error);
+                });
+        });
+
+    });
+</script>
+

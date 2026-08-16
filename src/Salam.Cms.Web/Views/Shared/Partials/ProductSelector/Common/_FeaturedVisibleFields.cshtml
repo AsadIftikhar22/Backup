@@ -1,0 +1,34 @@
+@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using Salam.Cms.Web.Features.Common.Models
+
+@model (IEnumerable<object> Fields, ProductSku Product)
+
+@{
+    int renderedCount = 0;
+}
+
+
+@foreach (var field in Model.Fields)
+{
+    if (renderedCount < 2)
+    {
+        var result = ContentHelper.ShouldRenderVisibleField(((dynamic)field).VisibleField, Model.Product);
+
+        if (result.ShouldRender)
+        {
+            string partialUrl = string.Format("~/Views/Shared/Partials/ProductSelector/Common/{0}.cshtml", ((dynamic)field).VisibleField + result.TemplateModifier);
+            @await Html.PartialAsync(partialUrl, Model.Product)
+            renderedCount++;
+        }
+    }
+}
+
+@{
+    ViewData["FeaturedFieldRendered"] = renderedCount > 0;
+}
+
+@if (renderedCount == 0)
+{
+    <div class="plan-card__divider"></div>
+}

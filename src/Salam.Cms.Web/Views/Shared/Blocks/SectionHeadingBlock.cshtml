@@ -1,0 +1,13 @@
+﻿@using Salam.Cms.Web.Features.SectionHeading.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using Salam.Cms.Web.Features.Common.Extensions
+
+@model SectionHeadingBlock
+
+<div @Html.PageNavigatorAnchorAttribute(Model.NavigationTitle) class="section-heading-wrapper section-heading-wrapper--full-width">
+    <h1 class="section-heading @Model.Style.GetCssClass()"
+        data-line1="@Model.LineOne" 
+        data-line2="@Model.LineTwo">
+        @Model.LineOne <br /> @Model.LineTwo
+    </h1>
+</div>

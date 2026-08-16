@@ -1,0 +1,14 @@
+﻿@using Salam.Cms.Web.Features.Navigation.ViewModels
+
+@model NavigationItemCollectionViewModel
+<div class="navigation-item-collection-block">
+    <div class="navigation-item-collection-block__nav-block">
+        <div class="navigation-item-collection-block__nav-block__heading">
+            @Html.PropertyFor(m => m.CurrentBlock.Heading)
+        </div>
+        @if (!Model.Links.IsNullOrEmpty() && Model.Links.Count > 0)
+        {
+            @await Html.PartialAsync("~/Views/Shared/Partials/FooterLinks.cshtml", Model.CurrentBlock.Links)
+        }
+    </div>
+</div>

@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="EPiServer.CMS.UI.Core" Version="12.32.5" />
+		<PackageReference Include="EPiServer.CMS.AspNetCore.HtmlHelpers" Version="12.22.5" />
+		<PackageReference Include="EPiServer.CMS.AspNetCore.TagHelpers" Version="12.22.5" />
+		<PackageReference Include="EPiServer.CMS.AspNetCore.Templating" Version="12.22.5" />
+		<PackageReference Include="EPiServer.CMS.AspNetCore.Routing" Version="12.22.5" />
+		<PackageReference Include="EPiServer.Find.Cms" Version="16.5.0" />
+		<PackageReference Include="EPiServer.Find" Version="16.5.0" />
+		<PackageReference Include="Flurl" Version="4.0.0" />
+		<PackageReference Include="Flurl.Http" Version="4.0.2" />
+		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<ProjectReference Include="..\Salam.Cms.Shared.Models\Salam.Cms.Shared.Models.csproj" />
+		<ProjectReference Include="..\Salam.Cms.Core.Settings\Salam.Cms.Core.Settings.csproj" />
+	</ItemGroup>
+
+</Project>

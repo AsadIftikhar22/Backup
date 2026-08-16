@@ -1,0 +1,369 @@
+﻿@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using EPiServer.Forms.UI.SelectionFactory
+@using Salam.Cms.Web.Features.EnquireProduct.Services
+@model WPOTPElementBlock
+
+@{
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var cssClasses = Model.GetValidationCssClasses();
+    var autoComplete = AutoCompleteSelectionFactory.GetStringValue(Model.AutoComplete);
+    @inject ISessionService _sessionService;
+}
+
+<style>
+    .form-header {
+        padding: 0px !important;
+    }
+
+    .otp-inputs {
+        display: flex;
+        gap: 12px;
+        justify-content: center; /* Center horizontally */
+        margin: 12px 0; /* optional spacing */
+    }
+
+    .otp-field {
+        width: 72px;
+        height: 72px;
+        padding: 12px 0;
+        padding: 12px 0;
+        font-size: 28px;
+        font-style: normal;
+        font-weight: 900;
+        line-height: 100%;
+        letter-spacing: 0.778px;
+        text-align: center;
+        border-radius: 8px;
+        border: 2px solid #DCDCDC;
+        color: #002035;
+    }
+
+        .otp-field:focus {
+            text-decoration: none;
+            outline: none !important;
+        }
+
+    .form-seconds-message,
+    .form-resend-message {
+        text-align: center;
+        display: block;
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    /* Optional: emphasis styles */
+    .form-resend-message {
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .otp-bottom-row {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin: 8px;
+        font-size: 13px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .otp-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .otp-inputs {
+        margin-bottom: 6px;
+    }
+
+    .otp-error {
+        color: red;
+        display: none;
+    }
+
+    .otp-timer {
+        color: #666;
+        margin-left: 10px;
+    }
+
+    .otp-resend {
+        color: #00b14f;
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+        .otp-resend.disabled {
+            color: gray;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+    html[dir=rtl] .otp-wrapper {
+        direction: ltr;
+    }
+</style>
+
+@if (Model?.OTPMessage != null)
+{
+    <p id="mobilenumber"><strong>@Html.Raw(Model?.OTPMessage)</strong></p>
+    <br />
+    <p><strong>@Html.Raw(Model?.EnterOTPMessage)</strong></p>
+}
+@using (Html.BeginElement(Model, new { @class = "FormTextbox" + cssClasses, data_f_type = "textbox" }))
+{
+    <div class="form-field">
+        <div class="otp-wrapper">
+            <div class="otp-inputs">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-field" id="otp1" name="otp1" autocomplete="one-time-code" required />
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-field" id="otp2" name="otp2" autocomplete="one-time-code" required />
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-field" id="otp3" name="otp3" autocomplete="one-time-code" required />
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-field" id="otp4" name="otp4" autocomplete="one-time-code" required />
+            </div>
+
+
+            <div class="otp-bottom-row">
+                <span class="otp-error" id="otpError">@Model?.InvalidOTPMessage</span>
+                <span class="otp-timer">@Model?.timeLeftMsg &nbsp;<span id="otpTimer"></span>&nbsp;sec</span>
+                @if (LinkItemExtensions.IsValid(Model?.ReSendOTP))
+                {
+                    <a href="javascript:void(0)" class="otp-resend disabled" id="resendOtp" onclick="resendOtp()">@Model.ReSendOTP.Title</a>
+                    @*                     <a href="@Url.ContentUrl(Model.ReSendOTP.Href)" class="otp-resend disabled" id="resendOtp">@Model.ReSendOTP.Title</a> *@
+                }
+            </div>
+        </div>
+        <input name="@formElement.ElementName" id="@formElement.Guid" type="hidden" class="CombinedOtp form-input FormTextbox__Input"
+               aria-describedby="@Util.GetAriaDescribedByElementName(formElement.ElementName)"
+               placeholder="@Html.FilterHtml(Model.PlaceHolder ?? "")"
+               value="@Model.GetDefaultValue()" @Html.Raw(Model.AttributesString) data-f-datainput
+               autocomplete="@autoComplete" />
+        <span id="@formElement.Guid-error" class="error-message">
+            @Html.ValidationMessageFor(Model)
+        </span>
+        @Model.RenderDataList()
+
+    </div>
+}
+<script>
+    document.addEventListener('DOMContentLoaded', function (e) {
+        const otpFields = document.querySelectorAll('.otp-field');
+        const combinedOtpInput = document.querySelector('.CombinedOtp');
+        const timerEl = document.getElementById("otpTimer");
+        const resendBtn = document.getElementById("resendOtp");
+        const errorEl = document.getElementById("otpError");
+
+        function updateNextState(e) {
+
+                const visibleStep = document.querySelector(
+          "section.Form__Element.FormStep.Form__Element--NonData:not(.hide)"
+        );
+        const nextBtn = document.querySelector(".Form__NavigationBar .btnNext");
+
+        if (!nextBtn) return;
+        const requiredFields = Array.from(
+              visibleStep.querySelectorAll("input[required], textarea[required], select")
+            ).filter(field => {
+                const isVisible =
+                  field.offsetParent !== null &&
+                  window.getComputedStyle(field).display !== "none" &&
+                  !field.closest(".hide");
+
+                const hasValue = (field.tagName.toLowerCase() == "select" && field.value.trim() == "");
+                if(hasValue){
+                  return hasValue;
+                }
+
+                return field.required && !field.disabled && isVisible;
+            });
+
+        let allValid = true;
+
+        requiredFields.forEach(field => {
+                    const value = field.value.trim();
+        const maxLength = field.getAttribute("maxlength");
+            if (!field.value.trim() || !field.checkValidity()) {
+                allValid = false;
+            }
+
+               if (maxLength && value.length > parseInt(maxLength, 10)) allValid = false;
+        });
+        nextBtn.disabled = !allValid;
+        nextBtn.classList.toggle("disabled", !allValid);
+    }
+
+       $$epiforms('.EPiServerForms').on('formsStepValidating formsNavigateToStep afterNavigateNextStep formsSetupCompleted', (event, data)  => {
+           updateNextState(event);
+        setTimeout(() => {
+            checkAndStartOtpTimer();
+        }, 50);
+
+    });
+
+    document.body.addEventListener("input", function (e) {
+        const field = e.target;
+        if (!field.checkValidity()) {
+            field.reportValidity();
+        }
+    });
+
+    document.body.addEventListener("input", updateNextState);
+    document.body.addEventListener("change", updateNextState);
+
+    // Also update when steps change (Optimizely changes step display)
+    document.body.addEventListener("click", function (e) {
+        if (e.target.matches(".btnNext, .btnPrev")) {
+            setTimeout(updateNextState, 20);
+        }
+    });
+
+    // Select all inputs, textareas, and selects in the current step
+        const allFields = document.querySelectorAll('section.FormStep input, section.FormStep textarea, section.FormStep select');
+
+        allFields.forEach(field => {
+            field.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    
+                         const mobileField = document.querySelector("input.mobilenumber");
+                if (mobileField && mobileField?.value !== null && mobileField?.value !== "" && mobileField?.value.length >9) {
+                       let el = document.getElementById("mobilenumber");
+                       let currentText = el.innerText;
+                       let updatedText = currentText.replace('MobileNumber', mobileField?.value );
+                       el.innerText = updatedText;
+                }
+                  
+                   const nextBtn = document.querySelector('.Form__NavigationBar .btnNext');
+                         document.querySelectorAll('.tab').forEach(tab => {
+                                tab.classList.add('disabled-tab');
+                                tab.style.pointerEvents = 'none';
+                                tab.style.opacity = '0.8';
+                                tab.style.cursor = 'not-allowed';
+                        });
+            
+                        if (!nextBtn || nextBtn.disabled) {
+                              e.preventDefault();
+                              e.stopImmediatePropagation();
+                              return;
+                        }
+                }
+            });
+        },true);
+
+        let timeLeft = 60;
+        let timerInterval = null;
+
+        /* ---------------- OTP Input Logic ---------------- */
+
+        otpFields.forEach((input, index) => {
+
+            input.addEventListener('input', function () {
+                this.value = this.value.replace(/\D/g, '').slice(0, 1);
+
+                if (this.value && index < otpFields.length - 1) {
+                    otpFields[index + 1].focus();
+                }
+
+                updateCombinedOtp();
+            });
+
+            input.addEventListener('keydown', function (e) {
+                if (e.key === 'Backspace' && !this.value && index > 0) {
+                    otpFields[index - 1].focus();
+                }
+            });
+        });
+
+        function updateCombinedOtp() {
+            let otp = '';
+            otpFields.forEach(field => otp += field.value);
+            if (combinedOtpInput) combinedOtpInput.value = otp;
+        }
+
+        /* ---------------- Timer Logic ---------------- */
+           function checkAndStartOtpTimer() {
+
+            const visibleStep = document.querySelector(
+                "section.Form__Element.FormStep.Form__Element--NonData:not(.hide)"
+            );
+
+            if (!visibleStep) return;
+
+            const stepIndex = parseInt(visibleStep.dataset.fStepindex, 10) + 1;
+
+            if (stepIndex === 2) {
+                startTimer();
+            }
+        }
+
+
+        function startTimer() {
+
+            timeLeft = 60;
+            timerEl.innerText = timeLeft;
+
+            resendBtn.classList.add("disabled");
+            resendBtn.style.pointerEvents = "none";
+
+            if (timerInterval) clearInterval(timerInterval);
+
+            timerInterval = setInterval(function () {
+                timeLeft--;
+                timerEl.innerText = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    resendBtn.classList.remove("disabled");
+                    resendBtn.style.pointerEvents = "auto";
+                }
+            }, 1000);
+        }
+
+        /* ---------------- Resend OTP ---------------- */
+
+        resendBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            resendOtp();
+        });
+       function showLoader(){
+                document.getElementById("formLoader").style.display = "flex";
+       }
+
+       function hideLoader(){
+                document.getElementById("formLoader").style.display = "none";
+       }
+        async function resendOtp() {
+            // showLoader();
+            if (resendBtn.classList.contains("disabled")) return;
+            resendBtn.classList.add("disabled");
+            resendBtn.style.pointerEvents = "none";
+
+            try {
+                const response = await fetch("@Url.Content(Model.ReSendOTP.Href)", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" }
+                });
+
+                const result = await response.json();
+
+                if (result.responseStatus != 200) {
+                    throw new Error(result.responseMessage || "OTP resend failed");
+                }else{
+                     if (errorEl) errorEl.style.display = "none";
+                }
+                startTimer();
+                // hideLoader();
+            } catch (error) {
+                showError(error.message || "Failed to resend OTP. Please try again.");
+                resendBtn.classList.remove("disabled");
+                resendBtn.style.pointerEvents = "auto";
+            }
+        }
+
+        /* ---------------- Error Display ---------------- */
+
+        window.showOtpError = function () {
+            if (errorEl) errorEl.style.display = "inline";
+        };
+    });
+</script>

@@ -1,0 +1,110 @@
+@using Salam.Cms.Web.Features.Common.Components.B2BCategoryNavigator.ViewModels
+@model B2BCategoryNavigatorViewModel
+
+@if (Model?.Items != null && Model.Items.Any())
+{
+    <div class="b2b-anchor-links-block">
+        <div class="b2b-anchor-links-block__container">
+            <div class="b2b-anchor-links">
+                @foreach (var item in Model.Items)
+                {
+                    <a class="b2b-anchor-link" href="#@item.AnchorId">
+                        <span class="b2b-anchor-link__text">@item.Title</span>
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+}
+<style>
+    .b2b-anchor-wrapper {
+        width: 99vw;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-bottom: 70px;
+    }
+
+    [dir=rtl] .b2b-anchor-wrapper {
+        width: 99vw;
+        position: relative;
+        right: 50%;
+        transform: translateX(50%);
+        margin-bottom: 70px;
+    }
+    .b2b-anchor-links-block .b2b-anchor-link--is-active {
+        border-top: var(--spacing-1) solid var(--logo);
+    }
+
+    .b2b-anchor-links {
+        align-items: center;
+        border-bottom: var(--spacing-0-0) solid var(--primary-900);
+        border-top: var(--spacing-0-0) solid var(--primary-900);
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        padding-inline-start: unset;
+    }
+
+    @@media (min-width: 1200px) and (max-width: 1300px) {
+        .b2b-anchor-links {
+            justify-content: center !important;
+            width: 98.5vw;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const tabLinks = document.querySelectorAll(".b2b-anchor-link");
+        const tabContents = document.querySelectorAll(".tab-wrapper .tab-content");
+
+        if (!tabLinks.length || !tabContents.length) return;
+
+        function showTab(tabId) {
+            // Hide all tab contents
+            tabContents.forEach(tab => {
+                tab.style.display = "none";
+                tab.classList.remove("b2b-anchor-link--is-active");
+            });
+
+            // Remove active class from links
+            tabLinks.forEach(link => {
+                link.classList.remove("b2b-anchor-link--is-active");
+            });
+
+            // Show selected tab
+            const activeTab = document.querySelector(tabId);
+            if (activeTab) {
+                activeTab.style.display = "block";
+                activeTab.classList.add("b2b-anchor-link--is-active");
+            }
+
+            // Highlight selected link
+            const activeLink = document.querySelector(`.b2b-anchor-link[href="${tabId}"]`);
+            if (activeLink) {
+                activeLink.classList.add("b2b-anchor-link--is-active");
+            }
+        }
+
+        // Click events
+        tabLinks.forEach(link => {
+            link.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                const target = this.getAttribute("href");
+                showTab(target);
+
+                // Optional: update URL hash
+                history.replaceState(null, "", target);
+            });
+        });
+       // Open hash tab if present, otherwise first tab
+       const initialTab =
+            window.location.hash &&
+            document.querySelector(window.location.hash)
+                ? window.location.hash
+                : tabLinks[0].getAttribute("href");
+        showTab(initialTab);
+    });
+</script>

@@ -1,0 +1,40 @@
+@using EPiServer.Core
+@using Salam.Cms.Web.Features.B2BInfrastructureCardBlock
+@using Salam.Cms.Web.Features.B2BInfrastructureCardBlock.ViewModels
+@using Salam.Cms.Web.Features.Common.Extensions
+
+@model B2BInfrastructureCardBlockViewModel
+
+@{
+    var name = "Asad Iftikhar";
+}
+<section class="infrastructure-block infrastructure-block__wrapper section-wrapper">
+    <div class="infrastructure-cards">
+        @foreach (var item in Model.CurrentBlock.infrastructureCardItems)
+        {
+            <div class="infrastructure-card">
+                @if (!String.IsNullOrEmpty(item.Heading))
+                {
+                    <div class="infrastructure-card__header">
+                        @item.Heading
+                    </div>
+                }
+                <div class="infrastructure-card__content">
+                    @if (!String.IsNullOrEmpty(item.Number))
+                    {
+                        <div class="infrastructure-card__number">
+                            @item.Number
+                        </div>
+                    }
+
+                    @if (!String.IsNullOrEmpty(item.Description))
+                    {
+                        <div class="infrastructure-card__description">
+                            @item.Description
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</section>

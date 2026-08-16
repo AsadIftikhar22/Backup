@@ -1,0 +1,19 @@
+﻿@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using static Salam.Cms.Shared.Models.SalamConstants
+
+@model ProductSku
+
+@if (!string.IsNullOrEmpty(Model.ecommerce_partnering_with))
+{   
+<li class="list-item">
+    <div class="list-item__content">
+        <span class="list-item__content__text">
+                <strong>@Model.ecommerce_partnering_with</strong>
+                @ContentHelper.GetDefaultFrontendLabel(Model, CatalogueAPIfields.ecommerce_partnering_with)
+                @Model.ecommerce_partnering_with
+        </span>
+    </div>
+    <div class="list-item__tooltip"></div>
+</li>
+}

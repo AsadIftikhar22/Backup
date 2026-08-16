@@ -1,0 +1,206 @@
+﻿@using EPiServer
+@using EPiServer.Framework.Web
+@using EPiServer.Framework.Web.Mvc.Html
+@using EPiServer.ServiceLocation
+@using Salam.Cms.Shared.Models.Pages
+@using Salam.Cms.Web.Features.ClientResources.Common
+@using Salam.Cms.Web.Features.Common.Components.Footer
+@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.Common.Components.Navigation
+@using Salam.Cms.Web.Features.Common.Models
+@using Salam.Cms.Web.Features.Hero.Components
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Core
+@using Salam.Cms.Web.Features.Landing.Models
+@using System.Globalization
+
+@{
+    var logoLink = $"/{CultureInfo.CurrentCulture.TwoLetterISOLanguageName}";
+}
+
+<style>
+    .search-container {
+        position: relative;
+    }
+
+    .search-input {
+        width: 287px;
+        height: 40px;
+        padding-left: 40px;
+        padding-top: 8px;
+        padding-right: 12px;
+        padding-bottom: 8px;
+        border-radius: 8px;
+        border: none;
+        font-size: 14px;
+        line-height: 20px;
+        letter-spacing: 0%;
+        background-color: #003831;
+        color: #B0C1BF;
+    }
+
+        .search-input::placeholder {
+            color: #B0C1BF;
+        }
+
+    .search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        pointer-events: none;
+    }
+
+    .search-input:focus {
+        outline: none;
+        background-color: #003831;
+        box-shadow: none;
+        border: none;
+    }
+
+    .social-row .social-row--footer {
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+
+    .footer__legal {
+        margin-top: 20px;
+    }
+
+    .footer__legal__links{
+        margin-top: 20px;
+    }
+
+    .footer{
+        border-top-left-radius:unset !important;
+        border-top-right-radius: unset !important;
+    }
+
+    .logo{
+        margin-bottom: 20px;    
+    }
+</style>
+@model NavigationViewModel
+@{
+    var lang = @Model.CurrentLanguage;
+}
+<header class="navigation bg-secondary-500-opacity">
+    <div class="navigation__bottom">
+        <div class="navigation__menu-top">
+            
+            <a href="@logoLink" class="logo"><vc:image-renderer image-reference="@Model.WholeSaleLogo" svg-render-mode="@SvgRenderMode.Inline" /></a>
+            <a href="@logoLink" class="logo-small"><vc:image-renderer image-reference="@Model.WholeSaleLogoSmall" svg-render-mode="@SvgRenderMode.Inline" /></a>
+            <div class="account-type-switcher">
+                @if (Model.TopLinks != null && Model.TopLinks.Count > 0)
+                {
+                    <button class="button button-theme--cta">
+                        <span>@Model.TopLinks[0]?.Name</span>
+                        <div class="arrows"><span></span><span></span></div>
+                    </button>
+                    <div class="account-type-switcher__list">
+                        <a href="@logoLink" class="logo"><vc:image-renderer image-reference="@Model.WholeSaleLogo" svg-render-mode="@SvgRenderMode.Inline" /></a>
+                        <div class="account-type-switcher__list__btns">
+                            @foreach (var link in Model.TopLinks)
+                            {
+                                <a href="@Url.ContentUrl(link.ContentLink)"
+                                   title="@link.Name"
+                                   target="@link.TargetFrameName"
+                                   class="button button-theme--cta @(link == Model.TopLinks.First() ? " active-type" : null)">
+                                    <span>@link.Name</span>
+                                </a>
+                            }
+                        </div>
+                        <div class="close-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                <path d="M11.25 0.749878L0.75 11.2499M0.75 0.749878L11.25 11.2499" stroke="#00F249" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </div>
+                    </div>
+                }
+            </div>
+           @*  <button class="icon-button icon-button--secondary icon-button__menu-toggle">
+                <div class="burger-menu-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="10" viewBox="0 0 15 10" fill="none">
+                        <path d="M1.81738 5H13.8174M1.81738 1H13.8174M1.81738 9H13.8174" stroke="#003831" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </div>
+                <div class="close-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M11.25 0.749878L0.75 11.2499M0.75 0.749878L11.25 11.2499" stroke="#00F249" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </div>
+            </button> *@
+
+            <div class="button-row-mobile">
+                <div class="language-switcher">
+                    @using (Html.BeginForm("Set", "Language", new { contentLink = Model.CurrentPage?.ContentLink }))
+                    {
+                        <div class="dropdown">
+                            <select class="dropdown__select" value="@Model.CurrentLanguage"></select>
+                            <button class="dropdown__button" type="button">
+                                <span class="dropdown__button__text">@Model.CurrentLanguage</span>
+                                <span class="dropdown__button__icon">
+                                    <svg class="arrow-top" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    <svg class="arrow-middle" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    <svg class="arrow-bottom" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </span>
+                            </button>
+                            <div class="dropdown__content">
+                                @foreach (var language in Model.Languages)
+                                {
+                                    <div class="dropdown__content__item selected"
+                                         @(language.Value == Model.CurrentLanguage ? "selected" : "")
+                                         data-value="@language.Value">
+                                        <input type="hidden" name="Language" value="en">@language.DisplayName
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="button-row-desktop">
+            <div class="language-switcher">
+                @using (Html.BeginForm("Set", "Language", new { contentLink = Model.CurrentPage?.ContentLink }))
+                {
+                    <div class="dropdown">
+                        <select class="dropdown__select" value="@lang" id="drpdwnSelect"></select>
+                        <button class="dropdown__button" type="button">
+                            <span class="dropdown__button__text" id="dropdwnBtn">@lang</span>
+                            <span class="dropdown__button__icon">
+                                <svg class="arrow-top" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                <svg class="arrow-middle" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                <svg class="arrow-bottom" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="dropdown__content">
+                            @foreach (var language in Model.Languages)
+                            {
+                                <div class="dropdown__content__item selected"
+                                     @(language.Value == Model.CurrentLanguage ? "selected" : "")
+                                     data-value="@language.Value">
+                                    <input type="hidden" name="Language" value="en">@language.DisplayName
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</header>

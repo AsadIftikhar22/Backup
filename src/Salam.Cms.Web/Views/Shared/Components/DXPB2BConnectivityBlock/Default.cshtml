@@ -1,0 +1,46 @@
+﻿@using Salam.Cms.Web.Features.DXPB2BConnectivity.ViewModels
+@model DXPB2BConnectivityBlockViewModel
+
+<style>
+    ul li svg[viewBox="0 0 19 18"] {
+        width: 19px !important;
+        height: 18px !important;
+        flex-shrink: 0;
+    }
+</style>
+
+<div class="layer-connectivity-container" @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle)>
+    <div class="layer-connectivity">
+        <h1 class="base-font">@Html.PropertyFor(x => x.CurrentBlock.Heading)</h1>
+        <div class="layer-card">
+            <h2 class="base-font">@Html.PropertyFor(x => x.CurrentBlock.Card1Heading)</h2>
+            <ul>
+                @foreach (var item in Model.CurrentBlock?.Card1List)
+                {
+                    <li class="base-font">
+                        <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="1.16309" y="0.5" width="17" height="17" rx="8.5" fill="#B0F9B4"></rect>
+                            <rect x="1.16309" y="0.5" width="17" height="17" rx="8.5" stroke="#55F25D"></rect>
+                            <path d="M6.66309 9.6002L8.46309 11.4002L12.6631 7.2002" stroke="#01A809" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg> @item
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="layer-card">
+            <h2 class="base-font">@Html.PropertyFor(x => x.CurrentBlock.Card2Heading)</h2>
+            <ul>
+                @foreach (var item in Model.CurrentBlock?.Card2List)
+                {
+                   <li class="base-font">
+                        <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="1.16309" y="0.5" width="17" height="17" rx="8.5" fill="#B0F9B4"></rect>
+                            <rect x="1.16309" y="0.5" width="17" height="17" rx="8.5" stroke="#55F25D"></rect>
+                            <path d="M6.66309 9.6002L8.46309 11.4002L12.6631 7.2002" stroke="#01A809" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg> @item
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

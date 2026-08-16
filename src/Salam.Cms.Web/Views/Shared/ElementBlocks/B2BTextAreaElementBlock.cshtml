@@ -1,0 +1,31 @@
+﻿@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using EPiServer.Forms.UI.SelectionFactory
+@using Salam.Cms.Web.Features.Forms.B2BTextAreaElementBlock
+@model B2BTextAreaElementBlock
+
+@{
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var cssClasses = Model.GetValidationCssClasses();
+    var autoComplete = AutoCompleteSelectionFactory.GetStringValue(Model.AutoComplete);
+    var TextAreaHeight = Model.TextAreaHeight ?? "120px";
+}
+<style>
+    textarea 
+    {
+        min-height:@TextAreaHeight;
+    }
+</style>
+@using (Html.BeginElement(Model, new { @class = "FormTextbox FormTextbox--Textarea" + cssClasses, data_f_type = "textbox", data_f_modifier = "textarea" }))
+{
+    <div class="form-field">
+    <label for="@formElement.Guid" class="Form__Element__Caption">@labelText</label>
+        <textarea name="@formElement.ElementName" id="@formElement.Guid" class="@Model.FieldMapping form-input FormTextbox__Input"
+          placeholder="@Html.FilterHtml(Model.PlaceHolder)"
+          data-f-label="@labelText" data-f-datainput
+          @Html.Raw(Model.AttributesString) aria-describedby="@Util.GetAriaDescribedByElementName(formElement.ElementName)"
+          autocomplete="@autoComplete">@Model.GetDefaultValue()</textarea>
+        <span id="form-comments-error" class="error-message">    @Html.ValidationMessageFor(Model)</span>
+    </div>
+}

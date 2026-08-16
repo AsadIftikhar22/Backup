@@ -1,0 +1,146 @@
+﻿@using EPiServer.Core
+@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.Common.Extensions
+@using Salam.Cms.Web.Features.IconLinks.Models
+@using Salam.Cms.Web.Features.IconLinks.ViewModels
+
+@model IconLinkItemListBlockViewModel
+
+@{
+    var itemCount = Model.CurrentBlock.Items?.Count ?? 0;
+    string layoutClass = string.Empty;
+    if (!Model.CurrentBlock.IsB2bLayout)
+    {
+        layoutClass = itemCount == 3
+               ? "icon-link-item-list-block__quick-links--layout-three"
+               : itemCount == 4
+                   ? "icon-link-item-list-block__quick-links--layout-four"
+                   : string.Empty;
+    }
+    else
+    {
+        <style>
+
+            .quick-link {
+                max-width: unset !important;
+            }
+
+            .icon-link-item-list-block__wrapper{
+                margin: 0 auto 70px;
+            }
+            .icon-link-item-list-block__wrapper .icon-link-item-list-block__quick-links {
+                width: 100%;
+            }
+
+                .icon-link-item-list-block__wrapper .icon-link-item-list-block__quick-links .icon-link-item-list-block__quick-links-grid {
+                    grid-template-columns: repeat(3, 1fr);
+                    max-width: unset;
+                }
+
+            .industry-header-component {
+              
+                justify-content: center;
+                justify-self: center;
+                margin: 0 auto 16px;
+                margin: auto;
+                max-width: 614px;
+                text-align: center;
+            }
+
+            .heading-content {
+                font-weight: 400;
+                font-size: 40px;
+                line-height: 44px;
+                text-align: center;
+                color: #ffff;
+            }
+
+            @@media(max-width: 768px) {
+                .footer--mobile-accordion .footer__links__wrapper {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    width: 100%;
+                    gap: 40px;
+                }
+
+                .icon-link-item-list-block__wrapper .icon-link-item-list-block__quick-links .icon-link-item-list-block__quick-links-grid {
+                    grid-template-columns: unset;
+                }
+            }
+        </style>
+    }
+
+
+    var hasHeadingOrDescription = !string.IsNullOrEmpty(Model.CurrentBlock.Heading) || !Model.CurrentBlock.Description.IsNullOrEmpty();
+}
+
+@if (Model.CurrentBlock.IsB2bLayout &&
+                    !String.IsNullOrWhiteSpace(Model.CurrentBlock.B2BHeading))
+{
+    <div class="industry-header-component">
+        <h3 class="heading-content">
+            @Html.PropertyFor(m => m.CurrentBlock.B2BHeading)
+        </h3>
+    </div>
+
+}
+<div class="section-wrapper">
+    <div @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle) class="icon-link-item-list-block__wrapper">
+        @if (hasHeadingOrDescription)
+        {
+            <div class="icon-link-item-list-block__content-block">
+                <div class="heading-and-description heading-and-description--primary heading-theme--primary">
+                    <h2 class="heading-and-description__title">
+                        @Html.PropertyFor(m => m.CurrentBlock.Heading)
+                    </h2>
+                    <div class="heading-and-description__text rte-wrapper">
+                        @Html.PropertyFor(m => m.CurrentBlock.Description)
+                    </div>
+
+                    <a href="#" class="button button-theme--transparent-secondary">
+                        <span>Plan details</span>
+                        <div class="arrow">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+        @if (Model.CurrentBlock.NewDXPUI)
+        {
+            <section class="quick-actions-updates">
+                @foreach (var item in Model.CurrentBlock.Items?.FilteredItems ?? Enumerable.Empty<ContentAreaItem>())
+                {
+                    var content = item.GetContent();
+                    if (content is IconLinkItemBlock block &&
+                    block.Link != null)
+                    {
+
+                        <a href="@Url.ContentUrl(block.Link.Href)"
+                           class="action-card-updates">
+                            <div class="action-icon-updates">
+                                <vc:image-renderer image-reference="@block.Icon" svg-render-mode="@SvgRenderMode.Inline" />
+                            </div>
+                            <h3>@block.Link.Text</h3>
+                        </a>
+
+                    }
+                }
+            </section>
+        }
+        else
+        {
+
+            <div class="icon-link-item-list-block__quick-links @layoutClass">
+                @Html.PropertyFor(m => m.CurrentBlock.Items, new
+                {
+                    CssClass = "icon-link-item-list-block__quick-links-grid",
+                        })
+        </div>
+                }
+    </div>
+</div>

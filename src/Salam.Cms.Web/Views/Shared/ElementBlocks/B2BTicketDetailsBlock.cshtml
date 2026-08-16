@@ -1,0 +1,129 @@
+﻿@*
+    ====================================
+    Version: 5.0.0.0. Modified: 20210818
+    ====================================
+*@
+
+@using EPiServer.ServiceLocation
+@using EPiServer.Web
+@using EPiServer.Forms.Core
+@using EPiServer.Forms.EditView
+@using EPiServer.Forms.Implementation.Elements
+@using EPiServer.Web.Routing
+@model B2BTicketDetailsBlock
+
+<style>
+    .container {
+        text-align: center;
+        margin-top: 60px;
+    }
+
+    h1 {
+        color: #6f7f8d;
+        font-size: 34px;
+        margin-bottom: 20px;
+    }
+
+    /* two small dots */
+    .dots {
+        margin-bottom: 30px;
+    }
+
+        .dots span {
+            display: block;
+            width: 6px;
+            height: 6px;
+            background: #6f7f8d;
+            border-radius: 50%;
+            margin: 6px auto;
+        }
+
+    /* status information */
+    .status-box {
+        display: inline-block;
+        text-align: left;
+    }
+
+    .row {
+        font-size: 22px;
+        margin: 15px 0;
+    }
+
+    .label {
+        font-weight: 500;
+    }
+
+    .value {
+        margin-left: 10px;
+    }
+
+    .btn-container {
+        text-align: center;
+        margin-top: 80px;
+    }
+
+    .home-btn {
+        display: inline-block;
+        background: #0aa63a;
+        color: #fff;
+        padding: 18px 60px;
+        font-size: 20px;
+        text-decoration: none;
+        border-radius: 999px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+        .home-btn:hover {
+            background: #089532;
+        }
+</style>
+@{
+    var isViewModeInvisibleElement = Model is IViewModeInvisibleElement;
+    var extraCSSClass = isViewModeInvisibleElement ? ConstantsFormsUI.CSS_InvisibleElement : string.Empty;
+    var formElement = Model.FormElement;
+    var hiddenField = Model.HiddenFieldName;
+}
+
+@if (EPiServer.ServiceLocation.ServiceLocator.Current.GetInstance<IContextModeResolver>().CurrentMode == ContextMode.Edit)
+{
+    <span class="Form__Element FormHidden @extraCSSClass">@Model.EditViewFriendlyTitle</span>
+}
+else
+{
+    <input name="@formElement.ElementName" id="@formElement.Guid" type="hidden"
+           value="@Model.GetDefaultValue()"
+           class="@hiddenField Form__Element FormHidden FormHideInSummarized" @Html.Raw(Model.AttributesString) data-f-type="hidden" />
+}
+
+<div class="container">
+    <h1>@Model?.ComplaintStatus</h1>
+@*     <div class="dots">
+        <span></span>
+        <span></span>
+    </div> *@
+    <div class="status-box">
+        <div class="row">
+            <span class="label">@Model?.TicketNumber</span>
+            <span class="value" id="TicketNumber"></span>
+        </div>
+        <div class="row">
+            <span class="label">@Model?.Opened:</span>
+            <span class="value" id="ticketOpenStatus"></span>
+        </div>
+        <div class="row">
+            <span class="label">@Model?.Closed:</span>
+            <span class="value" id="ticketClosedStatus"></span>
+        </div>
+        <div class="row">
+            <span class="label">@Model?.MobileNumber:</span>
+            <span class="value" id="ticketMobileNumber"></span>
+        </div>
+    </div>
+    @if (LinkItemExtensions.IsValid(Model?.ContinueHomePage))
+    {
+        <div class="btn-container">
+            <a href="@UrlResolver.Current.ContentUrl(Model?.ContinueHomePage?.Href)" target="@Model?.ContinueHomePage?.Target" class="home-btn">@Model?.ContinueHomePage?.Text</a>
+        </div>
+    }
+</div>

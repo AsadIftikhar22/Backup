@@ -1,0 +1,14 @@
+﻿@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using static Salam.Cms.Shared.Models.SalamConstants
+
+@model ProductSku
+
+@if (!string.IsNullOrEmpty(Model.InternationalMinutes))
+{
+    <div class="chips chips--primary plan-card__chip"><span class="chips__text">@Model.InternationalMinutes @ContentHelper.GetDefaultFrontendLabel(Model, CatalogueAPIfields.InternationalMinutes)</span></div>
+}
+else
+{
+    <div class="plan-card__divider"></div>
+}

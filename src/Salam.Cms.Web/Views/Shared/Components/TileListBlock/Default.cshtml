@@ -1,0 +1,52 @@
+﻿@using Salam.Cms.Web.Features.Common.Helpers
+@using Salam.Cms.Web.Features.TileListBlock.ViewModels
+@using System.Globalization
+@model TileListBlockViewModel
+
+@{
+    var tilelistItems = ContentHelper.GetTileListItems(Model.CurrentBlock?.Items.GetAllowedReferences(),
+                            CultureInfo.CurrentUICulture);
+
+    var tilelistCounts = tilelistItems.Count();
+    bool lessFourTilelist = tilelistCounts <= 4 ? true : false; 
+    string cssFourTilelist=!lessFourTilelist
+                ? "flex: 0 1 calc(33.333% - 20px);"
+                : "";
+}
+<style>
+    .tilelist-card {
+      @cssFourTilelist;
+    }
+</style>
+<div class="tilelist-container" @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle)>
+    <h2 class="tilelist-base-font">@Html.PropertyFor(x=>x.CurrentBlock.Heading)</h2>
+     <p class="tilelist-description base-font">
+        @Html.PropertyFor(x => x.CurrentBlock.Description)
+     </p>
+    
+     <div class="tilelist-business-type-cards">
+
+        @{
+        
+            @foreach (var item in tilelistItems)
+            {
+                <div class="tilelist-card">
+                    <div>
+                        <h4 class="tilelist-base-font">@item?.Heading.ToUpper()</h4>
+                        <p class="tilelist-base-font">@item?.Description</p>
+                    </div>
+                    @if(item.Cta != null)
+                    {
+                        <a class="tilelist-arrow-button" aria-label="" href="@Url.ContentUrl(item.Cta?.Href)">
+                            <svg width="57" height="56" viewBox="0 0 57 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0.5 12C0.5 5.37258 5.87258 0 12.5 0H44.5C51.1274 0 56.5 5.37258 56.5 12V44C56.5 50.6274 51.1274 56 44.5 56H12.5C5.87258 56 0.5 50.6274 0.5 44V12Z" fill="#003831"></path>
+                                <path d="M19.5 20L27.5 28.1096L19.7162 36" stroke="#01A809" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M29.5 20L37.5 28.1096L29.7162 36" stroke="#01EC0D" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </a>
+                    }
+                  </div>
+            }
+        }
+    </div>
+</div>

@@ -1,0 +1,42 @@
+@using Salam.Cms.Web.Features.CustomerRightsPage.ViewModels
+
+@model CustomerRightsPageViewModel
+
+<style>
+/* Remove green area on right (scrollbar) and under footer for Customer Rights page */
+body.customer-rights-page,
+html:has(body.customer-rights-page) {
+    background-color: #f1f1f1 !important;
+}
+/* Main content area: same background so no green strip below content / above footer */
+body.customer-rights-page main {
+    background-color: #f1f1f1 !important;
+}
+/* Hide empty/stray paragraph that CMS may add (green bar under content) */
+body.customer-rights-page .entry-content-page .wpb_wrapper > p {
+    display: none !important;
+}
+</style>
+<div class="salam-layout">
+    <div class="dxp-layout-content-area">
+        <div class="entry-content-page post--content">
+            <div class="vc_row wpb_row vc_row-fluid">
+                <div class="wpb_column vc_column_container vc_col-sm-12">
+                    <div class="vc_column-inner">
+                        <div class="wpb_wrapper">
+                            @Html.PropertyFor(x => x.CurrentPage.MainContent)
+                            @if (Model.CurrentPage.CustomCss != null && !string.IsNullOrWhiteSpace(Model.CurrentPage.CustomCss.ToString()))
+                            {
+                                <style>@Html.Raw(Model.CurrentPage.CustomCss)</style>
+                            }
+                            @if (Model.CurrentPage.CustomHtml != null && !string.IsNullOrWhiteSpace(Model.CurrentPage.CustomHtml.ToString()))
+                            {
+                                @Html.Raw(Model.CurrentPage.CustomHtml)
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,84 @@
+﻿@using Salam.Cms.Shared.Models.Catalogue.Data
+@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Catalogue.ViewModels
+@using Salam.Cms.Web.Features.Common.Helpers
+@using System.Globalization
+@using static Salam.Cms.Shared.Models.SalamConstants
+
+@model AddOnViewModel
+
+@{
+    var price = @Model.Price.Split(' ');
+    var priceValue = decimal.Parse(price[0], CultureInfo.InvariantCulture);
+}
+
+<div class="plan-card-sudo-tag">
+    <div class="plan-card-wrapper">
+        <div class="plan-card">
+            <p class="plan-card__heading">
+                @Model.Name
+            </p>
+            <div class="plan-card__header">
+                <h3 class="plan-card__price">@price[0]</h3>
+                <div class="plan-card__price-pm">
+                    @price[1] / @Model.Validity
+                </div>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.VatText))
+            {
+                <div class="plan-card__vat">
+                    @Model.VatText
+                </div>
+            }
+            <div class="plan-card__divider"></div> @* TODO: Featured Visible Fields *@
+            <ul class="plan-card__items">
+                @foreach (var field in @Model.VisibleFields)
+                {
+                    @if (field == "CallsMinutes" || field == "Data")
+                    {
+                        Model.Product.CallLabel = Model.CallLabel;
+                        Model.Product.CallAmountText = Model.CallAmountText;
+                        Model.Product.DataText = Model.DataText;
+                    }
+                    string partialUrl = string.Format("~/Views/Shared/Partials/ProductSelector/Common/{0}.cshtml", field);
+                    @await Html.PartialAsync(partialUrl, @Model.Product as ProductSku)
+                }
+            </ul>
+        </div>
+        <div class="plan-card__footer">
+            @{
+                var planDetails = Model.PlanDetailsLinks
+                .FirstOrDefault(planDetail => planDetail.ProductId == @Model.Product.Id);
+
+            }
+            @if (planDetails != null)
+            {
+                <a href="@Url.ContentUrl(planDetails.PlanDetailsUrl)" class="button button-theme--transparent-primary">
+                    <span>@Model.PlanDetailsText</span>
+                    <div class="arrow">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </a>
+            }
+            @if (LinkItemExtensions.IsValid(Model?.BuyNowStaticURL))
+            {
+                <div class="plan-card__footer">
+                    <a href="@Url.ContentUrl(Model?.BuyNowStaticURL.Href)"
+                       class="button button-theme--simple-outlined plan-card__footer-button"
+                       target="@Model?.BuyNowStaticURL?.Target">
+                        <span>@Model?.BuyNowStaticURL?.Text</span>
+                        <div class="arrow"><span></span><span></span><span></span><span></span><span></span></div>
+                    </a>
+                </div>
+            }
+            @{
+                string buyNowPartialView = string.Format("~/Views/Shared/Partials/ProductSelector/{0}/_BuyLink.cshtml", @Model.ProductType);
+                @await Html.PartialAsync(buyNowPartialView, (Model.Product as ProductSku, Model.HandOffUrl, Model.ProductButtonText))
+            }
+        </div>
+    </div>
+</div>

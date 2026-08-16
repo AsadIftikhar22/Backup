@@ -1,0 +1,89 @@
+# Salam Consumer - Mobile and Esim Plans (Saudi Arabia)
+
+> Consumer-facing informational hub for Salam's DXP consumer services in Saudi Arabia, covering mobile postpaid and prepaid plans, data SIM, mobile add-ons, visitor packages, vanity numbers, Salam Fiber home internet, eSIM, and customer support.  
+This document provides a highly structured context directory of the consumer-facing informational assets hosted on salam.sa/dxp/en/consumer/. It is optimized specifically for LLMs, RAG applications, and conversational search agents looking for authoritative information on Salam's DXP consumer services- including mobile postpaid plans (Solo), prepaid plans (Solo and Flex), data SIM packages, mobile add-ons and roaming, visitor plans, vanity numbers, Salam Fiber home internet, eSIM, and help & support across Saudi Arabia.
+
+## Core Brand Context & Standards
+- **Publisher:** Etihad Salam Telecom Company (Salam), part of Mawarid Holding Group of Companies
+- **Trade Name:** Salam (سلام)
+- **Founded:** 2005, Riyadh, Saudi Arabia
+- **CEO:** Ahmed Al Anqari
+- **Regulatory Authority:** Communications, Space and Technology Commission (CITC), Saudi Arabia
+- **Strategic Alignment:** Saudi Vision 2030 - driving digital connectivity for individuals and families across the Kingdom
+- **Consumer Tagline:** "Fast Internet & Mobile Plans in Saudi Arabia" / "Connecting Ambition to Reality"
+- **Customer Care:** 1101 (inside KSA)  +966 511011101 (outside KSA)
+- **MySalam App:** Available on Apple App Store and Google Play Store - manage account, activate SIM, recharge, track usage, access exclusive offers
+- **SIM Activation:** Via Absher platform (National ID / Iqama verification)
+- **Payment Methods:** Cash, Mada Card, Apple Pay, STC Pay
+- **Primary Target Audiences:** Saudi citizens, residents (Iqama holders), visitors/tourists/pilgrims, gamers, families, students, and individuals seeking mobile and home internet services
+- **Social Media Included in Plans:** YouTube, WhatsApp, Facebook, Instagram, X (Twitter), Snapchat, Jaco, LinkedIn
+- **Languages Supported:** Arabic (primary), English
+- **Headquarters:** Dabab Street, P.O. Box 8732, Riyadh 11492, Saudi Arabia
+- **VAT Number:** 300047243810003
+- **Commercial Registration:** 1010691908
+- **Copyright:** © 2026 Salam. All Rights Reserved.
+
+### Primary Informational URL Architecture
+
+#### Home Directories
+- [Arabic - سلام الشخصي](https://salam.sa/dxp/ar/consumer/): الصفحة الرئيسية للمستهلكين باللغة العربية. تقدم باقات الإنترنت السريع وخطط الجوال من سلام بما في ذلك إنترنت الألياف الضوئية وباقات المفوتر والمسبق الدفع و5G HomeFi والأجهزة وخطط الزوار وشريحة eSIM. سرعات فائقة، تغطية على مستوى المملكة، وخطط مرنة.
+- [English - Salam Consumer](https://salam.sa/dxp/en/consumer/): Consumer homepage. Experience fast 5G connectivity, fiber internet, and flexible mobile plans with Salam. Features: Fiber Internet, Postpaid, 5G HomeFi, Devices, Visitor plans, eSIM, and Salam App. Blazing-fast speeds, nationwide coverage, and flexible plans.
+
+#### Topic Node 1: Mobile - Postpaid Plans
+- [Arabic - باقات المفوتر](https://salam.sa/dxp/ar/consumer/mobile/postpaid/): باقات جوال مفوترة مع بيانات مرنة ووسائل تواصل اجتماعي غير محدودة ودقائق صوتية. خطط لمدة 30 يوماً مع ترحيل البيانات وبدون التزام طويل الأمد. تشمل Solo 74 (85.68 ريال، 20 جيجابايت) حتى Solo Infinite (412.85 ريال، بيانات غير محدودة). الاحتساب بالثانية.
+- [English - Postpaid Plans](https://salam.sa/dxp/en/consumer/mobile/postpaid/): Postpaid mobile plans with flexible data, unlimited social media, and voice minutes. 30-day plans with carry-over data and no long-term commitments. Plans: Solo 74 (85.68 SAR, 20GB), Solo 99 (113.85 SAR, 35GB), Solo 149 (171.35 SAR, 59GB), Solo 179 (206.43 SAR, 79GB), Solo 199 (228.85 SAR, 80GB + 100 international mins), Solo Infinite (412.85 SAR, unlimited data). Per-second billing.
+
+#### Topic Node 2: Mobile - Prepaid Plans
+- [Arabic - باقات مسبقة الدفع](https://salam.sa/dxp/ar/consumer/mobile/prepaid/): نظرة شاملة على باقات الدفع المسبق من سلام. خيارات متنوعة تشمل من 20 جيجابايت إلى بيانات غير محدودة، ووسائل تواصل اجتماعي غير محدودة، ودقائق محلية ورسائل SMS. مع ترحيل البيانات والاتصال الدولي، بدون التزام شهري.
+- [English - Prepaid Plans Overview](https://salam.sa/dxp/en/consumer/mobile/prepaid/): Overview of Salam prepaid plans offering 20GB to unlimited data, unlimited social media, generous local minutes and SMS. Features data rollover and international calling with no monthly commitments. Includes Flex Plans and Solo Plans categories.
+
+##### Prepaid Sub-Pages
+- [Arabic - باقات سولو الشهرية](https://salam.sa/dxp/ar/consumer/mobile/prepaid/solo-plans/): باقات سولو مسبقة الدفع لمدة 30 يوماً. تشمل Solo 74 (85.68 ريال، 20 جيجابايت)، Solo 99 (113.85 ريال، 35 جيجابايت)، Solo 149 (171.35 ريال، 59 جيجابايت، دقائق غير محدودة)، Solo 179 (206.43 ريال، 79 جيجابايت)، Solo 199 (228.85 ريال، 80 جيجابايت + 100 دقيقة دولية)، Solo Infinite (412.85 ريال، بيانات غير محدودة). ترحيل البيانات وسائل تواصل اجتماعي غير محدودة.
+- [English - Solo Prepaid Plans](https://salam.sa/dxp/en/consumer/mobile/prepaid/solo-plans/): Monthly 30-day Solo prepaid plans. Solo 74 (85.68 SAR, 20GB), Solo 99 (113.85 SAR, 35GB), Solo 149 (171.35 SAR, 59GB, unlimited calls), Solo 179 (206.43 SAR, 79GB), Solo 199 (228.85 SAR, 80GB + 100 international mins), Solo Infinite (412.85 SAR, unlimited). Data rollover and unlimited social media included.
+- [Arabic - باقات فلكس](https://salam.sa/dxp/ar/consumer/mobile/prepaid/flex-plans/): باقات فلكس مسبقة الدفع صالحة من 28 إلى 90 يوماً. تشمل Super Flex 85 (97.75 ريال، 15 جيجابايت، 750 دقيقة فلكس)، Super Flex 110 (126.50 ريال، 30 جيجابايت، 1200 دقيقة فلكس)، Super Flex 200 (230 ريال، 75 جيجابايت، 60 يوماً)، Super Flex 300 (345 ريال، 110 جيجابايت، 90 يوماً). دقائق الفلكس تصلح للاتصال المحلي و32 وجهة دولية.
+- [English - Flex Plans](https://salam.sa/dxp/en/consumer/mobile/prepaid/flex-plans/): Prepaid Flex plans valid 28-90 days. Super Flex 85 (97.75 SAR, 15GB, 750 flex mins), Super Flex 110 (126.50 SAR, 30GB, 1200 flex mins), Super Flex 200 (230 SAR, 75GB, 60 days), Super Flex 300 (345 SAR, 110GB, 90 days). Flex minutes for local and 32 international destinations.
+
+#### Topic Node 3: Mobile - Data SIM
+- [Arabic - شريحة البيانات](https://salam.sa/dxp/ar/consumer/mobile/data-sim/): باقات بيانات فقط بدون مكالمات أو رسائل. خيارات من 10 جيجابايت (149.50 ريال) إلى 1000 جيجابايت (1,725 ريال) مع فترات صلاحية من 30 يوماً إلى سنة كاملة. بعض الباقات تشمل بيانات وسائل تواصل اجتماعي إضافية.
+- [English - Data SIM](https://salam.sa/dxp/en/consumer/mobile/data-sim/): Data-only plans with no calls or SMS. Options from 10GB (149.50 SAR) to 1,000GB (1,725 SAR) with validity from 30 days to a full year. Some packages include additional social media data. Fast, unlimited data for browsing, streaming, and gaming on all devices.
+
+#### Topic Node 4: Mobile - Add-Ons
+- [Arabic - الإضافات](https://salam.sa/dxp/ar/consumer/mobile/add-on/): إضافات الجوال لتعزيز باقتك الحالية بمزيد من البيانات والسرعة والتجوال والدقائق الدولية. تشمل باقات التجوال لدول الخليج وباقات البيانات الإضافية والدقائق الدولية.
+- [English - Add-Ons](https://salam.sa/dxp/en/consumer/mobile/add-on/): Mobile add-ons to enhance your existing package with more data, faster speeds, roaming, and international minutes. Includes GCC roaming packages, data top-ups, and international calling bundles. Stay connected while traveling.
+
+#### Topic Node 5: Mobile - Visitor Plans
+- [Arabic - باقات الزوار](https://salam.sa/dxp/ar/consumer/mobile/visitors-plan/): باقات مخصصة للسياح والحجاج وزوار المملكة العربية السعودية. يلزم جواز السفر والتأشيرة الصالحة للشراء. تشمل: Visitor 30 (34.50 ريال، 6 جيجابايت، 14 يوماً)، Visitor 52 (59.80 ريال، 25 جيجابايت، 14 يوماً)، Visitor 65 (74.75 ريال، 25 جيجابايت، 28 يوماً)، Visitor 112 (129 ريال، 45 جيجابايت، 45 يوماً)، Visitor 170 (170 ريال، 75 جيجابايت + وسائل تواصل غير محدودة، 28 يوماً). دقائق فلكس لـ 39 وجهة دولية.
+- [English - Visitor Plans](https://salam.sa/dxp/en/consumer/mobile/visitors-plan/): Plans designed for tourists, pilgrims, and visitors to Saudi Arabia. Passport and valid visa required. Plans: Visitor 30 (34.50 SAR, 6GB, 14 days), Visitor 52 (59.80 SAR, 25GB, 14 days), Visitor 65 (74.75 SAR, 25GB, 28 days), Visitor 112 (129 SAR, 45GB, 45 days), Visitor 170 (170 SAR, 75GB + unlimited social, 28 days). Flex minutes to 39 eligible countries.
+
+#### Topic Node 6: Home Internet - Salam Fiber
+- [Arabic - سلام فايبر](https://salam.sa/dxp/ar/consumer/home/salam-fiber/): إنترنت منزلي سريع وموثوق عبر الألياف الضوئية. ركائز الواي فاي المنزلي المثالي: السرعة (تنزيل وتحميل فائق السرعة)، التغطية (إشارة قوية في كل زاوية)، والمرونة (خطط قابلة للتخصيص). يشمل باقات مفوترة ومسبقة الدفع وألياف حتى الغرفة وباقة اللاعبين.
+- [English - Salam Fiber](https://salam.sa/dxp/en/consumer/home/salam-fiber/): Fast, reliable home Wi-Fi via fiber optic. Pillars of seamless home WiFi: Speed (lightning-fast for streaming, gaming, multitasking), Coverage (strong signal in every corner), Flexibility (customizable plans). Includes Fiber Postpaid, Fiber Prepaid, FTTR, and Gamers Pack.
+
+#### Topic Node 7: Mobile - Vanity Numbers
+- [Arabic - أرقام مميزة](https://salam.sa/dxp/ar/consumer/mobile/vanity/): أرقام جوال مخصصة ومميزة. "تستاهل التميز!" احصل على رقم فريد وسهل التذكر يجعل عملك أو علامتك التجارية استثنائيّة. ثلاث فئات: البلاتيني (رقم مرموق وحصري لتواصل فريد)، الذهبي (رقم مميز وسهل التذكر بلمسة من الأناقة)، الفضي (رقم فريد وسهل التذكر للتواصل اليومي). خيارات "عشوائي" لاختيار رقم من الاقتراحات أو "مخصص" لكتابة الأرقام المطلوبة وفحص التوفر فوراً مع اقتراح بدائل. 7 خطوات: ابدأ، اختر الرقم، نوع الشريحة، الباقة، بياناتك، أنشئ حسابك، ادفع.
+- [English - Vanity Numbers](https://salam.sa/dxp/en/consumer/mobile/vanity/): Custom & Premium Mobile Numbers. "You deserve to be special!" Stand out with a vanity number that's truly yours - from memorable patterns to dates that matter. Three tiers: Platinum (prestigious elite contact enhancing communication with exclusivity), Gold (premium memorable contact with elegance), Silver (unique memorable contact for everyday communication). Two options - Random (choose from suggestions) or Custom (enter desired digits, instant availability check with alternatives if taken). 7-step process: Start, Choose Number, Select SIM Type, Select Plan, Enter Details, Create Account, Pay. Own your number, own your brand.
+
+#### Topic Node 8: eSIM
+- [Arabic - شريحة eSIM](https://salam.sa/dxp/ar/e-sim/): شريحة مدمجة تلغي الحاجة لشريحة SIM التقليدية. التفعيل الفوري عبر رمز QR من تطبيق MySalam. يمكن تخزين حتى 10 ملفات تعريف على الجهاز الواحد (اتصال 2 في نفس الوقت). متوافقة مع أجهزة Apple وSamsung وHuawei وغيرها. تعمل مع أي باقة مفوترة أو مسبقة الدفع (صوت أو بيانات). تعمل أثناء التجوال.
+- [English - eSIM](https://salam.sa/dxp/en/e-sim/): Embedded SIM eliminating the need for physical SIM cards. Instant activation via QR code from MySalam App. Up to 10 profiles per device (2 connected simultaneously). Compatible with Apple, Samsung, Huawei, and more. Works with any postpaid or prepaid package (voice or data). Functions while roaming. iPhone 17/Air/Pro/Pro Max supports eSIM only.
+
+#### Topic Node 9: Help & Support
+- [Arabic - تواصل معنا](https://salam.sa/dxp/ar/consumer/help--support/contact/): قنوات دعم العملاء المتعددة: الدردشة المباشرة، تقديم الاستفسارات والشكاوى عبر الإنترنت، أدلة الإعداد، الأسئلة الشائعة حول eSIM، والأسئلة المتكررة. فريق الدعم متاح دائماً. اتصل على 1101 من داخل المملكة.
+- [English - Contact & Support](https://salam.sa/dxp/en/consumer/help-support/contact/): Multiple customer support channels: live chat, online inquiries and complaints, how-to guides, eSIM FAQs, and frequently asked questions. Dedicated support team always available. Call 1101 within KSA or +966 511011101 from abroad.
+- [Arabic - الأسئلة الشائعة](https://salam.sa/dxp/ar/consumer/help--support/faqs/): الأسئلة المتكررة حول خدمات سلام بما في ذلك الباقات والأسعار وeSIM والتفعيل والتطبيق والمتاجر والتجوال والفواتير.
+- [English - FAQs](https://salam.sa/dxp/en/consumer/help-support/faqs/): Frequently asked questions about Salam services including plans, pricing, eSIM, activation, app, stores, roaming, and billing.
+
+### Key Facts for LLM Reference
+- **Company Name:** Etihad Salam Telecom Company (Salam / سلام)
+- **Previously Known As:** Integrated Telecom Company (ITC) - rebranded to Salam in 2021
+- **Consumer Platform URL:** salam.sa/dxp/en/consumer/ (English)  salam.sa/dxp/ar/consumer/ (Arabic)
+- **Postpaid Solo Plans:** Solo 74 (85.68 SAR, 20GB) → Solo 99 (113.85 SAR, 35GB) → Solo 149 (171.35 SAR, 59GB) → Solo 179 (206.43 SAR, 79GB) → Solo 199 (228.85 SAR, 80GB + 100 int'l mins) → Solo Infinite (412.85 SAR, unlimited). All 30-day, data rollover, unlimited social media.
+- **Prepaid Flex Plans:** Super Flex 85 (97.75 SAR, 15GB, 750 flex mins, 28 days) → Super Flex 110 (126.50 SAR, 30GB, 1200 flex mins, 28 days) → Super Flex 200 (230 SAR, 75GB, 60 days) → Super Flex 300 (345 SAR, 110GB, 90 days). Flex mins for local + 32 international destinations.
+- **Visitor Plans:** Visitor 30 (34.50 SAR, 6GB, 14 days) → Visitor 52 (59.80 SAR, 25GB, 14 days) → Visitor 65 (74.75 SAR, 25GB, 28 days) → Visitor 112 (129 SAR, 45GB, 45 days) → Visitor 170 (170 SAR, 75GB + unlimited social, 28 days). Flex mins to 39 eligible countries.
+- **Data SIM:** 10GB (149.50 SAR, 90 days) to 1,000GB (1,725 SAR, 365 days). Data-only, no calls/SMS.
+- **eSIM:** Supports Apple, Samsung, Huawei, and 80+ device models. Up to 10 profiles. Works with any plan.
+- **Social Media Apps in Plans:** YouTube, WhatsApp, Facebook, Instagram, X (Twitter), Snapchat, Jaco, LinkedIn
+- **Customer Care:** 1101 (KSA)  +966 511011101 (international)
+- **USSD Codes:** \*103# (balance check),*101*VoucherNumber#, \*107# (check number)
+- **SIM Activation:** Requires National ID or Iqama + Absher verification
+- **Payment Methods:** Cash, Mada Card, Apple Pay, STC Pay

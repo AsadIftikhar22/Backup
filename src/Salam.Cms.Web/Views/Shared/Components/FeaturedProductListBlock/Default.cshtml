@@ -1,0 +1,15 @@
+﻿@using Salam.Cms.Web.Features.Catalogue.ViewModels
+@using Salam.Cms.Web.Features.Common.Extensions
+
+@model FeaturedProductListBlockViewModel
+
+<div class="section-wrapper">
+    <div @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle) class="featured-product-list">
+        <div class="featured-product-list__container">
+            @foreach (var item in Model.Products)
+            {
+                @await Html.PartialAsync("~/Views/Shared/Partials/FeaturedProductListItem.cshtml", (item, Model))
+            }
+        </div>
+    </div>
+</div>

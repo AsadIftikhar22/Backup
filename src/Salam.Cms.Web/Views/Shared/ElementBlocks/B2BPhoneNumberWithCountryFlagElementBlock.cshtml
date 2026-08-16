@@ -1,0 +1,347 @@
+﻿@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using EPiServer.Forms.UI.SelectionFactory
+@using System.Globalization;
+@using Salam.Cms.Web.Features.Forms.B2BNumberElementBlock
+@model B2BPhoneNumberWithCountryFlagElementBlock
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@16.0.3/build/js/intlTelInput.min.js"></script>
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/intl-tel-input@16.0.3/build/css/intlTelInput.css">
+@{
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    string RequiredMessage = string.Empty;
+    var cssClasses = Model.GetValidationCssClasses();
+    var autoComplete = AutoCompleteSelectionFactory.GetStringValue(Model.AutoComplete);
+    var culture = CultureInfo.DefaultThreadCurrentCulture?.TwoLetterISOLanguageName ?? CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+    var requiredValidator = Model?.ValidatorMessages.FirstOrDefault()?.Validator.Equals("EPiServer.Forms.Implementation.Validation.RequiredValidator")
+                            ?? false;
+    if (requiredValidator)
+    {
+        RequiredMessage=Model?.ValidatorMessages.FirstOrDefault()?.Message;
+    }
+    var RegexPattern = Model?.RegexPattern;
+    var RegexErrorMessage = Model?.RegexErrorMessage;
+}
+<style>
+    [dir="rtl"] .pr-form-info-icon {
+        margin-left: 8px;
+        margin-right: 0px;
+    }
+
+    .error-message {
+        background-color: unset !important;
+        color:red !important;
+    }
+</style>
+@using (Html.BeginElement(Model, new { @class = "FormTextbox FormTextbox--Number" + cssClasses, @data_f_type = "textbox", data_f_modifier = "number" }))
+{
+    <div class="form-field">
+        <div lang=@culture>
+            <label for="@formElement.Guid" class="Form__Element__Caption">@labelText</label>
+            <div class="pr-form-phone-wrapper">
+               <input name="@formElement.ElementName" id="phone-number-@formElement.Guid" type="tel" step="any"
+                       pattern="@RegexPattern" placeholder="@Html.FilterHtml(Model.PlaceHolder)"
+                       class="pr-form-phone-input form-input  FormTextbox__Input tel-input" @Html.Raw(Model.AttributesString) data-f-datainput
+                       value="@Model.GetDefaultValue()" aria-describedby="@Util.GetAriaDescribedByElementName(formElement.ElementName)"
+                       autocomplete="@autoComplete" />
+                <div class="pr-form-info-icon">i</div>
+
+            </div>
+        </div>
+        <span id="phone-number-error-@formElement.Guid" class="error-message" style="display: none;">@Html.ValidationMessageFor(Model)</span>
+        @Model.RenderDataList()
+    </div>
+}
+
+            <script>
+
+    (function ($) {
+        "use strict";
+
+        $(document).ready(function () {
+            var phoneInput = document.querySelector(
+                "#phone-number-@formElement.Guid"
+            );
+
+            if (!phoneInput) {
+                return;
+            }
+
+            var errorElement = document.querySelector(
+                "#phone-number-error-@formElement.Guid"
+            );
+
+            /*
+             * Check whether intlTelInput is loaded
+             */
+            if (typeof window.intlTelInput !== "function") {
+                console.error("intl-tel-input library is not loaded.");
+                return;
+            }
+
+            /*
+             * Initialize intl-tel-input
+             */
+            var phoneIti = window.intlTelInput(phoneInput, {
+                initialCountry: "sa",
+                separateDialCode: true,
+                utilsScript:
+                    "https://cdn.jsdelivr.net/npm/intl-tel-input@16.0.3/build/js/utils.js"
+            });
+
+            /*
+             * Store instance on the input itself.
+             * This prevents global variable conflicts.
+             */
+            phoneInput._iti = phoneIti;
+
+
+            /*
+             * Show error
+             */
+            function showError(message) {
+
+                phoneInput.classList.add("input-validation-error");
+                phoneInput.classList.add("is-invalid");
+
+                phoneInput.setCustomValidity(message);
+
+                if (errorElement) {
+                    errorElement.style.display = "block";
+                    errorElement.innerText = message;
+                }
+            }
+
+
+            /*
+             * Clear error
+             */
+            function clearError() {
+
+                phoneInput.classList.remove("input-validation-error");
+                phoneInput.classList.remove("is-invalid");
+
+                phoneInput.setCustomValidity("");
+
+                if (errorElement) {
+                    errorElement.style.display = "none";
+                    errorElement.innerText = "";
+                }
+            }
+
+
+            /*
+             * Validate phone number
+             */
+            function validatePhoneNumber() {
+
+                var value = phoneInput.value.trim();
+                var pattern = phoneInput.getAttribute("pattern");
+                var isRequired = phoneInput.required;
+                var regex = new RegExp(pattern);
+                var message = "";
+
+
+                /*
+                 * Required
+                 */
+                if (isRequired && value === "") {
+
+                    message = "@Html.Raw(RequiredMessage)";
+                }
+
+
+                /*
+                 * Optional + empty
+                 */
+                else if (!isRequired && value === "") {
+
+                    clearError();
+
+                    return true;
+                }
+
+
+                /*
+                 * Numbers only
+                 */
+                // else if (!/^\d+$/.test(value)) {
+
+                //     message = "Please enter numbers only.";
+                // }
+
+
+                /*
+                 * Saudi Arabia
+                 */
+                else if (
+                    phoneIti.getSelectedCountryData().iso2 === "sa"
+                ) {
+
+                    /*
+                     * Saudi number:
+                     *
+                     * 5XXXXXXXX
+                     *
+                     * 9 digi
+                     * ts
+                     * Starts with 5
+                     */
+                       var dialCode = phoneIti.getSelectedCountryData().dialCode;
+                       var fullNumber = "+" + dialCode + value;
+
+                       if (!regex.test(fullNumber)) {
+
+                        message =
+                            "@Html.Raw(RegexErrorMessage)";
+                    }
+                }
+
+
+                /*
+                 * Other countries
+                 */
+                else if (!phoneIti.isValidNumber()) {
+
+                    message = "@Html.Raw(Model.ValidPhoneNumberErrorMsg)";
+                }
+
+
+                /*
+                 * Show / clear error
+                 */
+                if (message !== "") {
+
+                    showError(message);
+
+                    return false;
+                }
+
+                clearError();
+
+                return true;
+            }
+
+
+            /*
+             * Input
+             */
+            phoneInput.addEventListener("input", function () {
+
+                /*
+                 * Only numbers
+                 */
+                this.value = this.value.replace(/\D/g, "");
+
+                /*
+                 * Saudi maximum = 9 digits
+                 */
+                if (
+                    phoneIti.getSelectedCountryData().iso2 === "sa"
+                ) {
+                    this.value = this.value.substring(0, 9);
+                }
+
+                /*
+                 * Don't immediately show error while typing
+                 */
+                clearError();
+            });
+
+
+            /*
+             * Blur
+             */
+            phoneInput.addEventListener("blur", function () {
+
+                validatePhoneNumber();
+
+            });
+
+
+            /*
+             * Country changed
+             */
+            phoneInput.addEventListener("countrychange", function () {
+
+                clearError();
+
+            });
+
+
+            /*
+             * Optimizely Forms
+             */
+            if (typeof $$epiforms !== "undefined") {
+
+                $$epiforms(".EPiServerForms").on(
+                    "formsStepValidating",
+                    function (event) {
+
+                        if (!validatePhoneNumber()) {
+
+                            event.preventDefault();
+
+                        }
+
+                    }
+                );
+            }
+
+
+            /*
+             * Form submit
+             */
+            var form = phoneInput.closest("form");
+
+            if (form) {
+
+                $(form).on("submit", function (event) {
+
+                    if (!validatePhoneNumber()) {
+
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                    }
+
+                });
+            }
+
+        });
+
+    })(jQuery);
+
+        </script>
+
+                <style>
+    .form-field,
+    .pr-form-phone-wrapper {
+        overflow: visible !important;
+    }
+/* 
+    .iti {
+        width: 100%;
+        position: relative;
+    }
+
+    .iti__country-container {
+        z-index: 9999 !important;
+    }
+
+    .iti__dropdown-content {
+        z-index: 99999 !important;
+    }
+
+    .iti__country-list {
+        z-index: 99999 !important;
+        position: absolute !important;
+    }
+ */
+    .pr-form-phone-wrapper {
+        position: relative;
+        overflow: visible !important;
+    }
+                </style>

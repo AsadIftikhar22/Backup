@@ -1,0 +1,24 @@
+@using Salam.Cms.Web.Features.FaqBlock.Models
+
+@model FaqItemBlock
+
+@{
+    var accordionId = ViewData["AccordionId"]?.ToString() ?? "";
+    var itemId = ViewData["ItemId"]?.ToString() ?? "";
+    var isFirst = (bool)(ViewData["IsFirst"] ?? false);
+}
+
+<div class="single-faq">
+    <div class="faq-question @(isFirst ? "" : "collapsed")" 
+         data-toggle="collapse" 
+         data-target="#@itemId" 
+         aria-expanded="@(isFirst ? "true" : "false")">
+        <p>@Html.PropertyFor(m => m.Question)</p>
+    </div>
+    <div id="@itemId" class="faq-collapse collapse @(isFirst ? "show" : "")" data-parent="#@accordionId">
+        <div class="faq-answer">
+            <p class="faq-answer-styling">@Html.Raw(Model.Answer)</p>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,56 @@
+﻿@using EPiServer.Forms.Helpers.Internal;
+@using EPiServer.Shell.Web.Mvc.Html;
+@using EPiServer.Forms;
+@using Salam.Cms.Web.Features.Forms.B2BRecaptchaBlock
+@model B2BRecaptchaBlock
+@{
+    var formElement = Model.FormElement;
+}
+
+@using (Html.BeginElement(Model, new { @class = "FormTextbox" , data_f_type = "textbox" }))
+{
+    <div class="form-field">
+        <input name="clientToken" id="@formElement.Guid" type="hidden" class="form-input FormTextbox__Input"
+               aria-describedby="@Util.GetAriaDescribedByElementName(formElement.ElementName)"
+               data-f-datainput/>
+       
+    </div>
+}
+
+
+
+@if (!String.IsNullOrEmpty(Model.recaptchaToken))
+{
+    @* <script nonce src="https://www.google.com/recaptcha/enterprise.js?render=@Model.recaptchaToken">
+        </script>
+        <script>
+
+            declare const grecaptcha: {
+              enterprise: {
+                ready(callback: () => void): void;
+                execute(siteKey: string, options: { action: string }): Promise<string>;
+              };
+            };
+            grecaptcha.enterprise.ready(async () => {
+                 const token: string = await grecaptcha.enterprise.execute(
+                   '@Model.recaptchaToken',
+                   { action: 'LOGIN' }
+                 );
+                   }
+        </script> *@
+
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LeWk_IrAAAAAB8X7aUu0xGyZGYPZA9UBjgCLPEP"></script>
+    <script>
+        grecaptcha.enterprise.ready(async () => {
+          const token = await grecaptcha.enterprise.execute(
+            '6LeWk_IrAAAAAB8X7aUu0xGyZGYPZA9UBjgCLPEP',
+            { action: 'LOGIN' }
+          );
+
+          document.getElementById('@formElement.Guid').value = token;
+          console.log("Token is",token)
+          console.log("Field value is",document.getElementById('@formElement.Guid').value )
+
+        });
+    </script>
+}

@@ -1,0 +1,288 @@
+﻿@using Salam.Cms.Web.Features.TabsFormBlock.ViewModels
+@model TabsFormBlockViewModel
+
+<style>
+    /* Tabs container */
+    .tabs-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap; /* wrap on smaller screens */
+        border-bottom: 2px solid #eee;
+        margin-bottom: 20px;
+        gap: 64px;
+    }
+
+    /* Individual tab */
+    .tab {
+        flex: 0 0 auto;
+        min-width: 250px;
+        text-align: center;
+        padding: 12px 20px;
+        cursor: pointer;
+        font-weight: 800;
+        color: #888;
+        position: relative;
+        transition: all 0.3s;
+        border-radius: 8px 8px 0 0;
+        font-size: 25px;
+    }
+
+        .tab.active {
+            color: #00B248;
+        }
+
+            .tab.active::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -2px;
+                width: 100%;
+                height: 5px;
+                background-color: #00B248;
+            }
+
+    /* Tab contents */
+    .tabs-contents {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .tab-content {
+        display: none;
+        width: 100%;
+        text-align: left;
+        padding: 20px 0;
+        box-sizing: border-box;
+    }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Form container styling */
+        .tab-content .section-container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .tab {
+            flex: 1 1 100%;
+            margin-bottom: 10px;
+        }
+    }
+
+    .page-header {
+        text-align: center;
+        padding: 0px 20px 40px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .page-title {
+        font-size: 48px;
+        font-weight: 700;
+        color: #0b2b3c;
+        margin-bottom: 20px;
+    }
+
+    .page-desc {
+        font-size: 20px;
+        color: #000;
+        margin: 5px 0;
+    }
+
+    @@media (max-width:768px) {
+        .page-title {
+            font-size: 32px;
+        }
+
+        .page-desc {
+            font-size: 16px;
+        }
+
+        .page-header {
+            padding: 40px 15px;
+        }
+    }
+
+    .navigation-circle {
+        display: flex;
+        flex-direction:row;
+        align-items: center;
+        justify-content: center;
+        width: 25%;
+        margin: 0px auto 70px auto;
+    }
+
+    .step-circle {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        border: 2px solid #ccc;
+        background-color: white;
+        color: #ccc;
+        text-align: center;
+        line-height: 21px;
+        font-weight: 900;
+        user-select: none;
+        transition: all 0.3s ease;
+        font-size: 12px;
+    }
+
+    .line {
+        flex: 1;
+        height: 2px;
+        background-color: #ccc;
+        transition: background-color 0.3s ease;
+    }
+
+    /* Completed steps */
+    .step-circle.completed {
+        background-color: #00a651; /* green */
+        border-color: #00a651;
+        color: white;
+    }
+
+    .line.completed {
+        background-color: #00a651;
+    }
+
+    /* Active step */
+    .step-circle.active {
+        background-color: #00a651;
+        border-color: #00a651;
+        color: white;
+    }
+
+    /* Upcoming steps (default styles) */
+    .step-circle.upcoming {
+        background-color: white;
+        border-color: #ccc;
+        color: #80909a;
+    }
+
+    @@media (max-width: 768px) {
+        .navigation-circle {
+            width: 30%;
+            margin: 33px 30px 0px 30px;
+        }
+
+        .step-circle {
+            width: 20px;
+            height: 20px;
+            line-height: 15px;
+            font-size: 13px;
+        }
+    }
+
+</style>
+
+@{
+    var MainComplaintFormTab = Model.CurrentBlock;
+}
+<div class="navigation-circle">
+    <div class="step-circle" data-step="1">1</div>
+    <div class="line"></div>
+    <div class="step-circle" data-step="2">2</div>
+    <div class="line"></div>
+    <div class="step-circle" data-step="3">3</div>
+</div>
+
+<div class="page-header">
+    <h1 class="page-title">@MainComplaintFormTab?.Title</h1>
+    @if (MainComplaintFormTab.Descrption != null)
+    {
+        <p class="page-desc">
+            @Html.Raw(MainComplaintFormTab.Descrption)
+        </p>
+    }
+</div>
+
+<div class="tabs-container">
+    @for (int i = 0; i < Model.CurrentBlock.tabFormItems.Count; i++)
+    {
+        var item = Model.CurrentBlock.tabFormItems[i];
+        <div class="tab @(i == 0 ? "active" : "")" data-tab="@item.DataTab">
+            @item.Title
+        </div>
+    }
+</div>
+
+<div class="tabs-contents">
+    @for (int i = 0; i < Model.CurrentBlock.tabFormItems.Count; i++)
+    {
+        var item = Model.CurrentBlock.tabFormItems[i];
+        <div id="@item.DataTab" class="tab-content @(i == 0 ? "active" : "")">
+            @Html.PropertyFor(x => item.FormContentArea, new { CssClass = "" })
+        </div>
+    }
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        function updateTabsByStep(stepIndex) {
+            if (stepIndex >= 2) {
+                disableTabs();
+            } else {
+                enableTabs();
+            }
+        }
+
+        function disableTabs() {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.add('disabled-tab');
+                tab.style.pointerEvents = 'none';
+                tab.style.opacity = '0.8';
+                tab.style.cursor = 'not-allowed';
+            });
+        }
+
+        function enableTabs() {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('disabled-tab');
+                tab.style.pointerEvents = 'auto';
+                tab.style.opacity = '1';
+                tab.style.cursor = 'pointer';
+            });
+        }
+
+         document.addEventListener("click", function (e) {
+        const btn = e.target;
+        if (btn.classList.contains("btnNext")) {
+            disableTabs();
+        }
+    });
++
+        const tabs = document.querySelectorAll(".tab");
+        const contents = document.querySelectorAll(".tab-content");
+
+        tabs.forEach(tab => {
+            tab.addEventListener("click", function () {
+                tabs.forEach(t => t.classList.remove("active"));
+                contents.forEach(c => c.classList.remove("active"));
+                this.classList.add("active");
+                const contentId = this.dataset.tab;
+                document.getElementById(contentId)?.classList.add("active");
+            });
+        });
+
+    const formSection = document.querySelector(".form-section");
+
+    if (formSection) {
+        function removeClassesRecursively(element) {
+            element.removeAttribute("class");
+            element.querySelectorAll("*").forEach(child => {
+                child.removeAttribute("class");
+            });
+        }
+
+        // Remove all classes from formSection and its children
+        removeClassesRecursively(formSection);
+    }
+    });
+</script>

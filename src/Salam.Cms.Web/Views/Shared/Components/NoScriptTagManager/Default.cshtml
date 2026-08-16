@@ -1,0 +1,10 @@
+﻿@model Salam.Cms.Web.Features.Common.Components.TagManager.TagManagerViewModel
+
+@if (!string.IsNullOrWhiteSpace(Model.TagManagerKey) && (Context.Request.Cookies["Marketing"] == "true"))
+{
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=@Model.TagManagerKey" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+}

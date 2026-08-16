@@ -1,0 +1,139 @@
+﻿@using EPiServer.Framework.Web
+@using EPiServer.Framework.Web.Mvc.Html
+@using Salam.Cms.Core.Settings.Abstract
+@using Salam.Cms.Web.Features.ClientResources.Common
+@using Salam.Cms.Web.Features.Common.Components.Footer
+@using Salam.Cms.Web.Features.Common.Components.Navigation
+@using Salam.Cms.Web.Features.Common.Components.PageNavigator.Components
+@using Salam.Cms.Web.Features.Common.Interfaces
+@using Salam.Cms.Web.Features.Common.Components.MetaData
+@using Salam.Cms.Web.Features.Common.Components.TagManager
+@using Salam.Cms.Web.Features.Common.Models
+@using Salam.Cms.Web.Features.Hero.Components
+@using EPiServer.Core
+@using EPiServer.Web
+@using EPiServer.Web.Mvc.Html
+@using Salam.Cms.Web.Features.Hero.Models
+@using Salam.Cms.Web.Features.Landing.Models
+@using Salam.Cms.Web.Features.Settings.Models
+@using Salam.Cms.Web.Features.Support.Components
+@using Salam.Cms.Web.Features.WholesaleLanding.Models
+
+@model ISitePageViewModel<SitePageData>
+
+@{
+    var hasPageNavigator = false;
+    @inject ISettingsManager _settingsManager;
+    bool HideCookieBanner = _settingsManager.GetSettings<WebLayoutSettings>().HideCookieBanner;
+}
+<!DOCTYPE html>
+<html lang="@(Model.CurrentPage?.Language)" dir="@(Model.CurrentPage?.Language.TextInfo.IsRightToLeft == true ? "rtl" : "ltr")">
+<head>
+    @await Component.InvokeAsync(typeof(MetaDataViewComponent),   new
+    {
+        currentPage = Model.CurrentPage,
+        showSiteTitle = true
+        })
+    @await Component.InvokeAsync(typeof(SocialMetaDataViewComponent), Model.CurrentPage)
+    @await Html.PartialAsync("_Hreflang", Model.CurrentPage)
+    @if (Model.CurrentPage is not FinanceInvestorSitePageData && Model.CurrentPage is not B2bSupportPageData)
+    {
+        <link nonce asp-href-include="~/static/assets/css/swiper-0hDZVvSk.css" rel="stylesheet" />
+        <style nonce>
+            @Html.RenderCssInline("critical-*.css")
+        </style>
+        <style>
+            ul li svg[viewBox="0 0 19 18"] {
+                width: 19px !important;
+                height: 18px !important;
+                flex-shrink: 0;
+            }
+        </style>
+        <link asp-href-include="~/static/assets/css/main-*.css" rel="stylesheet" />
+    }
+    @if (!HideCookieBanner)
+    {
+        <link rel="preconnect" href="https://cdn.optimizely.com" crossorigin>
+        <link rel="preconnect" href="//logx.optimizely.com">
+        <link rel="preload" href="https://cdn.optimizely.com/js/5271816705409024.js" as="script">
+        <script nonce src="https://cdn.optimizely.com/js/5271816705409024.js"></script>
+    }
+    @if (Context.Request.Cookies["Analytics"] == "true" && HideCookieBanner)
+    {
+        <link rel="preconnect" href="https://cdn.optimizely.com" crossorigin>
+        <link rel="preconnect" href="//logx.optimizely.com">
+        <link rel="preload" href="https://cdn.optimizely.com/js/5271816705409024.js" as="script">
+        <script nonce src="https://cdn.optimizely.com/js/5271816705409024.js"></script>
+    }
+    @if (Context.Request.Cookies["Marketing"] == "true" && HideCookieBanner)
+    {
+        <link rel="preconnect" href="https://api.zaius.com" crossorigin>
+    }
+    @if (!HideCookieBanner)
+    {
+        @await Component.InvokeAsync(typeof(TagManagerViewComponent), Model.CurrentPage)
+    }
+    else if (Context.Request.Cookies["Marketing"] == "true" && HideCookieBanner)
+    {
+        @await Component.InvokeAsync(typeof(TagManagerViewComponent), Model.CurrentPage)
+    }
+    @await Html.RenderEPiServerQuickNavigatorAsync()
+    @Html.RequiredClientResources(RenderingTags.Header)
+    <link asp-href-include="~/static/assets/css/b2b-*.css" rel="stylesheet" />
+     <link asp-href-include="~/static/assets/css/b2b_asad-*.css" rel="stylesheet" /> 
+
+</head>
+<body data-content-link="@Model?.CurrentPage?.ContentLink?.ID">
+    @await Component.InvokeAsync(typeof(NoScriptTagManagerViewComponent))
+    @Html.RequiredClientResources(ClientResourceConstants.BodyStart)
+
+        @await Component.InvokeAsync(typeof(NavigationViewComponent), Model.CurrentPage)
+        <main style="padding-top: 136px;">
+
+            @await Component.InvokeAsync(typeof(HeroViewComponent), Model.CurrentPage)
+
+            @if (Model.CurrentPage is IPageNavigatorEnabled pageNavigatorEnabledPage && pageNavigatorEnabledPage.EnablePageNavigator)
+            {
+                hasPageNavigator = true;
+                <div class="anchor-wrapper">
+                    @await Component.InvokeAsync(typeof(PageNavigatorViewComponent), pageNavigatorEnabledPage)
+                </div>
+            }
+
+        @if (Model.CurrentPage is not B2bSupportPageData)
+        {
+           <script nonce asp-src-include="~/static/assets/js/bundle-*.js" type="module"></script>
+        }
+        @if (
+                    Model.CurrentPage?.HeroArea != null &&
+                    Model.CurrentPage.HeroArea.FilteredItems.Any(x => x.LoadContent() is HeroLandingBlock)
+                    )
+            {
+                <script nonce asp-src-include="~/static/assets/js/hero-*.js" type="module"></script>
+            }
+            @RenderBody()
+
+            @await Component.InvokeAsync(typeof(SupportViewComponent), Model.CurrentPage)
+
+        </main>
+  
+
+        @await Component.InvokeAsync(typeof(FooterViewComponent), Model.CurrentPage)
+        @* @await Component.InvokeAsync(typeof(CookiesBannerViewComponent), Model.CurrentPage) *@
+
+    @if (
+        Model.CurrentPage?.HeroArea != null &&
+        Model.CurrentPage.HeroArea.FilteredItems.Any() &&
+        Model.CurrentPage.HeroArea.FilteredItems.Any(x => x.GetContent() is HeroLandingBlock)
+        )
+    {
+        <script nonce asp-src-include="~/static/assets/js/hero-*.js" type="module"></script>
+    }
+
+    @if (hasPageNavigator)
+    {
+        <script nonce asp-src-include="~/static/assets/js/anchorLinks-*.js" type="module"></script>
+    }
+    @Html.RequiredClientResources(RenderingTags.Footer)
+</body>
+</html>

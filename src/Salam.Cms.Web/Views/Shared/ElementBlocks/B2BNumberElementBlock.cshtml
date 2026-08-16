@@ -1,0 +1,90 @@
+﻿@*
+    ====================================
+    Version: 5.7.2.0. Modified: 20231120
+    ====================================
+*@
+
+@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using EPiServer.Forms.UI.SelectionFactory
+@using System.Globalization;
+@using Salam.Cms.Web.Features.Forms.B2BNumberElementBlock
+@model B2BNumberElementBlock
+
+@{
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var cssClasses = Model.GetValidationCssClasses();
+    var autoComplete = AutoCompleteSelectionFactory.GetStringValue(Model.AutoComplete);
+    var Pattern = Model?.RegexPattern ?? "[0-9]{10}";
+    var culture = CultureInfo.DefaultThreadCurrentCulture?.TwoLetterISOLanguageName ?? CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+}
+@if (Model?.NoteProtectionChannel != null)
+{
+    <p><strong>@Html.Raw(Model.NoteProtectionChannel)</strong></p>
+    <br />
+}
+
+@using (Html.BeginElement(Model, new { @class = "FormTextbox FormTextbox--Number" + cssClasses, @data_f_type = "textbox", data_f_modifier = "number" }))
+{
+    <div class="form-field">
+
+        <label for="@formElement.Guid" class="@Model?.FieldMapping Form__Element__Caption">
+            @labelText
+        </label>
+        @if (Model?.ComplaintModelElementBlock?.ModalID != "0")
+        {
+            <img class="note-icon @Model?.ComplaintModelElementBlock?.ModalID" id="@Model?.ComplaintModelElementBlock?.ModalID+openNoteModal"
+                 src="https://staging-mobile.salammobile.sa/wp-content/uploads/2022/06/Group-11.png.webp"
+                 data-src-img="https://staging-mobile.salammobile.sa/wp-content/uploads/2022/06/Group-11.png"
+                 data-src-webp="https://staging-mobile.salammobile.sa/wp-content/uploads/2022/06/Group-11.png.webp"
+                 alt="icon">
+        }
+
+
+        <div id="@Model?.ComplaintModelElementBlock?.ModalID" class="modal-overlay hide">
+            <div class="modal-content">
+                <span id="@Model?.ComplaintModelElementBlock?.ModalID+modal-close" class="modal-close">&times;</span>
+                <div class="modal-body">
+                    <h3>@Model?.ComplaintModelElementBlock?.ModalTitle</h3>
+                    <p>@Model?.ComplaintModelElementBlock?.ModalDescription</p>
+                </div>
+            </div>
+        </div>
+
+
+        <input name="@formElement.ElementName" id="@formElement.Guid" type="text" inputmode="numeric"
+               pattern=@Pattern
+               maxlength="10"
+               placeholder="@Html.FilterHtml(Model?.PlaceHolder)"
+               class="@Model?.FieldMapping @Model?.OTPNumber form-input FormTextbox__Input" @Html.Raw(Model?.AttributesString) data-f-datainput
+               value="@Model?.GetDefaultValue()" aria-describedby="@Util.GetAriaDescribedByElementName(formElement.ElementName)"
+               autocomplete="@autoComplete" />
+        <span id="@formElement.Guid-error" class="error-message">
+            @Html.ValidationMessageFor(Model)
+        </span>
+    </div>
+    @Model.RenderDataList()
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var openNoteModalBtn = document.getElementById("@Model?.ComplaintModelElementBlock?.ModalID+openNoteModal");
+        var noteModal = document.getElementById("@Model?.ComplaintModelElementBlock?.ModalID");
+        var closeModalBtn = document.getElementById("@Model?.ComplaintModelElementBlock?.ModalID+modal-close");
+
+               openNoteModalBtn?.addEventListener("click", function () {
+                            noteModal?.classList.remove("hide");
+               });
+                 
+               closeModalBtn?.addEventListener("click", function () {
+                            noteModal?.classList.add("hide");
+               });
+                 
+                noteModal?.addEventListener("click", function (e) {
+                    if (e.target === noteModal) {
+                        noteModal?.classList.add("hide");
+                    }
+                });
+    });
+</script>

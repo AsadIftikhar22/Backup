@@ -1,0 +1,139 @@
+﻿@using Salam.Cms.Shared.Models.Catalogue.Data
+@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Catalogue.ViewModels
+@using Salam.Cms.Web.Features.Common.Extensions
+@using Salam.Cms.Web.Features.Common.Helpers
+@using System.Globalization
+@using static Salam.Cms.Shared.Models.SalamConstants
+
+@model RelatedProductListBlockViewModel
+
+@if (Model.RelatedProducts.Any())
+{
+    var visibleFields = Model.ParentPage.ProductSelectorVisibleFieldsNew.IsNullOrEmpty() ? Model.ParentPage.ProductSelectorVisibleFields : Model.ParentPage.ProductSelectorVisibleFieldsNew;
+
+    var productTypes = visibleFields
+        .Select(item =>
+        {
+            var parts = ContentHelper.SplitExtensionForVisibleFields(item);
+            return new
+            {
+                ProductType = parts[0],
+                VisibleField = parts.Length > 1 ? parts[1] : string.Empty
+            };
+        })
+        .GroupBy(x => x.ProductType);
+
+    <div class="section-wrapper">
+        <!-- Related Products Block -->
+        <div @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle) class="related-products-block">
+            <div class="related-products-block__wrapper">
+                <!-- Content Block -->
+                <div class="related-products-block__content-block">
+                    <div class="heading-and-description heading-and-description--primary">
+                        <div class="heading-and-description__title">@Html.PropertyFor(m => m.CurrentBlock.Heading)</div>
+                        <div class="heading-and-description__text rte-wrapper">
+                            @Html.PropertyFor(m => m.CurrentBlock.Description)
+                        </div>
+                        <a href="@Url.ContentUrl(Model.ParentPage.ContentLink)" class="button button-theme--transparent-secondary">
+                            <span>@Model.ViewAllLinkText</span>
+                            <div class="arrow"><span></span><span></span><span></span><span></span><span></span></div>
+                        </a>
+                    </div>
+                </div>
+                <!-- Plans Grid -->
+                <div class="related-products-block__plans-grid">
+
+                    @foreach (var product in Model.RelatedProducts)
+                    {
+                        product.Labels = Model.Labels;
+                        <div class="plan-card-wrapper">
+                            <div class="plan-card">
+                                <p class="plan-card__heading">@product.Name</p>
+                                @if (product.SpecialPrice > 0)
+                                {
+                                    <span class="old-price">
+                                        <span class="old-price-amount">@product.Price.ToString("0.##", CultureInfo.InvariantCulture)</span>
+                                        <span class="old-price-text plan-card__price-pm">
+                                            @if (!string.IsNullOrEmpty(Model.Span) && !string.IsNullOrEmpty(product.Validity))
+                                            {
+                                                @Model.DiscountedPriceSpan 
+                                            }
+                                        </span>
+                                    </span>
+                                }
+                                <div class="plan-card__header">
+                                    <h3 class="plan-card__price">
+                                        @if (product.SpecialPrice > 0)
+                                        {
+                                            @product.SpecialPrice?.ToString("0.##", CultureInfo.InvariantCulture)
+                                        }
+                                        else
+                                        {
+                                            @product.Price.ToString("0.##", CultureInfo.InvariantCulture)
+                                        }
+                                    </h3>
+                                    @if (!string.IsNullOrEmpty(Model.Span) || !string.IsNullOrEmpty(product.Validity))
+                                    {
+                                        <div class="plan-card__price-pm">
+                                            @Model.Span @product.Validity
+                                        </div>
+                                    }
+                                </div>
+                                @if (!string.IsNullOrEmpty(Model.VatText))
+                                {
+                                    <div class="plan-card__vat">
+                                        @Model.VatText
+                                    </div>
+                                }
+                                <div class="plan-card__divider"></div>
+                                <ul class="plan-card__items">
+                                    @{
+                                        var productType = productTypes
+                                        .Where(type => type.Key.Equals(product.ProductType))
+                                        .FirstOrDefault();
+                                    }
+
+                                    @if (productType != null)
+                                    {
+                                        @foreach (var field in productType)
+                                        {
+                                            string partialUrl = string.Format("~/Views/Shared/Partials/ProductSelector/Common/{0}.cshtml", field.VisibleField);
+                                            @await Html.PartialAsync(partialUrl, product as ProductSku)
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                            <div class="plan-card__footer">
+                                @{
+                                    var planDetails = Model.PlanDetailsLinks
+                                    .FirstOrDefault(planDetail => planDetail.ProductId == product.Id);
+
+                                }
+                                @if (planDetails != null)
+                                {
+                                    <a href="@Url.ContentUrl(planDetails.PlanDetailsUrl)" class="button button-theme--transparent-primary">
+                                        <span>@Model.PlanDetailsText</span>
+                                        <div class="arrow">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                    </a>
+                                }
+                                @if (productType != null)
+                                {
+                                    string buyNowPartialView = string.Format("~/Views/Shared/Partials/ProductSelector/{0}/_BuyLink.cshtml", productType?.Key);
+                                    @await Html.PartialAsync(buyNowPartialView, (product, Model.HandoffUrl, Model.ProductButtonText))
+                                }
+
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

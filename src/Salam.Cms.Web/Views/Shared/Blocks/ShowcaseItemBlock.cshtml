@@ -1,0 +1,11 @@
+﻿@using Salam.Cms.Web.Features.Showcase.Models
+@using Salam.Cms.Web.Features.Support.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using Salam.Cms.Web.Features.Common.Extensions
+
+@model ShowcaseItemBlock
+
+<!-- START SupportBlock -->
+<div class="usp-card__title">@Html.PropertyFor(m => m.Heading)</div>
+<p class="usp-card__details">@Html.PropertyFor(m => m.MainBody)</p>
+<!-- END SupportBlock -->

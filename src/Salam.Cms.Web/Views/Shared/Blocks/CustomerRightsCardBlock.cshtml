@@ -1,0 +1,37 @@
+@using Salam.Cms.Web.Features.CustomerRightsBlock.Models
+@using EPiServer.Core
+
+@model CustomerRightsCardBlock
+
+@{
+    var linkUrl = "#";
+    if (Model.Link != null && !ContentReference.IsNullOrEmpty(Model.Link))
+    {
+        linkUrl = Url.ContentUrl(Model.Link);
+    }
+    else if (!string.IsNullOrEmpty(Model.LinkUrl))
+    {
+        linkUrl = Model.LinkUrl;
+    }
+    var linkTarget = Model.LinkNewTab ? "_blank" : "_self";
+    var imageUrl = Model.Image != null && !ContentReference.IsNullOrEmpty(Model.Image) ? Url.ContentUrl(Model.Image) : string.Empty;
+}
+
+<a href="@linkUrl" class="information-card-anchor" target="@linkTarget" rel="@(Model.LinkNewTab ? "noopener noreferrer" : null)">
+    <div class="information-card">
+        @if (!string.IsNullOrEmpty(imageUrl))
+        {
+            <img src="@imageUrl" alt="@(Model.Title ?? "Image")">
+        }
+        @if (!string.IsNullOrEmpty(Model.Title))
+        {
+            <h2>@Html.PropertyFor(m => m.Title)</h2>
+        }
+        @if (Model.Description != null && !string.IsNullOrWhiteSpace(Model.Description.ToString()))
+        {
+            <div class="description">
+                @Html.Raw(Model.Description)
+            </div>
+        }
+    </div>
+</a>

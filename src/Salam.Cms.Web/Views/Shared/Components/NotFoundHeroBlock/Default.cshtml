@@ -1,0 +1,30 @@
+﻿@using Salam.Cms.Web.Features.NotFound.ViewModels
+
+@model NotFoundHeroBlockViewModel
+
+<section>
+    <div>
+        <div>
+            <h1>@Model.Title</h1>
+            @if (!Model.MainBody.IsNullOrEmpty())
+            {
+                <div>
+                    @Html.XhtmlString(Model.MainBody)
+                </div>
+            }
+            @if (Model.Links.Any())
+            {
+                foreach (var link in @Model.Links)
+                {
+                    <partial name="~/Views/Shared/Components/NotFoundHeroBlock/LinkButton.cshtml" model="@link" />
+                }
+            }
+            @if (!Model.MainBody.IsNullOrEmpty())
+            {
+                <div>
+                    @Html.XhtmlString(Model.SecondaryBody)
+                </div>
+            }
+        </div>
+    </div>
+</section>

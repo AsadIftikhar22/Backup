@@ -1,0 +1,194 @@
+@using Salam.Cms.Web.Features.CustomerRightsBlock.ViewModels
+@using Salam.Cms.Web.Features.CustomerRightsBlock.Models
+@using EPiServer.Core
+
+@model CustomerRightsSectionBlockViewModel
+
+@{
+    var sectionId = "CustomerRightsSection" + Guid.NewGuid().ToString("N");
+}
+
+<style>
+.dxp-layout-content-area {
+    padding: 0;
+}
+.support-page-wrapper div, * {
+    box-sizing: border-box;
+}
+.salam-layout {
+    font-family: "Codec Pro";
+    font-size: 16px;
+    font-weight: 500;
+}
+body {
+    line-height: 1.67;
+    text-align: left;
+}
+.vc_row {
+    margin-left: -15px;
+    margin-right: -15px;
+}
+.vc_row:after, .vc_row:before {
+    content: " ";
+    display: table;
+}
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+.vc_column_container {
+    padding-left: 0;
+    padding-right: 0;
+}
+.vc_column_container>.vc_column-inner {
+    box-sizing: border-box;
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 100%;
+}
+.vc_column-inner::after, .vc_column-inner::before {
+    content: " ";
+    display: table;
+}
+.customer-rights-container {
+    padding: 80px 0 194px;
+    background-color: #f1f1f1;
+    font-family: ModernEraBlack;
+}
+.customer-rights-container .customer-rights-section-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    margin-bottom: 40px;
+    padding: 1rem;
+}
+.customer-rights-container .customer-rights-section-wrapper h2 {
+    color: #002035;
+    text-align: center;
+    font-family: ModernEraBold;
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 120%;
+    margin-bottom: 50px;
+}
+.customer-rights-container .customer-rights-section-wrapper .introduction {
+    font-family: ModernEra;
+}
+.customer-rights-container .customer-rights-section-wrapper .introduction strong {
+    color: #00b140;
+    font-size: 18px;
+    line-height: 1.67;
+    font-weight: 400;
+}
+.customer-rights-container .customer-rights-section-wrapper .cards-container {
+    padding-top: 30px;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    display: flex;
+}
+.customer-rights-container .customer-rights-section-wrapper .cards-container .information-card-anchor {
+    max-width: 45%;
+    min-width: 300px;
+    display: flex;
+}
+.customer-rights-container .customer-rights-section-wrapper .information-card {
+    font-family: ModernEra;
+    padding: 24px 16px;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0px 2px 8px 0px rgba(0, 32, 53, 0.1);
+    text-align: center;
+}
+.customer-rights-container .customer-rights-section-wrapper .information-card img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+.customer-rights-container .customer-rights-section-wrapper .information-card h2 {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 120%;
+    color: #000;
+    margin: 4px 0 10px;
+}
+.customer-rights-container .customer-rights-section-wrapper .information-card .description p {
+    color: #80909a;
+    text-align: center;
+    font-family: ModernEra;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 120%;
+}
+.vc_column-inner::after {
+    clear: both;
+}
+.vc_column-inner::after, .vc_column-inner::before {
+    content: " ";
+    display: table;
+}
+.vc_row:after {
+    clear: both;
+}
+.vc_row:after, .vc_row:before {
+    content: " ";
+    display: table;
+}
+.alignleft:after, .alignright:after, .blog-details-text:after, .clearfix:after, .page-links:before, .post--content:after {
+    display: table;
+    content: "";
+    clear: both;
+    table-layout: fixed;
+}
+img {
+    vertical-align: middle;
+    border-style: none;
+}
+@@media (min-width: 768px) {
+    .vc_col-sm-12 {
+        width: 100%;
+    }
+}
+@@media (min-width: 768px) {
+    .vc_col-sm-1, .vc_col-sm-10, .vc_col-sm-11, .vc_col-sm-12, .vc_col-sm-2, .vc_col-sm-3, .vc_col-sm-4, .vc_col-sm-5, .vc_col-sm-6, .vc_col-sm-7, .vc_col-sm-8, .vc_col-sm-9 {
+        float: left;
+    }
+}
+
+/* ========== RTL (Arabic) ========== */
+html[dir="rtl"] body { text-align: right; }
+html[dir="rtl"] .customer-rights-container .customer-rights-section-wrapper .information-card { text-align: center; }
+@@media (min-width: 768px) {
+    html[dir="rtl"] .vc_col-sm-1, html[dir="rtl"] .vc_col-sm-10, html[dir="rtl"] .vc_col-sm-11, html[dir="rtl"] .vc_col-sm-12, html[dir="rtl"] .vc_col-sm-2, html[dir="rtl"] .vc_col-sm-3, html[dir="rtl"] .vc_col-sm-4, html[dir="rtl"] .vc_col-sm-5, html[dir="rtl"] .vc_col-sm-6, html[dir="rtl"] .vc_col-sm-7, html[dir="rtl"] .vc_col-sm-8, html[dir="rtl"] .vc_col-sm-9 { float: right; }
+}
+html[dir="rtl"] .salam-layout { font-family: Frutigerlt, "Codec Pro", system-ui, sans-serif; }
+</style>
+
+<div id="@sectionId">
+    <div class="customer-rights-container">
+        <div class="customer-rights-section-wrapper">
+            @if (!string.IsNullOrEmpty(Model.CurrentBlock.Heading))
+            {
+                <h2>@Html.PropertyFor(m => m.CurrentBlock.Heading)</h2>
+            }
+            @if (Model.CurrentBlock.Introduction != null && !string.IsNullOrWhiteSpace(Model.CurrentBlock.Introduction.ToString()))
+            {
+                <div class="introduction">@Html.Raw(Model.CurrentBlock.Introduction)</div>
+            }
+            <div class="cards-container">
+                @if (Model.CurrentBlock.Cards != null)
+                {
+                    foreach (var item in Model.CurrentBlock.Cards.FilteredItems)
+                    {
+                        var card = item.GetContent() as CustomerRightsCardBlock;
+                        if (card != null)
+                        {
+                            @await Html.PartialAsync("~/Views/Shared/Blocks/CustomerRightsCardBlock.cshtml", card)
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

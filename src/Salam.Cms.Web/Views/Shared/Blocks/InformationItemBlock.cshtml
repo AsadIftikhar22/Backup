@@ -1,0 +1,34 @@
+﻿@using Salam.Cms.Web.Features.Common.Components.Images
+
+@model (Salam.Cms.Web.Features.InformationItem.Models.InformationItemBlock block, string style)
+
+@{
+    var (block, style) = Model;
+}
+
+<!-- START InformationItemBlock -->
+@if (style != "information-item-list-block--simple")
+{
+    <div class="plan-info-card plan-info-card--secondary plan-info-card-theme--secondary" role="article">
+        <div class="plan-info-card__icon" role="img" aria-label="Calling icon">
+            <vc:image-renderer image-reference="@block.Icon" svg-render-mode="@SvgRenderMode.Inline" />
+        </div>
+        <div class="plan-info-card__header">
+            <div class="plan-info-card__header__title" role="heading" aria-level="4">@Html.PropertyFor(x => block.Heading)</div>
+            <p class="plan-info-card__header__details">@Html.PropertyFor(x => block.Description)</p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="plan-info-card plan-info-card--featured plan-info-card-theme--tertiary" role="article">
+        <div class="plan-info-card__icon" role="img" aria-label="Business Category 2 icon">
+            <vc:image-renderer image-reference="@block.Icon" svg-render-mode="@SvgRenderMode.Inline" />
+        </div>
+        <div class="plan-info-card__header">
+            <h4 class="plan-info-card__header__featured-title">@Html.PropertyFor(x => block.Heading)</h4>
+            <div class="plan-info-card__header__title" role="heading" aria-level="5">@Html.PropertyFor(x => block.Description)</div>
+        </div>
+    </div>
+}
+<!-- END InformationItemBlock -->

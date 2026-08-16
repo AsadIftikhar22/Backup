@@ -1,0 +1,70 @@
+﻿@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using Salam.Cms.Web.Features.Forms.B2BChoiceElementBlock
+@model B2BChoiceElementBlock
+
+@{
+    var formElement = Model.FormElement;
+    var items = Model.GetItems();
+    var cssClasses = Model.GetValidationCssClasses();
+    bool isIncreaseHeight = Model.IncreaseLabelHeight;
+    if (isIncreaseHeight)
+    {
+        <style>
+            .form-radio-label {
+                position: unset !important;
+            }
+        </style>
+    }
+}
+
+
+@using (Html.BeginElement(Model, new { id = formElement.Guid, @class = "FormChoice" + cssClasses, data_f_type = "choice", aria_invalid = Util.GetAriaInvalidByValidationCssClasses(cssClasses) }, true))
+{
+    <div class="form-field">
+
+        @if (!string.IsNullOrWhiteSpace(Model.Label))
+        {
+            <label>@Model.Label</label>
+        }
+        @foreach (var item in items.Select((item, index) => new { index, item }))
+        {
+            var defaultCheckedString = Model.GetDefaultSelectedString(item.item);
+            var checkedString = string.IsNullOrEmpty(defaultCheckedString) ? string.Empty : "checked";
+            var choiceId = string.Format("{0}_{1}", formElement.Guid, item.index);
+
+            @if (Model.AllowMultiSelect)
+            {
+                <div>
+                    <input type="checkbox" id="@choiceId" name="@formElement.ElementName" value="@item.item.Value" class="FormChoice__Input FormChoice__Input--Checkbox" @checkedString @defaultCheckedString data-f-datainput @Html.Raw(Model.AttributesString) />
+                    <label for="@choiceId" class="FormChoice__Label">
+                        @item.item.Caption
+                    </label>
+                </div>
+            }
+        }
+
+        @if (!Model.AllowMultiSelect)
+        {
+            <div class="form-radio-group">
+                @foreach (var item in items.Select((item, index) => new { index, item }))
+                {
+                    var defaultCheckedString = Model.GetDefaultSelectedString(item.item);
+                    var checkedString = string.IsNullOrEmpty(defaultCheckedString) ? string.Empty : "checked";
+                    var choiceId = string.Format("{0}_{1}", formElement.Guid, item.index);
+                    <label for="@choiceId" class="form-radio-button">
+                        <input type="radio" id="@choiceId" name="@formElement.ElementName" value="@item.item.Value"
+                               class="FormChoice__Input FormChoice__Input--Radio" @checkedString
+                               @defaultCheckedString data-f-datainput @Html.Raw(Model.AttributesString) />
+                        <span class="form-radio-circle">&nbsp;</span>
+                        <span class="form-radio-label" 
+                              style="@Model.LabelPositionCss"> @item.item.Caption</span>
+                    </label>
+                }
+            </div>
+        }
+        <span id="reason-for-call-error" class="error-message">
+            @Html.ValidationMessageFor(Model)
+        </span>
+    </div>
+}

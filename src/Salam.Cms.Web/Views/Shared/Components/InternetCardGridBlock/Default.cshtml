@@ -1,0 +1,174 @@
+﻿@using EPiServer.Core
+@using EPiServer.Core.Internal
+@using EPiServer.Web.Routing
+@using Salam.Cms.Web.Features.AccordInternetCardGridion.ViewModels
+@using Salam.Cms.Web.Features.Common.Components.B2BCategoryNavigator.Components
+@using Salam.Cms.Web.Features.Common.Components.PageNavigator.Components
+@using Salam.Cms.Web.Features.Common.Helpers
+@using Salam.Cms.Web.Features.Common.Interfaces
+@using Salam.Cms.Web.Features.InternetCards.Models
+@using System.Globalization
+@inject IUrlResolver urlResolver
+@inject ContentLoader _contentLoader
+@inject IPageRouteHelper pageRouteHelper
+
+@model InternetCardGridBlockViewModel
+
+@{
+    
+    var hasPageNavigator = false;
+    var currentPageId = pageRouteHelper.Page.ContentLink;
+
+    PageData? parentPage = null; if (!ContentReference.IsNullOrEmpty(currentPageId))
+    { parentPage = _contentLoader.Get<PageData>(currentPageId); }
+}
+<section class="internet-solution-section" @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle)>
+    @if (!String.IsNullOrEmpty(Model.CurrentBlock?.Heading) || !String.IsNullOrEmpty(Model.CurrentBlock?.Description))
+    {
+        <div class="tilelist-container" style="padding:0px; margin-bottom:0px;">
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock?.Heading))
+            {
+                <h1 class="tilelist-base-font"> @Model.CurrentBlock?.Heading</h1>
+            }
+
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock?.Description))
+            {
+                <p class="tilelist-description base-font">@Model.CurrentBlock?.Description</p>
+            }
+        </div>
+    }
+    @if (Model.CurrentBlock?.TabContainer == null)
+    {
+        <div class="internet-card-grid">
+
+            @{
+                var internetCards = ContentHelper.GetInternetCardsGrid(Model.CurrentBlock.Items.GetAllowedReferences(),
+                CultureInfo.CurrentUICulture);
+                @foreach (var item in internetCards)
+                {
+
+                    <div class="internet-solution-card">
+                        <div class="internet-card-inner" @Html.PageNavigatorAnchorAttribute(item.NavigationTitle)>
+                            <div class="internet-card-labels">
+                                @if (item.Labels != null && item.Labels.Any())
+                                {
+                                    foreach (var label in item.Labels)
+                                    {
+                                        <span class="internet-label">@label</span>
+                                    }
+                                }
+                            </div>
+                            @if (!String.IsNullOrEmpty(item.Heading))
+                            {
+                                <h3>@item.Heading</h3>
+                            }
+                            @if (item.Description != null)
+                            {
+                                @Html.Raw(item.Description)
+                            }
+                            <ul class="internet-features">
+                                @if (item.InternetList != null && item.InternetList.Any())
+                                {
+                                    foreach (var InternetList in item.InternetList)
+                                    {
+                                        <li>@InternetList</li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                        <div class="internet-card-actions">
+                            @if (item.EnquireCtaButton != null)
+                            {
+                                var cardId = (item as IContent)?.ContentLink.ID;
+                                var url = urlResolver.GetUrl(item.EnquireCtaButton?.Href);
+                                <a class="internet-btn-solid"
+                                   href="@(url)?cardId=@cardId"
+                                   style="transition: transform 0.6s, color 0.6s; background: rgb(0, 56, 49); transform: translateX(0px);">
+                                    @item?.EnquireCtaButton?.Text
+                                </a>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    }
+    else
+    {
+        @if (parentPage is IPageNavigatorEnabled pageNavigatorEnabledPage && pageNavigatorEnabledPage.EnableCategoryNavigator)
+        {
+            hasPageNavigator = true;
+            <div class="b2b-anchor-wrapper">
+                @await Component.InvokeAsync(typeof(B2BCategoryNavigatorViewComponent), pageNavigatorEnabledPage)
+            </div>
+        }
+       
+        <div class="tab-wrapper">
+
+            @{
+                var GetTabWrappers = ContentHelper.GetTabWrappers(Model.CurrentBlock.TabContainer.GetAllowedReferences(),
+                CultureInfo.CurrentUICulture);
+            }
+
+            @foreach (var itemcontainer in GetTabWrappers)
+            {
+                <div @Html.PageNavigatorAnchorAttribute(itemcontainer.NavigationTitle)
+                     class="tab-content @(@itemcontainer.IsDefault ? "default-tab" : "")">
+                    <div class="internet-card-grid">
+
+                        @{
+                            var internetCards = ContentHelper.GetInternetCardsGrid(itemcontainer.Items.GetAllowedReferences(),
+                            CultureInfo.CurrentUICulture);
+                            @foreach (var item in internetCards)
+                            {
+
+                                <div class="internet-solution-card">
+                                    <div class="internet-card-inner" @Html.PageNavigatorAnchorAttribute(item.NavigationTitle)>
+                                        <div class="internet-card-labels">
+                                            @if (item.Labels != null && item.Labels.Any())
+                                            {
+                                                foreach (var label in item.Labels)
+                                                {
+                                                    <span class="internet-label">@label</span>
+                                                }
+                                            }
+                                        </div>
+                                        @if (!String.IsNullOrEmpty(item.Heading))
+                                        {
+                                            <h3>@item.Heading</h3>
+                                        }
+                                        @if (item.Description != null)
+                                        {
+                                            @Html.Raw(item.Description)
+                                        }
+                                        <ul class="internet-features">
+                                            @if (item.InternetList != null && item.InternetList.Any())
+                                            {
+                                                foreach (var InternetList in item.InternetList)
+                                                {
+                                                    <li>@InternetList</li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                    <div class="internet-card-actions">
+                                        @if (item.EnquireCtaButton != null)
+                                        {
+                                            var cardId = (item as IContent)?.ContentLink.ID;
+                                            var url = urlResolver.GetUrl(item.EnquireCtaButton?.Href);
+                                            <a class="internet-btn-solid"
+                                               href="@(url)?cardId=@cardId"
+                                               style="transition: transform 0.6s, color 0.6s; background: rgb(0, 56, 49); transform: translateX(0px);">
+                                                @item?.EnquireCtaButton?.Text
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

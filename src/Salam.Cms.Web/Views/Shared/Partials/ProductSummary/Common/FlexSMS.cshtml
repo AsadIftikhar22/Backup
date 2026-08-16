@@ -1,0 +1,22 @@
+﻿@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using static Salam.Cms.Shared.Models.SalamConstants
+
+@model ProductSku
+
+
+<div class="plan-info-card plan-info-card--featured plan-info-card-theme--tertiary">
+    <div class="plan-info-card__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M7.5 0C3.36667 0 0 3.36667 0 7.5V15H7.5C11.6333 15 15 11.6333 15 7.5C15 3.36667 11.6333 0 7.5 0ZM9.98333 10H3.31667V8.33333H9.98333V10ZM11.65 6.66667H3.31667V5H11.65V6.66667ZM16.6667 7.56667C16.6333 10.0667 15.6167 12.3333 13.9667 13.9833C12.3333 15.6333 10.0667 16.65 7.56667 16.6667C8.71667 18.65 10.8667 20 13.3333 20H20V13.3333C20 10.8667 18.65 8.71667 16.6667 7.56667Z" fill="currentColor" />
+        </svg>
+    </div>
+    <div class="plan-info-card__header">
+        <h4 class="plan-info-card__header__featured-title">
+            @Model.FlexSMS
+        </h4>
+        <div class="plan-info-card__header__title">
+            @ContentHelper.GetDefaultFrontendLabel(Model, CatalogueAPIfields.FlexSMS)
+        </div>
+    </div>
+</div>

@@ -1,0 +1,6 @@
+﻿@using Salam.Cms.Shared.Models.Catalogue.Data
+@using Salam.Cms.Web.Features.Catalogue.ViewModels
+
+@model ProductLandingPageViewModel
+
+@Html.PropertyFor(x => x.CurrentPage.MainContent, new { CssClass = "section-container bg-ltr" })

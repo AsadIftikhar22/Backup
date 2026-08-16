@@ -1,0 +1,23 @@
+﻿@using EPiServer.Core 
+@using Salam.Cms.Web.Features.Accordion.Models
+@using Salam.Cms.Web.Features.Accordion.ViewModels
+@using Salam.Cms.Web.Features.Common.Extensions
+
+@model BusinessSolutionsBlockViewModel
+
+<section class="layer2-section">
+    <div class="layer2-container">
+        <div class="layer2-heading">
+            @if(!String.IsNullOrEmpty(Model.CurrentBlock.Heading))
+            {
+                <h2>@Html.PropertyFor(x=>x.CurrentBlock.Heading)</h2>
+            }
+        </div>
+        <div class="layer2-description">
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock.Description))
+            {
+                <p>@Model.CurrentBlock.Description</p>
+            }
+        </div>
+    </div>
+</section>

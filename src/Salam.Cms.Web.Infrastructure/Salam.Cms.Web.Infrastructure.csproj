@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Advanced.CMS.AdvancedReviews" Version="1.3.10" />
+		<PackageReference Include="Baaijte.Optimizely.ImageSharp.Web" Version="2.1.3" />
+		<PackageReference Include="EPiServer.Azure" Version="11.2.1" />
+		<PackageReference Include="EPiServer.CloudPlatform.Cms" Version="1.6.3" />
+		<PackageReference Include="EPiServer.ContentDeliveryApi.Cms" Version="3.11.3" />
+		<PackageReference Include="EPiServer.CMS" Version="12.32.5" />
+		<PackageReference Include="EPiServer.CMS.AspNetCore.HtmlHelpers" Version="12.22.5" />
+		<PackageReference Include="EPiServer.CMS.AspNetCore.TagHelpers" Version="12.22.5" />
+		<PackageReference Include="EPiServer.CMS.AspNetCore.Templating" Version="12.22.5" />
+		<PackageReference Include="EPiServer.CMS.AspNetCore.Routing" Version="12.22.5" />
+		<PackageReference Include="EPiServer.Framework" Version="12.22.5" />
+		<PackageReference Include="EPiServer.Cms.WelcomeIntegration.Graph" Version="2.1.4" />
+		<PackageReference Include="EPiServer.Cms.WelcomeIntegration.UI" Version="2.1.4" />
+		<!--<PackageReference Include="EPiServer.Hosting" Version="12.22.5" />-->
+		<PackageReference Include="EPiServer.Find.Cms" Version="16.5.0" />
+		<PackageReference Include="Geta.NotFoundHandler.Optimizely" Version="5.0.13" />
+		<PackageReference Include="Geta.Optimizely.Categories" Version="1.1.2" />
+		<PackageReference Include="Geta.Optimizely.ContentTypeIcons" Version="2.0.2" />
+		<PackageReference Include="Geta.Optimizely.Sitemaps" Version="3.1.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.4" />
+		<PackageReference Include="OpenIddict.Server" Version="6.0.0" />
+		<PackageReference Include="Optimizely.Cms.Cmp.Publishing" Version="1.3.0" />
+		<PackageReference Include="SixLabors.ImageSharp.Web.Providers.Azure" Version="2.0.2" />
+		<PackageReference Include="Stott.Optimizely.RobotsHandler" Version="4.0.0" />
+		<PackageReference Include="Stott.Security.Optimizely" Version="3.0.2" />
+		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
+		<PackageReference Include="UNRVLD.ODP.VisitorGroups" Version="2.1.0.59" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Salam.Cms.Shared.Models\Salam.Cms.Shared.Models.csproj" />
+		<ProjectReference Include="..\Salam.Cms.Core.Services\Salam.Cms.Core.Services.csproj" />
+		<ProjectReference Include="..\Salam.Cms.Core.Settings\Salam.Cms.Core.Settings.csproj" />
+	</ItemGroup>
+	
+</Project>

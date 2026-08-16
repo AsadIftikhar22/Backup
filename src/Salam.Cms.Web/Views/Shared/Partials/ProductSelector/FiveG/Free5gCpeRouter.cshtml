@@ -1,0 +1,11 @@
+﻿@using Salam.Cms.Shared.Models.Catalogue.Data
+@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using static Salam.Cms.Shared.Models.SalamConstants
+
+@model ProductSku
+
+@if (Model.Free5gCpeRouter == true)
+{
+    <div class="chips chips--primary plan-card__chip"><span class="chips__text">@ContentHelper.GetDefaultFrontendLabel(Model, CatalogueAPIfields.Free5gCpeRouter)</span></div>
+}

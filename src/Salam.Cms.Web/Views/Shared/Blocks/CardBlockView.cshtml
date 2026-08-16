@@ -1,0 +1,80 @@
+﻿@using Salam.Cms.Shared.Models.Common.Enums
+@using Salam.Cms.Web.Features.Cards.ViewModels
+@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.InformationItem.Enums
+@using PictureRenderer
+@using PictureRenderer.Profiles
+
+@model CardBlockViewModel
+
+@{
+    string IsEnquireClass = string.Empty;
+    if (Model.CurrentBlock.IsEnquireProduct)
+        IsEnquireClass = "is-enquire";
+}
+<!-- START CardBlock -->
+<div class="card-block @Model.Theme @Model.Layout @Model.Style">
+    <div class="card-block__featured-image-wrapper">
+        @if (Model.CurrentBlock.Media != null && Model.ImageProfile != null)
+        {
+            @await Html.Picture(Model.CurrentBlock.Media,
+            Model.ImageProfile, new PictureAttributes
+            {
+                LazyLoading = LazyLoading.Browser,
+                ImgDecoding = ImageDecoding.Sync,
+                ImgFetchPriority = FetchPriority.Low
+            })
+                }
+    </div>
+
+    @if (Model.CurrentBlock.MainBody != null || !String.IsNullOrEmpty(Model.CurrentBlock.Heading))
+    {
+        <div class="quick-link-card @IsEnquireClass">
+            <div class="quick-link-card__content">
+                @if (!Model.CurrentBlock.Icon.IsNullOrEmpty())
+                {
+                    <div class="quick-link-card__icon">
+                        <vc:image-renderer image-reference="@Model.CurrentBlock.Icon" svg-render-mode="@SvgRenderMode.Inline" />
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.CurrentBlock.BadgeText))
+                {
+                    <div class="chips">
+                        <span class="chips__text">@Html.PropertyFor(m => m.CurrentBlock.BadgeText)</span>
+                    </div>
+                }
+
+                <div class="quick-link-card__text">
+                    <div class="quick-link-card__heading">
+                        @Html.PropertyFor(m => m.CurrentBlock.Heading)
+                        <div class="quick-link-card__sub-heading">
+                            @* Optional second heading line *@
+                            @* @Html.PropertyFor(m => m.HeadingLineTwo) *@
+                        </div>
+                    </div>
+
+                    <div class="quick-link-card__subtext">
+                        <div class="rte-wrapper">
+                            @Html.RenderRichTextContent(m => m.CurrentBlock.MainBody)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (!Model.CurrentBlock.LinkItems.IsNullOrEmpty())
+            {
+                if (Model.ButtonStyle == StyleOption.Simple)
+                {
+                    @await Html.PartialAsync("~/Views/Shared/Partials/SimpleButton.cshtml", Model.CurrentBlock.LinkItems)
+                }
+                else
+                {
+                    @await Html.PartialAsync("~/Views/Shared/Partials/ButtonRow.cshtml", Model.CurrentBlock.LinkItems)
+                }
+            }
+
+        </div>
+    }
+</div>
+<!-- END CardBlock -->

@@ -1,0 +1,33 @@
+﻿@using EPiServer.Cms.WelcomeIntegration.UI.Helpers;
+@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Common.Components.Images
+
+@model ProductSku
+
+<div class="featured-product-list__item">
+    <div class="featured-card">
+        <div class="featured-card__content-wrapper">
+            <div class="featured-card__image">
+                <img src="https://placehold.co/240x240/FFF/B0C1BF" alt="Product" />
+            </div>
+            <div class="featured-card__content">
+                <div class="featured-card__text">
+                    <div class="featured-card__title">
+                        @Html.PropertyFor(m => m.Name)
+                    </div>
+                    <div class="featured-card__price">
+                        @Html.PropertyFor(m => m.Price)
+                        <span class="featured-card__currency">SAR</span>
+                    </div>
+                </div>
+                <button class="icon-button icon-button--primary">
+                    <div class="icon-button__arrows">
+                        <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 2L10 10.1096L2.21622 18" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

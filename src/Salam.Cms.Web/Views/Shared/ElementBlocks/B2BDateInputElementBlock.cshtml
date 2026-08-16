@@ -1,0 +1,52 @@
+﻿@using Salam.Cms.Web.Features.Forms.B2BDateInputElementBlock
+@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using EPiServer.Forms.UI.SelectionFactory 
+@model B2BDateInputElementBlock
+
+<link asp-href-include="~/static/assets/css/flatpicker.min.css" rel="stylesheet" />
+<script nonce asp-src-include="~/static/assets/js/flatpickr.min.js" type="module"></script>
+@{
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var cssClasses = Model.GetValidationCssClasses();
+    var autoComplete = AutoCompleteSelectionFactory.GetStringValue(Model.AutoComplete);
+}
+
+@using (Html.BeginElement(Model, new { @class = "FormTextbox" + cssClasses, data_f_type = "textbox" }))
+{
+    <div class="form-field">
+        <label for="@formElement.Guid" class="Form__Element__Caption">@labelText</label>
+        <input name="@formElement.ElementName" id="@formElement.Guid"
+               type="text"
+              
+               class="form-input FormTextbox__Input"
+               aria-describedby="@Util.GetAriaDescribedByElementName(formElement.ElementName)"
+               placeholder="@Html.FilterHtml(Model.PlaceHolder ?? "")"
+               value="@Model.GetDefaultValue()" @Html.Raw(Model.AttributesString) data-f-datainput
+               autocomplete="@autoComplete" />
+        <span id="@formElement.Guid-error" class="error-message">
+            @Html.ValidationMessageFor(Model)
+        </span>
+        @Model.RenderDataList()
+
+    </div>
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        flatpickr("#@formElement.Guid", {
+            enableTime: true,
+            time_24hr: true,
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "F j, Y",
+            minDate: "today",
+            defaultDate: "@DateTime.Now.ToString("yyyy-MM-dd")",
+            allowInput: true,
+            disableMobile: true
+        });
+
+    });
+</script>

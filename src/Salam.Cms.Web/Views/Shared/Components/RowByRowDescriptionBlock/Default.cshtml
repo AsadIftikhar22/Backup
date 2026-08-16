@@ -1,0 +1,11 @@
+﻿@using Salam.Cms.Web.Features.RowByRowDescriptionBlock.ViewModels
+@model RowByRowDescriptionBlockViewModel
+
+<section class="layer2-section" @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle)>
+    <div class="layer2-container">
+        <div class="layer2-heading">
+            <h2>@Html.PropertyFor(x=>x.CurrentBlock.Heading)</h2>
+        </div>
+        <p class="layer2-description">@Html.PropertyFor(x => x.CurrentBlock.Description)</p>
+    </div>
+</section>

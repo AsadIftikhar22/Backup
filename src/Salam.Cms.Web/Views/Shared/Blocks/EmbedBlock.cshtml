@@ -1,0 +1,15 @@
+﻿@using Salam.Cms.Web.Features.ClientResources.Enums
+@using Salam.Cms.Web.Features.Embed.Models
+
+@model EmbedBlock
+
+@if(Model.RenderLocation == EmbedRenderLocationOption.Inline)
+{
+    <div class="embed-block">
+        <div class="embed-block__content">
+
+            @Html.Raw(Model.EmbedContent)
+
+        </div>
+    </div>
+}

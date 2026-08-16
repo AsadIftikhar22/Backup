@@ -1,0 +1,353 @@
+﻿@using Salam.Cms.Web.Features.SolutionsSectionsBlock.ViewModels 
+@using EPiServer.Web.Routing
+@inject UrlResolver urlResolver
+@model SolutionsSections4By4BlockViewModel
+
+<section class="solutions-section" @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle)>
+    @* Card 1 *@
+    @if (!String.IsNullOrEmpty(Model.CurrentBlock?.Card1Heading)
+        || !String.IsNullOrEmpty(Model.CurrentBlock?.Card1Description)
+        || Model.CurrentBlock?.Card1Cta != null)
+    {
+        <div class="solution-card">
+            <div class="quick-link-card__icon">
+                <svg width="41" height="40" viewBox="0 0 41 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.5835 6.66659C2.5835 4.13528 4.63552 2.08325 7.16683 2.08325C9.69813 2.08325 11.7502 4.13528 11.7502 6.66659C11.7502 9.19789 9.69813 11.2499 7.16683 11.2499C4.63552 11.2499 2.5835 9.19789 2.5835 6.66659Z" fill="#00F249"></path>
+                    <path d="M15.917 6.66659C15.917 4.13528 17.969 2.08325 20.5003 2.08325C23.0316 2.08325 25.0837 4.13528 25.0837 6.66659C25.0837 9.19789 23.0316 11.2499 20.5003 11.2499C17.969 11.2499 15.917 9.19789 15.917 6.66659Z" fill="#00F249"></path>
+                    <path d="M29.25 6.66659C29.25 4.13528 31.302 2.08325 33.8333 2.08325C36.3646 2.08325 38.4167 4.13528 38.4167 6.66659C38.4167 9.19789 36.3646 11.2499 33.8333 11.2499C31.302 11.2499 29.25 9.19789 29.25 6.66659Z" fill="#00F249"></path>
+                    <path d="M2.5835 19.9998C2.5835 17.4685 4.63552 15.4165 7.16683 15.4165C9.69813 15.4165 11.7502 17.4685 11.7502 19.9998C11.7502 22.5311 9.69813 24.5832 7.16683 24.5832C4.63552 24.5832 2.5835 22.5311 2.5835 19.9998Z" fill="#00F249"></path>
+                    <path d="M2.5835 33.3333C2.5835 30.802 4.63552 28.75 7.16683 28.75C9.69813 28.75 11.7502 30.802 11.7502 33.3333C11.7502 35.8646 9.69813 37.9167 7.16683 37.9167C4.63552 37.9167 2.5835 35.8646 2.5835 33.3333Z" fill="#00F249"></path>
+                    <path d="M15.917 19.9998C15.917 17.4685 17.969 15.4165 20.5003 15.4165C23.0316 15.4165 25.0837 17.4685 25.0837 19.9998C25.0837 22.5311 23.0316 24.5832 20.5003 24.5832C17.969 24.5832 15.917 22.5311 15.917 19.9998Z" fill="#00F249"></path>
+                    <path d="M15.917 33.3333C15.917 30.802 17.969 28.75 20.5003 28.75C23.0316 28.75 25.0837 30.802 25.0837 33.3333C25.0837 35.8646 23.0316 37.9167 20.5003 37.9167C17.969 37.9167 15.917 35.8646 15.917 33.3333Z" fill="#00F249"></path>
+                    <path d="M29.25 19.9998C29.25 17.4685 31.302 15.4165 33.8333 15.4165C36.3646 15.4165 38.4167 17.4685 38.4167 19.9998C38.4167 22.5311 36.3646 24.5832 33.8333 24.5832C31.302 24.5832 29.25 22.5311 29.25 19.9998Z" fill="#00F249"></path>
+                    <path d="M29.25 33.3333C29.25 30.802 31.302 28.75 33.8333 28.75C36.3646 28.75 38.4167 30.802 38.4167 33.3333C38.4167 35.8646 36.3646 37.9167 33.8333 37.9167C31.302 37.9167 29.25 35.8646 29.25 33.3333Z" fill="#00F249"></path>
+                </svg>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock.Card1Heading))
+            {
+                <h4 class="base-font">@Model.CurrentBlock.Card1Heading</h4>
+            }
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock.Card1Description))
+            {
+                <p class="base-font">@Model.CurrentBlock.Card1Description</p>
+            }
+            @if (Model.CurrentBlock.Card1Cta != null)
+            {
+                <a href="@urlResolver.GetUrl(Model.CurrentBlock.Card1Cta.Href)" target="@Model.CurrentBlock.Card1Cta?.Target" class="learn-more-link">
+                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.3">
+                            <path opacity="0.8" d="M1 1L5 5.05479L1.10811 9" stroke="#55F25D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M7 1L11 5.05479L7.10811 9" stroke="#34F03D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </g>
+                    </svg>
+                    @Model.CurrentBlock.Card1Cta.Text
+                </a>
+            }
+        </div>
+    }
+
+    @* Card 2 *@
+    @if (!String.IsNullOrEmpty(Model.CurrentBlock?.Card2Heading)
+        || !String.IsNullOrEmpty(Model.CurrentBlock?.Card2Description)
+        || Model.CurrentBlock?.Card2Cta != null)
+    {
+        <div class="solution-card">
+            <div class="quick-link-card__icon">
+                <svg width="41" height="40" viewBox="0 0 41 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.5835 6.66659C2.5835 4.13528 4.63552 2.08325 7.16683 2.08325C9.69813 2.08325 11.7502 4.13528 11.7502 6.66659C11.7502 9.19789 9.69813 11.2499 7.16683 11.2499C4.63552 11.2499 2.5835 9.19789 2.5835 6.66659Z" fill="#00F249"></path>
+                    <path d="M15.917 6.66659C15.917 4.13528 17.969 2.08325 20.5003 2.08325C23.0316 2.08325 25.0837 4.13528 25.0837 6.66659C25.0837 9.19789 23.0316 11.2499 20.5003 11.2499C17.969 11.2499 15.917 9.19789 15.917 6.66659Z" fill="#00F249"></path>
+                    <path d="M29.25 6.66659C29.25 4.13528 31.302 2.08325 33.8333 2.08325C36.3646 2.08325 38.4167 4.13528 38.4167 6.66659C38.4167 9.19789 36.3646 11.2499 33.8333 11.2499C31.302 11.2499 29.25 9.19789 29.25 6.66659Z" fill="#00F249"></path>
+                    <path d="M2.5835 19.9998C2.5835 17.4685 4.63552 15.4165 7.16683 15.4165C9.69813 15.4165 11.7502 17.4685 11.7502 19.9998C11.7502 22.5311 9.69813 24.5832 7.16683 24.5832C4.63552 24.5832 2.5835 22.5311 2.5835 19.9998Z" fill="#00F249"></path>
+                    <path d="M2.5835 33.3333C2.5835 30.802 4.63552 28.75 7.16683 28.75C9.69813 28.75 11.7502 30.802 11.7502 33.3333C11.7502 35.8646 9.69813 37.9167 7.16683 37.9167C4.63552 37.9167 2.5835 35.8646 2.5835 33.3333Z" fill="#00F249"></path>
+                    <path d="M15.917 19.9998C15.917 17.4685 17.969 15.4165 20.5003 15.4165C23.0316 15.4165 25.0837 17.4685 25.0837 19.9998C25.0837 22.5311 23.0316 24.5832 20.5003 24.5832C17.969 24.5832 15.917 22.5311 15.917 19.9998Z" fill="#00F249"></path>
+                    <path d="M15.917 33.3333C15.917 30.802 17.969 28.75 20.5003 28.75C23.0316 28.75 25.0837 30.802 25.0837 33.3333C25.0837 35.8646 23.0316 37.9167 20.5003 37.9167C17.969 37.9167 15.917 35.8646 15.917 33.3333Z" fill="#00F249"></path>
+                    <path d="M29.25 19.9998C29.25 17.4685 31.302 15.4165 33.8333 15.4165C36.3646 15.4165 38.4167 17.4685 38.4167 19.9998C38.4167 22.5311 36.3646 24.5832 33.8333 24.5832C31.302 24.5832 29.25 22.5311 29.25 19.9998Z" fill="#00F249"></path>
+                    <path d="M29.25 33.3333C29.25 30.802 31.302 28.75 33.8333 28.75C36.3646 28.75 38.4167 30.802 38.4167 33.3333C38.4167 35.8646 36.3646 37.9167 33.8333 37.9167C31.302 37.9167 29.25 35.8646 29.25 33.3333Z" fill="#00F249"></path>
+                </svg>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock.Card2Heading))
+            {
+                <h4 class="base-font">@Model.CurrentBlock.Card2Heading</h4>
+            }
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock.Card2Description))
+            {
+                <p class="base-font">@Model.CurrentBlock.Card2Description</p>
+            }
+            @if (Model.CurrentBlock.Card2Cta != null)
+            {
+                <a href="@urlResolver.GetUrl(Model.CurrentBlock.Card2Cta.Href)" target="@Model.CurrentBlock.Card2Cta?.Target" class="learn-more-link">
+                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.3">
+                            <path opacity="0.8" d="M1 1L5 5.05479L1.10811 9" stroke="#55F25D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M7 1L11 5.05479L7.10811 9" stroke="#34F03D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </g>
+                    </svg>
+                    @Model.CurrentBlock.Card2Cta.Text
+                </a>
+            }
+        </div>
+    }
+
+    @* Card 3 *@
+    @if (!String.IsNullOrEmpty(Model.CurrentBlock?.Card3Heading)
+        || !String.IsNullOrEmpty(Model.CurrentBlock?.Card3Description)
+        || Model.CurrentBlock?.Card3Cta != null)
+    {
+        <div class="solution-card">
+            <div class="quick-link-card__icon">
+                <svg width="41" height="40" viewBox="0 0 41 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.5835 6.66659C2.5835 4.13528 4.63552 2.08325 7.16683 2.08325C9.69813 2.08325 11.7502 4.13528 11.7502 6.66659C11.7502 9.19789 9.69813 11.2499 7.16683 11.2499C4.63552 11.2499 2.5835 9.19789 2.5835 6.66659Z" fill="#00F249"></path>
+                    <path d="M15.917 6.66659C15.917 4.13528 17.969 2.08325 20.5003 2.08325C23.0316 2.08325 25.0837 4.13528 25.0837 6.66659C25.0837 9.19789 23.0316 11.2499 20.5003 11.2499C17.969 11.2499 15.917 9.19789 15.917 6.66659Z" fill="#00F249"></path>
+                    <path d="M29.25 6.66659C29.25 4.13528 31.302 2.08325 33.8333 2.08325C36.3646 2.08325 38.4167 4.13528 38.4167 6.66659C38.4167 9.19789 36.3646 11.2499 33.8333 11.2499C31.302 11.2499 29.25 9.19789 29.25 6.66659Z" fill="#00F249"></path>
+                    <path d="M2.5835 19.9998C2.5835 17.4685 4.63552 15.4165 7.16683 15.4165C9.69813 15.4165 11.7502 17.4685 11.7502 19.9998C11.7502 22.5311 9.69813 24.5832 7.16683 24.5832C4.63552 24.5832 2.5835 22.5311 2.5835 19.9998Z" fill="#00F249"></path>
+                    <path d="M2.5835 33.3333C2.5835 30.802 4.63552 28.75 7.16683 28.75C9.69813 28.75 11.7502 30.802 11.7502 33.3333C11.7502 35.8646 9.69813 37.9167 7.16683 37.9167C4.63552 37.9167 2.5835 35.8646 2.5835 33.3333Z" fill="#00F249"></path>
+                    <path d="M15.917 19.9998C15.917 17.4685 17.969 15.4165 20.5003 15.4165C23.0316 15.4165 25.0837 17.4685 25.0837 19.9998C25.0837 22.5311 23.0316 24.5832 20.5003 24.5832C17.969 24.5832 15.917 22.5311 15.917 19.9998Z" fill="#00F249"></path>
+                    <path d="M15.917 33.3333C15.917 30.802 17.969 28.75 20.5003 28.75C23.0316 28.75 25.0837 30.802 25.0837 33.3333C25.0837 35.8646 23.0316 37.9167 20.5003 37.9167C17.969 37.9167 15.917 35.8646 15.917 33.3333Z" fill="#00F249"></path>
+                    <path d="M29.25 19.9998C29.25 17.4685 31.302 15.4165 33.8333 15.4165C36.3646 15.4165 38.4167 17.4685 38.4167 19.9998C38.4167 22.5311 36.3646 24.5832 33.8333 24.5832C31.302 24.5832 29.25 22.5311 29.25 19.9998Z" fill="#00F249"></path>
+                    <path d="M29.25 33.3333C29.25 30.802 31.302 28.75 33.8333 28.75C36.3646 28.75 38.4167 30.802 38.4167 33.3333C38.4167 35.8646 36.3646 37.9167 33.8333 37.9167C31.302 37.9167 29.25 35.8646 29.25 33.3333Z" fill="#00F249"></path>
+                </svg>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock.Card3Heading))
+            {
+                <h4 class="base-font">@Model.CurrentBlock.Card3Heading</h4>
+            }
+            @if (Model.CurrentBlock.Card3Description != null)
+            {
+                <p class="base-font">@Model.CurrentBlock?.Card3Description</p>
+            }
+            @if (Model.CurrentBlock.Card3Cta != null)
+            {
+                <a href="@urlResolver.GetUrl(Model.CurrentBlock.Card3Cta.Href)" target="@Model.CurrentBlock.Card3Cta?.Target" class="learn-more-link">
+                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.3">
+                            <path opacity="0.8" d="M1 1L5 5.05479L1.10811 9" stroke="#55F25D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M7 1L11 5.05479L7.10811 9" stroke="#34F03D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </g>
+                    </svg>
+                    @Model.CurrentBlock.Card3Cta.Text
+                </a>
+            }
+        </div>
+    }
+
+    <div class="solutions-center-text">
+        <h2 class="base-font">@Model?.CurrentBlock.Heading</h2>
+        @if (Model.CurrentBlock.Description != null)
+        {
+            <p class="base-font">@Html.Raw(Model.CurrentBlock.Description)</p>
+        }
+    </div>
+
+
+    @* Card 4 *@
+    @if (!String.IsNullOrEmpty(Model.CurrentBlock?.Card4Heading)
+        || !String.IsNullOrEmpty(Model.CurrentBlock?.Card4Description)
+        || Model.CurrentBlock?.Card4Cta != null)
+    {
+        <div class="solution-card">
+            <div class="quick-link-card__icon">
+                <svg width="41" height="40" viewBox="0 0 41 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.5835 6.66659C2.5835 4.13528 4.63552 2.08325 7.16683 2.08325C9.69813 2.08325 11.7502 4.13528 11.7502 6.66659C11.7502 9.19789 9.69813 11.2499 7.16683 11.2499C4.63552 11.2499 2.5835 9.19789 2.5835 6.66659Z" fill="#00F249"></path>
+                    <path d="M15.917 6.66659C15.917 4.13528 17.969 2.08325 20.5003 2.08325C23.0316 2.08325 25.0837 4.13528 25.0837 6.66659C25.0837 9.19789 23.0316 11.2499 20.5003 11.2499C17.969 11.2499 15.917 9.19789 15.917 6.66659Z" fill="#00F249"></path>
+                    <path d="M29.25 6.66659C29.25 4.13528 31.302 2.08325 33.8333 2.08325C36.3646 2.08325 38.4167 4.13528 38.4167 6.66659C38.4167 9.19789 36.3646 11.2499 33.8333 11.2499C31.302 11.2499 29.25 9.19789 29.25 6.66659Z" fill="#00F249"></path>
+                    <path d="M2.5835 19.9998C2.5835 17.4685 4.63552 15.4165 7.16683 15.4165C9.69813 15.4165 11.7502 17.4685 11.7502 19.9998C11.7502 22.5311 9.69813 24.5832 7.16683 24.5832C4.63552 24.5832 2.5835 22.5311 2.5835 19.9998Z" fill="#00F249"></path>
+                    <path d="M2.5835 33.3333C2.5835 30.802 4.63552 28.75 7.16683 28.75C9.69813 28.75 11.7502 30.802 11.7502 33.3333C11.7502 35.8646 9.69813 37.9167 7.16683 37.9167C4.63552 37.9167 2.5835 35.8646 2.5835 33.3333Z" fill="#00F249"></path>
+                    <path d="M15.917 19.9998C15.917 17.4685 17.969 15.4165 20.5003 15.4165C23.0316 15.4165 25.0837 17.4685 25.0837 19.9998C25.0837 22.5311 23.0316 24.5832 20.5003 24.5832C17.969 24.5832 15.917 22.5311 15.917 19.9998Z" fill="#00F249"></path>
+                    <path d="M15.917 33.3333C15.917 30.802 17.969 28.75 20.5003 28.75C23.0316 28.75 25.0837 30.802 25.0837 33.3333C25.0837 35.8646 23.0316 37.9167 20.5003 37.9167C17.969 37.9167 15.917 35.8646 15.917 33.3333Z" fill="#00F249"></path>
+                    <path d="M29.25 19.9998C29.25 17.4685 31.302 15.4165 33.8333 15.4165C36.3646 15.4165 38.4167 17.4685 38.4167 19.9998C38.4167 22.5311 36.3646 24.5832 33.8333 24.5832C31.302 24.5832 29.25 22.5311 29.25 19.9998Z" fill="#00F249"></path>
+                    <path d="M29.25 33.3333C29.25 30.802 31.302 28.75 33.8333 28.75C36.3646 28.75 38.4167 30.802 38.4167 33.3333C38.4167 35.8646 36.3646 37.9167 33.8333 37.9167C31.302 37.9167 29.25 35.8646 29.25 33.3333Z" fill="#00F249"></path>
+                </svg>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock.Card4Heading))
+            {
+                <h4 class="base-font">@Model.CurrentBlock.Card4Heading</h4>
+            }
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock?.Card4Description))
+            {
+                <p class="base-font">@Model.CurrentBlock.Card4Description</p>
+            }
+            @if (Model.CurrentBlock.Card4Cta != null)
+            {
+                <a href="@urlResolver.GetUrl(Model.CurrentBlock.Card4Cta.Href)" target="@Model.CurrentBlock.Card4Cta?.Target" class="learn-more-link">
+                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.3">
+                            <path opacity="0.8" d="M1 1L5 5.05479L1.10811 9" stroke="#55F25D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M7 1L11 5.05479L7.10811 9" stroke="#34F03D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </g>
+                    </svg>
+                    @Model.CurrentBlock.Card4Cta.Text
+                </a>
+            }
+        </div>
+    }
+
+    @* Card 5 *@
+    @if (!String.IsNullOrEmpty(Model.CurrentBlock?.Card5Heading)
+        || !String.IsNullOrEmpty(Model.CurrentBlock?.Card5Description)
+        || Model.CurrentBlock?.Card5Cta != null)
+    {
+        <div class="solution-card">
+            <div class="quick-link-card__icon">
+                <svg width="41" height="40" viewBox="0 0 41 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.5835 6.66659C2.5835 4.13528 4.63552 2.08325 7.16683 2.08325C9.69813 2.08325 11.7502 4.13528 11.7502 6.66659C11.7502 9.19789 9.69813 11.2499 7.16683 11.2499C4.63552 11.2499 2.5835 9.19789 2.5835 6.66659Z" fill="#00F249"></path>
+                    <path d="M15.917 6.66659C15.917 4.13528 17.969 2.08325 20.5003 2.08325C23.0316 2.08325 25.0837 4.13528 25.0837 6.66659C25.0837 9.19789 23.0316 11.2499 20.5003 11.2499C17.969 11.2499 15.917 9.19789 15.917 6.66659Z" fill="#00F249"></path>
+                    <path d="M29.25 6.66659C29.25 4.13528 31.302 2.08325 33.8333 2.08325C36.3646 2.08325 38.4167 4.13528 38.4167 6.66659C38.4167 9.19789 36.3646 11.2499 33.8333 11.2499C31.302 11.2499 29.25 9.19789 29.25 6.66659Z" fill="#00F249"></path>
+                    <path d="M2.5835 19.9998C2.5835 17.4685 4.63552 15.4165 7.16683 15.4165C9.69813 15.4165 11.7502 17.4685 11.7502 19.9998C11.7502 22.5311 9.69813 24.5832 7.16683 24.5832C4.63552 24.5832 2.5835 22.5311 2.5835 19.9998Z" fill="#00F249"></path>
+                    <path d="M2.5835 33.3333C2.5835 30.802 4.63552 28.75 7.16683 28.75C9.69813 28.75 11.7502 30.802 11.7502 33.3333C11.7502 35.8646 9.69813 37.9167 7.16683 37.9167C4.63552 37.9167 2.5835 35.8646 2.5835 33.3333Z" fill="#00F249"></path>
+                    <path d="M15.917 19.9998C15.917 17.4685 17.969 15.4165 20.5003 15.4165C23.0316 15.4165 25.0837 17.4685 25.0837 19.9998C25.0837 22.5311 23.0316 24.5832 20.5003 24.5832C17.969 24.5832 15.917 22.5311 15.917 19.9998Z" fill="#00F249"></path>
+                    <path d="M15.917 33.3333C15.917 30.802 17.969 28.75 20.5003 28.75C23.0316 28.75 25.0837 30.802 25.0837 33.3333C25.0837 35.8646 23.0316 37.9167 20.5003 37.9167C17.969 37.9167 15.917 35.8646 15.917 33.3333Z" fill="#00F249"></path>
+                    <path d="M29.25 19.9998C29.25 17.4685 31.302 15.4165 33.8333 15.4165C36.3646 15.4165 38.4167 17.4685 38.4167 19.9998C38.4167 22.5311 36.3646 24.5832 33.8333 24.5832C31.302 24.5832 29.25 22.5311 29.25 19.9998Z" fill="#00F249"></path>
+                    <path d="M29.25 33.3333C29.25 30.802 31.302 28.75 33.8333 28.75C36.3646 28.75 38.4167 30.802 38.4167 33.3333C38.4167 35.8646 36.3646 37.9167 33.8333 37.9167C31.302 37.9167 29.25 35.8646 29.25 33.3333Z" fill="#00F249"></path>
+                </svg>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock.Card5Heading))
+            {
+                <h4 class="base-font">@Model.CurrentBlock.Card5Heading</h4>
+            }
+            @if (Model.CurrentBlock.Card5Description != null)
+            {
+                <p class="base-font">@Model.CurrentBlock.Card5Description</p>
+            }
+            @if (Model.CurrentBlock.Card5Cta != null)
+            {
+                <a href="@urlResolver.GetUrl(Model.CurrentBlock.Card5Cta.Href)" target="@Model.CurrentBlock.Card5Cta?.Target" class="learn-more-link">
+                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.3">
+                            <path opacity="0.8" d="M1 1L5 5.05479L1.10811 9" stroke="#55F25D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M7 1L11 5.05479L7.10811 9" stroke="#34F03D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </g>
+                    </svg>
+                    @Model.CurrentBlock.Card5Cta.Text
+                </a>
+            }
+        </div>
+    }
+
+    @* Card 6 *@
+    @if (!String.IsNullOrEmpty(Model.CurrentBlock?.Card6Heading)
+        || !String.IsNullOrEmpty(Model.CurrentBlock?.Card6Description)
+        || Model.CurrentBlock.Card6Cta != null)
+    {
+        <div class="solution-card">
+            <div class="quick-link-card__icon">
+                <svg width="41" height="40" viewBox="0 0 41 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.5835 6.66659C2.5835 4.13528 4.63552 2.08325 7.16683 2.08325C9.69813 2.08325 11.7502 4.13528 11.7502 6.66659C11.7502 9.19789 9.69813 11.2499 7.16683 11.2499C4.63552 11.2499 2.5835 9.19789 2.5835 6.66659Z" fill="#00F249"></path>
+                    <path d="M15.917 6.66659C15.917 4.13528 17.969 2.08325 20.5003 2.08325C23.0316 2.08325 25.0837 4.13528 25.0837 6.66659C25.0837 9.19789 23.0316 11.2499 20.5003 11.2499C17.969 11.2499 15.917 9.19789 15.917 6.66659Z" fill="#00F249"></path>
+                    <path d="M29.25 6.66659C29.25 4.13528 31.302 2.08325 33.8333 2.08325C36.3646 2.08325 38.4167 4.13528 38.4167 6.66659C38.4167 9.19789 36.3646 11.2499 33.8333 11.2499C31.302 11.2499 29.25 9.19789 29.25 6.66659Z" fill="#00F249"></path>
+                    <path d="M2.5835 19.9998C2.5835 17.4685 4.63552 15.4165 7.16683 15.4165C9.69813 15.4165 11.7502 17.4685 11.7502 19.9998C11.7502 22.5311 9.69813 24.5832 7.16683 24.5832C4.63552 24.5832 2.5835 22.5311 2.5835 19.9998Z" fill="#00F249"></path>
+                    <path d="M2.5835 33.3333C2.5835 30.802 4.63552 28.75 7.16683 28.75C9.69813 28.75 11.7502 30.802 11.7502 33.3333C11.7502 35.8646 9.69813 37.9167 7.16683 37.9167C4.63552 37.9167 2.5835 35.8646 2.5835 33.3333Z" fill="#00F249"></path>
+                    <path d="M15.917 19.9998C15.917 17.4685 17.969 15.4165 20.5003 15.4165C23.0316 15.4165 25.0837 17.4685 25.0837 19.9998C25.0837 22.5311 23.0316 24.5832 20.5003 24.5832C17.969 24.5832 15.917 22.5311 15.917 19.9998Z" fill="#00F249"></path>
+                    <path d="M15.917 33.3333C15.917 30.802 17.969 28.75 20.5003 28.75C23.0316 28.75 25.0837 30.802 25.0837 33.3333C25.0837 35.8646 23.0316 37.9167 20.5003 37.9167C17.969 37.9167 15.917 35.8646 15.917 33.3333Z" fill="#00F249"></path>
+                    <path d="M29.25 19.9998C29.25 17.4685 31.302 15.4165 33.8333 15.4165C36.3646 15.4165 38.4167 17.4685 38.4167 19.9998C38.4167 22.5311 36.3646 24.5832 33.8333 24.5832C31.302 24.5832 29.25 22.5311 29.25 19.9998Z" fill="#00F249"></path>
+                    <path d="M29.25 33.3333C29.25 30.802 31.302 28.75 33.8333 28.75C36.3646 28.75 38.4167 30.802 38.4167 33.3333C38.4167 35.8646 36.3646 37.9167 33.8333 37.9167C31.302 37.9167 29.25 35.8646 29.25 33.3333Z" fill="#00F249"></path>
+                </svg>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock.Card6Heading))
+            {
+                <h4 class="base-font">@Model.CurrentBlock.Card6Heading</h4>
+            }
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock.Card6Description))
+            {
+                <p class="base-font">@Model.CurrentBlock.Card6Description</p>
+            }
+            @if (Model.CurrentBlock.Card6Cta != null)
+            {
+                <a href="@urlResolver.GetUrl(Model.CurrentBlock.Card6Cta.Href)" target="@Model.CurrentBlock.Card6Cta?.Target" class="learn-more-link">
+                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.3">
+                            <path opacity="0.8" d="M1 1L5 5.05479L1.10811 9" stroke="#55F25D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M7 1L11 5.05479L7.10811 9" stroke="#34F03D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </g>
+                    </svg>
+                    @Model.CurrentBlock.Card6Cta.Text
+                </a>
+            }
+        </div>
+    }
+
+
+    @* Card 7 *@
+    @if (!String.IsNullOrEmpty(Model.CurrentBlock?.Card7Heading)
+        || !String.IsNullOrEmpty(Model.CurrentBlock?.Card7Description)
+        || Model.CurrentBlock?.Card7Cta != null)
+    {
+        <div class="solution-card">
+            <div class="quick-link-card__icon">
+                <svg width="41" height="40" viewBox="0 0 41 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.5835 6.66659C2.5835 4.13528 4.63552 2.08325 7.16683 2.08325C9.69813 2.08325 11.7502 4.13528 11.7502 6.66659C11.7502 9.19789 9.69813 11.2499 7.16683 11.2499C4.63552 11.2499 2.5835 9.19789 2.5835 6.66659Z" fill="#00F249"></path>
+                    <path d="M15.917 6.66659C15.917 4.13528 17.969 2.08325 20.5003 2.08325C23.0316 2.08325 25.0837 4.13528 25.0837 6.66659C25.0837 9.19789 23.0316 11.2499 20.5003 11.2499C17.969 11.2499 15.917 9.19789 15.917 6.66659Z" fill="#00F249"></path>
+                    <path d="M29.25 6.66659C29.25 4.13528 31.302 2.08325 33.8333 2.08325C36.3646 2.08325 38.4167 4.13528 38.4167 6.66659C38.4167 9.19789 36.3646 11.2499 33.8333 11.2499C31.302 11.2499 29.25 9.19789 29.25 6.66659Z" fill="#00F249"></path>
+                    <path d="M2.5835 19.9998C2.5835 17.4685 4.63552 15.4165 7.16683 15.4165C9.69813 15.4165 11.7502 17.4685 11.7502 19.9998C11.7502 22.5311 9.69813 24.5832 7.16683 24.5832C4.63552 24.5832 2.5835 22.5311 2.5835 19.9998Z" fill="#00F249"></path>
+                    <path d="M2.5835 33.3333C2.5835 30.802 4.63552 28.75 7.16683 28.75C9.69813 28.75 11.7502 30.802 11.7502 33.3333C11.7502 35.8646 9.69813 37.9167 7.16683 37.9167C4.63552 37.9167 2.5835 35.8646 2.5835 33.3333Z" fill="#00F249"></path>
+                    <path d="M15.917 19.9998C15.917 17.4685 17.969 15.4165 20.5003 15.4165C23.0316 15.4165 25.0837 17.4685 25.0837 19.9998C25.0837 22.5311 23.0316 24.5832 20.5003 24.5832C17.969 24.5832 15.917 22.5311 15.917 19.9998Z" fill="#00F249"></path>
+                    <path d="M15.917 33.3333C15.917 30.802 17.969 28.75 20.5003 28.75C23.0316 28.75 25.0837 30.802 25.0837 33.3333C25.0837 35.8646 23.0316 37.9167 20.5003 37.9167C17.969 37.9167 15.917 35.8646 15.917 33.3333Z" fill="#00F249"></path>
+                    <path d="M29.25 19.9998C29.25 17.4685 31.302 15.4165 33.8333 15.4165C36.3646 15.4165 38.4167 17.4685 38.4167 19.9998C38.4167 22.5311 36.3646 24.5832 33.8333 24.5832C31.302 24.5832 29.25 22.5311 29.25 19.9998Z" fill="#00F249"></path>
+                    <path d="M29.25 33.3333C29.25 30.802 31.302 28.75 33.8333 28.75C36.3646 28.75 38.4167 30.802 38.4167 33.3333C38.4167 35.8646 36.3646 37.9167 33.8333 37.9167C31.302 37.9167 29.25 35.8646 29.25 33.3333Z" fill="#00F249"></path>
+                </svg>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock.Card7Heading))
+            {
+                <h4 class="base-font">@Model.CurrentBlock.Card7Heading</h4>
+            }
+            @if (Model.CurrentBlock.Card7Description != null)
+            {
+                <p class="base-font">@Model.CurrentBlock.Card7Description</p>
+            }
+            @if (Model.CurrentBlock.Card7Cta != null)
+            {
+                <a href="@urlResolver.GetUrl(Model.CurrentBlock.Card7Cta.Href)" target="@Model.CurrentBlock.Card7Cta?.Target" class="learn-more-link">
+                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.3">
+                            <path opacity="0.8" d="M1 1L5 5.05479L1.10811 9" stroke="#55F25D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M7 1L11 5.05479L7.10811 9" stroke="#34F03D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </g>
+                    </svg>
+                    @Model.CurrentBlock.Card7Cta.Text
+                </a>
+            }
+        </div>
+    }
+
+
+    @* Card 8 *@
+    @if (!String.IsNullOrEmpty(Model.CurrentBlock?.Card8Heading)
+        || !String.IsNullOrEmpty(Model.CurrentBlock?.Card8Description)
+        || Model.CurrentBlock.Card8Cta != null)
+    {
+        <div class="solution-card">
+            <div class="quick-link-card__icon">
+                <svg width="41" height="40" viewBox="0 0 41 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.5835 6.66659C2.5835 4.13528 4.63552 2.08325 7.16683 2.08325C9.69813 2.08325 11.7502 4.13528 11.7502 6.66659C11.7502 9.19789 9.69813 11.2499 7.16683 11.2499C4.63552 11.2499 2.5835 9.19789 2.5835 6.66659Z" fill="#00F249"></path>
+                    <path d="M15.917 6.66659C15.917 4.13528 17.969 2.08325 20.5003 2.08325C23.0316 2.08325 25.0837 4.13528 25.0837 6.66659C25.0837 9.19789 23.0316 11.2499 20.5003 11.2499C17.969 11.2499 15.917 9.19789 15.917 6.66659Z" fill="#00F249"></path>
+                    <path d="M29.25 6.66659C29.25 4.13528 31.302 2.08325 33.8333 2.08325C36.3646 2.08325 38.4167 4.13528 38.4167 6.66659C38.4167 9.19789 36.3646 11.2499 33.8333 11.2499C31.302 11.2499 29.25 9.19789 29.25 6.66659Z" fill="#00F249"></path>
+                    <path d="M2.5835 19.9998C2.5835 17.4685 4.63552 15.4165 7.16683 15.4165C9.69813 15.4165 11.7502 17.4685 11.7502 19.9998C11.7502 22.5311 9.69813 24.5832 7.16683 24.5832C4.63552 24.5832 2.5835 22.5311 2.5835 19.9998Z" fill="#00F249"></path>
+                    <path d="M2.5835 33.3333C2.5835 30.802 4.63552 28.75 7.16683 28.75C9.69813 28.75 11.7502 30.802 11.7502 33.3333C11.7502 35.8646 9.69813 37.9167 7.16683 37.9167C4.63552 37.9167 2.5835 35.8646 2.5835 33.3333Z" fill="#00F249"></path>
+                    <path d="M15.917 19.9998C15.917 17.4685 17.969 15.4165 20.5003 15.4165C23.0316 15.4165 25.0837 17.4685 25.0837 19.9998C25.0837 22.5311 23.0316 24.5832 20.5003 24.5832C17.969 24.5832 15.917 22.5311 15.917 19.9998Z" fill="#00F249"></path>
+                    <path d="M15.917 33.3333C15.917 30.802 17.969 28.75 20.5003 28.75C23.0316 28.75 25.0837 30.802 25.0837 33.3333C25.0837 35.8646 23.0316 37.9167 20.5003 37.9167C17.969 37.9167 15.917 35.8646 15.917 33.3333Z" fill="#00F249"></path>
+                    <path d="M29.25 19.9998C29.25 17.4685 31.302 15.4165 33.8333 15.4165C36.3646 15.4165 38.4167 17.4685 38.4167 19.9998C38.4167 22.5311 36.3646 24.5832 33.8333 24.5832C31.302 24.5832 29.25 22.5311 29.25 19.9998Z" fill="#00F249"></path>
+                    <path d="M29.25 33.3333C29.25 30.802 31.302 28.75 33.8333 28.75C36.3646 28.75 38.4167 30.802 38.4167 33.3333C38.4167 35.8646 36.3646 37.9167 33.8333 37.9167C31.302 37.9167 29.25 35.8646 29.25 33.3333Z" fill="#00F249"></path>
+                </svg>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock.Card8Heading))
+            {
+                <h4 class="base-font">@Model.CurrentBlock.Card8Heading</h4>
+            }
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock?.Card8Description))
+            {
+                <p class="base-font">@Model.CurrentBlock.Card8Description</p>
+            }
+            @if (Model.CurrentBlock.Card8Cta != null)
+            {
+                <a href="@urlResolver.GetUrl(Model.CurrentBlock.Card8Cta.Href)" target="@Model.CurrentBlock.Card8Cta?.Target" class="learn-more-link">
+                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.3">
+                            <path opacity="0.8" d="M1 1L5 5.05479L1.10811 9" stroke="#55F25D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M7 1L11 5.05479L7.10811 9" stroke="#34F03D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </g>
+                    </svg>
+                    @Model.CurrentBlock.Card8Cta.Text
+                </a>
+            }
+        </div>
+    }
+</section>

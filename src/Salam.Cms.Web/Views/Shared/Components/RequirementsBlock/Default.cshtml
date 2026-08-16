@@ -1,0 +1,70 @@
+﻿@using EPiServer.SpecializedProperties
+@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.InformationItem.Models
+@using Salam.Cms.Web.Features.InformationItem.ViewModels
+@using Salam.Cms.Web.Features.Required.ViewModel
+@using Salam.Cms.Web.Features.Support.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using Salam.Cms.Web.Features.Common.Extensions
+
+@model RequirementsBlockViewModel
+
+<div class="section-wrapper">
+    <!-- START SupportBlock -->
+    <div @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle)>
+        <div class="requirements-block-wrapper @Model.ModifierClass">
+            @if (!Model.CurrentBlock.isB2B)
+            {
+                <div class="requirements-block__heading">
+                    <div class="heading-and-description heading-and-description--primary heading-and-description--heading-3">
+                        @if (!string.IsNullOrEmpty(Model.CurrentBlock.Heading))
+                        {
+                            <div class="heading-and-description__title">
+                                @Html.PropertyFor(m => m.CurrentBlock.Heading)
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.CurrentBlock.Description))
+                        {
+                            <div class="heading-and-description__text">
+                                @Html.PropertyFor(m => m.CurrentBlock.Description)
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+               <div class="industry-header">
+                    @if (!string.IsNullOrEmpty(Model.CurrentBlock.Heading))
+                    {
+                        <h2> @Html.PropertyFor(m => m.CurrentBlock.Heading)</h2>
+
+                    }
+                    @if (!string.IsNullOrEmpty(Model.CurrentBlock.Description))
+                    {
+                        <p>@Html.PropertyFor(m => m.CurrentBlock.Description)</p>
+                    }
+                   
+                </div>
+
+           
+            }
+
+            <div class="requirements-block__items">
+                @if (Model.InformationItems?.Any() == true)
+                {
+                    <div class="requirements-block__items__plan-info-card-wrapper">
+                        @foreach (var block in Model.InformationItems)
+                        {
+                            @Html.Partial("~/Views/Shared/Blocks/RequirementsItemBlock.cshtml", block)
+                        }
+                    </div>
+                }
+                <div class="requirements-block__items__quick-link-card-wrapper">
+                    @Html.PropertyFor(m => m.CurrentBlock.FeaturedItem)
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END SupportBlock -->
+</div>

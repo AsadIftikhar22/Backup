@@ -1,0 +1,24 @@
+﻿@using Salam.Cms.Web.Features.Support.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using Salam.Cms.Web.Features.Common.Extensions
+
+@model SupportBlock
+
+<div class="section-wrapper">
+    <!-- START SupportBlock -->
+    <div @Html.PageNavigatorAnchorAttribute(Model.NavigationTitle) class="icon-link-item-list-block__wrapper">
+            @if (!string.IsNullOrEmpty(Model.HeadingLineOne) || !string.IsNullOrEmpty(Model.Description))
+            {
+                <div class="icon-link-item-list-block__content-block">
+                    <div class="heading-and-description heading-and-description--primary heading-and-description--heading-2">
+                        <div class="heading-and-description__title">@Html.PropertyFor(m => m.HeadingLineOne)</div>
+                        <p class="heading-and-description__text">@Html.PropertyFor(m => m.Description)</p>
+                    </div>
+                </div>
+            }
+        <div class="icon-link-item-list-block__quick-links">
+            @Html.PropertyFor(m => m.Items, new { CssClass = "icon-link-item-list-block__quick-links-grid", ChildrenCssClass = "icon-link-item-block" })
+        </div>
+     <!-- END SupportBlock -->
+    </div>
+</div>

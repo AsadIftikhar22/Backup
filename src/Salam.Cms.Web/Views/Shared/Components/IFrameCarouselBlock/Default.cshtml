@@ -1,0 +1,59 @@
+﻿@using Salam.Cms.Web.Features.IFrameCarouselBlock.ViewModels
+@model IFrameCarouselBlockViewModel
+
+@if (Model.CurrentBlock.Items != null && Model.CurrentBlock.Items.Any())
+{
+    var carouselId = "carousel" + Guid.NewGuid().ToString("N");
+
+    <div id="@carouselId" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            @for (int i = 0; i < Model.CurrentBlock.Items.Count; i++)
+            {
+                <button type="button"
+                        data-bs-target="#@carouselId"
+                        data-bs-slide-to="@i"
+                        class="@(i == 0 ? "active" : "")"
+                        aria-label="Slide @(i + 1)">
+                </button>
+            }
+        </div>
+
+        <div class="carousel-inner">
+            @{
+                int index = 0;
+                foreach (var slide in Model.CurrentBlock.Items)
+                {
+                    var imageUrl = Url.ContentUrl(slide.Image);
+                    var target = slide.OpenInNewTab ? "_blank" : "_self";
+                    <div class="carousel-item @(index == 0 ? "active" : "")">
+                        @if (!string.IsNullOrEmpty(slide.Link?.ToString()))
+                        {
+                            <a href="@slide.Link" target="@target">
+                                <img src="@imageUrl" class="d-block w-100" alt="@slide.AltText" />
+                            </a>
+                        }
+                        else
+                        {
+                            <img src="@imageUrl" class="d-block w-100" alt="@slide.AltText" />
+                        }
+                    </div>
+                    index++;
+                }
+            }
+        </div>
+
+        <button class="carousel-control-prev" type="button"
+                data-bs-target="#@carouselId"
+                data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+
+        <button class="carousel-control-next" type="button"
+                data-bs-target="#@carouselId"
+                data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+}

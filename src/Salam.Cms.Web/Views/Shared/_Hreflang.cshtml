@@ -1,0 +1,57 @@
+﻿@using EPiServer
+@using EPiServer.Core
+@using EPiServer.Web.Routing
+@using Salam.Cms.Web.Features.Common.Models
+
+@model SitePageData
+
+@inject IContentLoader ContentLoader
+@inject UrlResolver UrlResolver
+
+@{
+    string? enUrl = null;
+    string? arUrl = null;
+
+    try
+    {
+        var englishPage = ContentLoader.Get<SitePageData>(
+            Model.ContentLink,
+            new LanguageSelector("en"));
+
+        var url = UrlResolver.GetUrl(englishPage.ContentLink, "en");
+        enUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{url}";
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[HREFLANG] English page not found: {ex.Message}");
+    }
+
+    try
+    {
+        var arabicPage = ContentLoader.Get<SitePageData>(
+            Model.ContentLink,
+            new LanguageSelector("ar"));
+
+        var url = UrlResolver.GetUrl(arabicPage.ContentLink, "ar");
+        arUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{url}";
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[HREFLANG] Arabic page not found: {ex.Message}");
+    }
+}
+
+@if (!string.IsNullOrWhiteSpace(enUrl))
+{
+    <link rel="alternate" hreflang="en-SA" href="@enUrl" />
+}
+
+@if (!string.IsNullOrWhiteSpace(arUrl))
+{
+    <link rel="alternate" hreflang="ar-SA" href="@arUrl" />
+}
+
+@if (!string.IsNullOrWhiteSpace(enUrl))
+{
+    <link rel="alternate" hreflang="x-default" href="@enUrl" />
+}

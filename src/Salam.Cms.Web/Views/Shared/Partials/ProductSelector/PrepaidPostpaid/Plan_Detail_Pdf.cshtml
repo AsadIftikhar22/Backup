@@ -1,0 +1,19 @@
+﻿@using Salam.Cms.Shared.Models.Catalogue.Data
+@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using static Salam.Cms.Shared.Models.SalamConstants
+
+@model ProductSku
+
+@if (!String.IsNullOrEmpty(Model.Plan_Detail_Pdf))
+{
+    <li class="list-item">
+        <div>
+            <span class="list-item__content__text">
+                <a style="color:green;" href="@Model.Plan_Detail_Pdf">
+                    @ContentHelper.GetDefaultFrontendLabel(Model, CatalogueAPIfields.Plan_Detail_Pdf)</a>
+            </span>
+        </div>
+        <div class="list-item__tooltip"></div>
+    </li>
+}

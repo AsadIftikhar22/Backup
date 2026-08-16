@@ -1,0 +1,16 @@
+﻿@using Salam.Cms.Shared.Models.Catalogue.Data
+@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using static Salam.Cms.Shared.Models.SalamConstants
+
+@model ProductSku
+
+@if (Model.AdditionalDataSim == true)
+{
+    <div class="chips chips--primary plan-card__chip"><span class="chips__text">@ContentHelper.GetDefaultFrontendLabel(Model, CatalogueAPIfields.AdditionalDataSim)</span></div>
+}
+@* else
+{
+    <div class="plan-card__divider"></div>
+}
+ *@

@@ -1,0 +1,70 @@
+﻿@using Salam.Cms.Core.Settings.Abstract
+@using Salam.Cms.Web.Features.B2BComponentContent.ViewModels
+@using Salam.Cms.Web.Features.B2BGeneralContent.ViewModels
+@using Salam.Cms.Web.Features.Cards.Components
+@using Salam.Cms.Web.Features.Settings.Models
+
+@{
+    Layout = "~/Views/Shared/_Layout_Component.cshtml";
+}
+@if (Model.CurrentPage.BackgroundImage != null)
+{
+    <style>
+        .section-container {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .section-container::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background-image: url('@Url.ContentUrl(Model.CurrentPage.BackgroundImage)');
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: 50%;
+                background-attachment: fixed;
+                opacity: 0.4;
+                z-index: -1;
+        }
+    </style>
+}
+
+@model B2BComponentContentPageViewModel
+
+<link asp-href-include="~/static/assets/css/b2b_asad-*.css" rel="stylesheet" />
+
+<style>
+    .header-navigation-link-wrapper {
+        position: relative;
+    }
+
+    .hover-overlay {
+        position: absolute;
+        inset: 0;
+        background: transparent;
+        pointer-events: none; /* Allows hover events to pass through */
+        transition: background 0.3s;
+    }
+
+    .header-navigation-link-wrapper .navigation-flyout-card:hover ~ .hover-overlay {
+        background: lightblue;
+    }
+</style>
+@Html.PropertyFor(x => x.CurrentPage.MainContent, new { CssClass = "section-container bg-ltr" })
+@Html.Raw(Model.CurrentPage.HTMLCSS)
+@Html.Raw(Model.CurrentPage.HTMLBody)
+@if (Model.CurrentPage.NotShowFromWebLayoutB2B)
+{
+    @Html.PropertyFor(x => x.CurrentPage.EndPageMainContent, new { CssClass = "section-container bg-ltr" })
+
+
+}
+else
+{
+    @inject ISettingsManager _settingsManager;
+    var webLayoutSettings = _settingsManager.GetSettings<WebLayoutSettings>();
+    @await Component.InvokeAsync(typeof(CardListBlockViewComponent), webLayoutSettings.CardListBlockView)
+    ;
+}

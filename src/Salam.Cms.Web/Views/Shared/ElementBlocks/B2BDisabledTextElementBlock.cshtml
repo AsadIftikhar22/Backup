@@ -1,0 +1,31 @@
+﻿@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using EPiServer.Forms.UI.SelectionFactory
+@using Salam.Cms.Web.Features.EnquireProduct.Services
+@model B2BDisabledTextElementBlock
+
+@{
+    @inject ISessionService _sessionService;
+    @inject IHttpContextAccessor _httpContextAccessor;
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var cssClasses = Model.GetValidationCssClasses();
+    var autoComplete = AutoCompleteSelectionFactory.GetStringValue(Model.AutoComplete);
+    // var mobileNumber=_sessionService.Get(_httpContextAccessor?.HttpContext?.Session.Id + "MobileNumber");
+}
+
+@using (Html.BeginElement(Model, new { @class = "FormTextbox" + cssClasses, data_f_type = "textbox" }))
+{
+    <div class="form-field">
+        <label for="@formElement.Guid" class="Form__Element__Caption">@labelText</label>
+        <input name="@formElement.ElementName" id="@formElement.Guid" type="text" class="form-input FormTextbox__Input"
+               aria-describedby="@Util.GetAriaDescribedByElementName(formElement.ElementName)"
+               placeholder="@Html.FilterHtml(Model.PlaceHolder ?? "")"
+               value="" @Html.Raw(Model.AttributesString) data-f-datainput
+               autocomplete="@autoComplete" disabled />
+        <span id="@formElement.Guid-error" class="error-message">
+            @Html.ValidationMessageFor(Model)
+        </span>
+        @Model.RenderDataList()
+    </div>
+}

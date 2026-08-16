@@ -1,0 +1,31 @@
+﻿@using Castle.Core.Internal
+@using Salam.Cms.Shared.Models.Catalogue.Data
+@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+
+@model (ProductSku productSku, string? handoffUrl, string? ButtonText)
+
+@if (!Model.handoffUrl.IsNullOrEmpty() && !Model.productSku.CorrelatedId.IsNullOrEmpty())
+{
+<a href="@(Model.handoffUrl + Model.productSku.CorrelatedId)"
+       class="button button-theme--primary plan-card-banner__footer-button">
+        <span>@Model.ButtonText</span>
+        <div class="arrow">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+</a>
+}
+
+@if (!Model.productSku.buy_now_link.IsNullOrEmpty())
+{
+    <div class="plan-card__footer">
+        <a href="@Model.productSku.buy_now_link" class="button button-theme--primary plan-card-banner__footer-button plan-card__footer-details-button">
+            <span>@Model.ButtonText</span>
+            <div class="arrow"><span></span><span></span><span></span><span></span><span></span></div>
+        </a>
+    </div>
+}

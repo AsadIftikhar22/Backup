@@ -1,0 +1,36 @@
+﻿@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+@using Salam.Cms.Web.Features.Common.Helpers
+@using Salam.Cms.Web.Features.InformationItem.Models
+@using Salam.Cms.Web.Features.InformationItem.ViewModels
+@using Salam.Cms.Web.Features.Common.Extensions
+
+@model InformationItemListBlockViewModel
+
+@{
+    var itemCount = Model.CurrentBlock.Items?.FilteredItems?.Count() ?? 0;
+    var modifierClass = InformationItemListBlockHelper.GetModifierClass(itemCount);
+    var styleClass = Model.CurrentBlock.Style.GetCssClass() ?? string.Empty;
+    var childrenCssClass = $"information-item-list-block__item {styleClass}";
+}
+
+<div class="section-wrapper">
+<!-- START InformationItemListBlock -->
+<div @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle)>
+        <div class="information-item-list-block @modifierClass @Model.CurrentBlock.MaxWidth.GetCssClass()">
+        <div class="information-item-list-block__container">
+            @foreach (var item in Model.CurrentBlock.Items?.FilteredItems ?? Enumerable.Empty<ContentAreaItem>())
+            {
+                var content = item.GetContent();
+                if (content is InformationItemBlock block)
+                {
+                    <div class="@childrenCssClass">
+                        @Html.Partial("~/Views/Shared/Blocks/InformationItemBlock.cshtml", (block, styleClass))
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+<!-- END InformationItemListBlock -->
+</div>

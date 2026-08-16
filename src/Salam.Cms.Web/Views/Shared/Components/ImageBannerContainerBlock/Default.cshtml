@@ -1,0 +1,92 @@
+﻿@using PictureRenderer
+@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.SolutionsSectionsBlock.ViewModels
+
+@model ImageBannerContainerBlockViewModel
+@{
+    var guid = Guid.NewGuid().ToString();
+}
+ <style>
+      .card-content {
+          height: 308px;
+      }
+
+      .button-theme--transparent-primary, .button-theme--transparent-secondary .uniqueid- @guid {
+          flex-direction: row-reverse;
+      }
+
+      .flex-para-btn {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: center;
+      }
+
+          .flex-para-btn p {
+              flex: 1;
+              margin: 0;
+              min-width: 250px;
+          }
+
+          .flex-para-btn a {
+              flex-shrink: 0;
+          }
+
+      /* Mobile */
+      @@media (max-width: 768px) {
+          .flex-para-btn {
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 16px;
+              align-items: center;
+          }
+
+              .flex-para-btn a {
+                  width: fit-content;
+              }
+      }
+</style>
+<section class="image-banner-section">
+    <div class="image-banner-container">
+        @foreach (var imageCard in Model.CurrentBlock.ImageCardBlockList)
+        {
+            <div class="image-card">
+                <div class="image-container">
+                    @await Html.Picture(imageCard?.CardImage,
+                    PictureProfiles.CarouselCards, new PictureAttributes
+                    {
+                        LazyLoading = LazyLoading.Browser,
+                        ImgDecoding = ImageDecoding.Async,
+                        ImgFetchPriority = FetchPriority.Auto,
+                        ImgClass = "image-content",
+                    })
+                @* <img class="image-content" src="@Url.ContentUrl(imageCard.CardImage)" alt="Home Office Solutions"> *@
+            </div>
+            <div class="content-section">
+                <h3 class="image-title">@imageCard?.Heading</h3>
+                <div class="flex-para-btn">
+                    <p class="image-description">@imageCard?.Description</p>
+                    @if (imageCard?.ExploreLink != null)
+                        {
+                            <a href="@Url.ContentUrl(@imageCard?.ExploreLink.Href)"
+                               target="@imageCard?.ExploreLink.Target" title="@imageCard?.ExploreLink.Title"
+                               class="button button-theme--transparent-secondary uniqueid-@guid">
+                                <span>@imageCard?.ExploreLink.Text</span>
+                                <div class="arrow">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </a>
+                           
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>

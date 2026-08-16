@@ -1,0 +1,29 @@
+﻿@using PictureRenderer
+@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.SolutionsSectionsBlock.ViewModels
+@model UserGuideBannerBlockViewModel
+
+<section class="user-guide-banner" @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle)>
+    <div class="banner-container">
+        <div class="banner-content">
+            <div class="banner-text">
+                <h1>@Model.CurrentBlock?.Heading</h1>
+                <p>@Model.CurrentBlock?.Description</p>
+                @if (Model.CurrentBlock?.UserGuideBannerCta != null)
+                {
+                    <a href="@Url.ContentUrl(Model.CurrentBlock?.UserGuideBannerCta?.Href)" class="download-button" target="@Model.CurrentBlock?.UserGuideBannerCta?.Target">@Model?.CurrentBlock?.UserGuideBannerCta?.Text</a>
+                }
+            </div>
+            <div class="banner-image">
+                <div class="banner-image">
+                    @await Html.Picture(Model.CurrentBlock?.UserGuideImage,
+                    PictureProfiles.UserGuideBanner, new PictureAttributes
+                        {
+                            LazyLoading = LazyLoading.Browser,
+                            ImgDecoding = ImageDecoding.Async,
+                            ImgFetchPriority = FetchPriority.Auto
+                        })
+            </div>
+        </div>
+    </div>
+</section>

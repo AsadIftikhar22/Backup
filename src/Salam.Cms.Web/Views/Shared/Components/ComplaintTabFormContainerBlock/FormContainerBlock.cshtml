@@ -1,0 +1,1129 @@
+﻿@using EPiServer.Framework.ClientResources
+@using EPiServer.Globalization
+@using EPiServer.ServiceLocation
+@using EPiServer.Forms
+@using EPiServer.Forms.Core
+@using EPiServer.Forms.Core.Internal
+@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.EditView.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web
+@using EPiServer.Shell.Web.Mvc.Html
+@using EPiServer.Web.Routing
+@using Salam.Cms.Web.Features.ConnectivityRemove.Components
+@using Salam.Cms.Web.Features.Forms.B2BFormContainerBlock
+@using Salam.Cms.Web.Features.Forms.ComplaintTabFormContainerBlock
+@using Salam.Cms.Web.Features.Forms.WPFormStepBlock
+@using Salam.Cms.Web.Infrastructure.Forms.Services
+@using EPiServer.Core
+
+
+@model ComplaintTabFormContainerBlock
+@inject UrlResolver UrlResolver
+@{
+
+    var dataSubmissionService = ServiceLocator.Current.GetInstance<ProtectorChannelFormDataSubmissionService>();
+    var readOnlyModeMessage = dataSubmissionService.GetReadOnlyModeMessage();
+    var currentMode = ServiceLocator.Current.GetInstance<IContextModeResolver>().CurrentMode;
+    var formTitleId = Model.Form.FormGuid + "_label";
+    var _cspNonceService = ServiceLocator.Current.GetInstance<ICspNonceService>();
+    var nonceAttribute = string.IsNullOrEmpty(_cspNonceService.GetNonce()) ? "" : $"nonce = \"{_cspNonceService.GetNonce()}\"";
+
+    var bgColor = Model.SelectedHexColor;
+    var headingFontSize = Model.HeadingFontSize;
+    var headingFontWeight = Model.HeadingFontWeight;
+    var MobileheadingFontSize = Model.MobileHeadingFontSize ?? "35px";
+    var MobileheadingFontWeight = Model.MobileHeadingFontWeight ?? "400";
+    var paragraphFontSize = Model.ParagraphFontSize;
+    var MobileParagraphFontSize = Model.MobileParagraphFontSize ?? "16px";
+    var formWidth = Model.FormWidth ?? "676px";
+    ViewBag.SubmitMessage = Model.SubmitSuccessMessage;
+    var LabelFormFontColor = Model.LabelFormColor ?? "#2e7d32";
+    var LabelFormFontSize = Model.LabelFormSize ?? "14px";
+    var lang = ContentLanguage.PreferredCulture.TwoLetterISOLanguageName;
+
+}
+<style>
+    .form-container {
+        background: @bgColor;
+    }
+
+    .form-header p {
+        font-size: @paragraphFontSize;
+        color: rgb(128, 144, 154);
+    }
+
+    .form-header h1 {
+        font-size: @headingFontSize;
+        font-weight: @headingFontWeight;
+    }
+
+    .form-main-bg {
+        width: @formWidth;
+    }
+
+    .form-field label {
+        font-size: @LabelFormFontSize;
+        color: @LabelFormFontColor;
+    }
+
+    button.form-submit-btn.Form__NavigationBar__Action.FormExcludeDataRebind.btnNext.disabled {
+        color: #212529 !important;
+        background: rgba(128, 144, 154, 0.2) !important;
+        pointer-events: none;
+        border: none !important;
+    }
+
+    .EPiServerForms .Form__NavigationBar .Form__NavigationBar__Action:disabled{
+        opacity:unset;
+    }
+    .form-input {
+        text-decoration: none;
+        outline: none !important;
+        height: 56px;
+        width: 560px;
+        flex: 1 1 auto;
+        border: 2px solid #80909a;
+        color: #002035;
+        border-radius: 8px;
+        padding: 0 16px;
+        font-weight: bolder;
+    }
+
+    .form-header p {
+        font-size: 16px;
+    }
+
+    .EPiServerForms .FormStep > .block.b2btextareaelementblock {
+        flex: 1 1 100%;
+        width: 100%;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .EPiServerForms .FormStep > .block.b2btextareaelementblock label,
+        .EPiServerForms .FormStep > .block.b2btextareaelementblock textarea {
+            width: 100%;
+            display: block;
+        }
+
+    .btnNext {
+        height: unset !important;
+        background: rgba(128, 144, 154, 0.2) !important;
+        color: #80909A !important;
+        max-width: 200px !important;
+        padding: 18px 12px !important;
+        border-radius: 50px !important;
+        background: #00b140 !important;
+        color: #fff !important;
+        text-align: center !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        line-height: 120% !important;
+        text-transform: capitalize !important;
+        margin: 40px auto !important;
+        display: block !important;
+        border: 1px solid rgba(41, 128, 189, 0.5);
+    }
+
+    .form-header {
+        padding: 0 0 0 0;
+        text-align: left;
+    }
+
+    .form-box form > div {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .form-box {
+        background: unset !important;
+    }
+
+    .form-input {
+        flex: 1 1 auto;
+        min-width: 180px;
+    }
+
+    .nav.Form__NavigationBar {
+        flex: 0 0 auto;
+    }
+
+    /*
+                                        .EPiServerForms > div > section + nav,
+                                        .EPiServerForms > div {
+                                            display: flex;
+                                            align-items: flex-end;
+                                            gap: 356px;
+                                        } */
+
+    .EPiServerForms .FormTextbox {
+        flex: 1;
+    }
+
+    .EPiServerForms .Form__NavigationBar {
+        margin: 0 !important;
+    }
+
+    .EPiServerForms .btnNext {
+        height: 48px;
+        padding: 0 28px;
+        white-space: nowrap;
+    }
+
+    .form-header.inline-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .form-header.inline-row .header-text {
+            margin: 0;
+            white-space: nowrap;
+            flex-shrink: 1;
+        }
+
+        .form-header.inline-row .note-icon {
+            width: 20px;
+            height: auto;
+        }
+
+    .btn-header-action {
+        padding: 6px 12px;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+        .modal-overlay.hide {
+            display: none;
+        }
+
+    .modal-content {
+        position: relative;
+        max-width: 800px;
+        max-height: 233px;
+        background: #fff;
+        border-radius: 18px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 24px 47px;
+        text-align: center;
+        width: 100%;
+        pointer-events: auto;
+        outline: 0;
+    }
+
+    .modal-body > h1 {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 18px;
+    }
+
+    .modal-body > p {
+        font-weight: 400;
+        font-size: 20px;
+        color: #000;
+        line-height: 1.4;
+    }
+
+    .modal-close {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 20px;
+        font-size: 2.6rem;
+        cursor: pointer;
+    }
+
+    .form-input {
+        width: 100%;
+    }
+
+    textarea.form-input {
+        flex: 1 1 100% !important;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .Form__Element.FormTextbox.FormTextbox--Textarea {
+        flex: 1 1 100% !important;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .EPiServerForms .Form__Element .Form__Element__Caption {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    @@media (max-width: 768px) {
+        .form-main-bg {
+            width: 100%;
+        }
+
+        .EPiServerForms .Form__NavigationBar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* optional: stack vertically */
+        }
+
+        .EPiServerForms .Form__NavigationBar .Form__NavigationBar__Action {
+                margin: 0.5rem 0; /* spacing between buttons */
+                width: 100%; /* optional: full width on mobile */
+                max-width: 300px; /* optional limit */
+        }
+        .form-header p {
+            font-size: @MobileParagraphFontSize;
+        }
+
+        .form-header h1 {
+            font-size: @MobileheadingFontSize;
+            font-weight: @MobileheadingFontWeight;
+        }
+
+        .business-solution-card {
+            height: 100%;
+        }
+
+        .section-container bg-ttb {
+            padding: 20px;
+        }
+
+        .tabs-container {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tab {
+            flex: 1 1 100%;
+            border-radius: 8px;
+        }
+
+        .form-main-bg {
+            width: 100%;
+        }
+
+        .form-header.inline-row .header-text {
+            font-size: 14px;
+            white-space: normal;
+        }
+
+        .EPiServerForms > div {
+            flex-direction: column;
+            align-items: center;
+            gap: 0px !important;
+        }
+
+            .EPiServerForms > div > section + nav {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0px !important;
+            }
+
+        .form-input,
+        .EPiServerForms .FormTextbox {
+            width: 100%;
+        }
+
+        .EPiServerForms .btnNext {
+            width: 100%;
+            margin: 10px 0 0 0 !important;
+            padding: 16px 20px !important;
+        }
+
+        .EPiServerForms > div {
+            gap: 12px !important;
+        }
+        /* Ensure all form fields stack and take full width */
+        .form-box form > div,
+        .form-box form > div section,
+        .form-box form .form-input,
+        .form-box form .EPiServerForms .FormTextbox,
+        .form-box form .EPiServerForms .FormCheckbox,
+        .form-box form .EPiServerForms .FormRadio,
+        .form-box form .EPiServerForms input,
+        .form-box form .EPiServerForms select,
+        .form-box form .EPiServerForms textarea {
+            width: 100% !important;
+            flex: 1 1 100% !important;
+            max-width: 100% !important;
+            margin-bottom: 12px;
+        }
+        /* Button full width */
+        .EPiServerForms .btnNext {
+            width: 100% !important;
+            padding: 16px 20px !important;
+        }
+
+        .half-width .form-input {
+            width: 100%;
+        }
+
+        .modal-close {
+            margin-bottom: 0px !important;
+            font-size: 1.6rem !important
+        }
+
+        .modal-content {
+            overflow: unset !important;
+        }
+    }
+
+    .form-field label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .note-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    section[data-f-stepindex="2"] {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+    }
+
+    .block.b2bdisabledtextelementblock,
+    .block.b2bnumberelementblock,
+    .block.b2btextelementblock {
+        flex: 1 1 calc(33.333% - 10px);
+    }
+
+    .block.b2bselectdropdownblock {
+        flex: 1 1 100%;
+    }
+
+    .block.b2btextareaelementblock {
+        flex: 1 1 100%;
+    }
+
+    .block.wpotpelementblock > p {
+        font-size: 24px;
+    }
+
+    .tab-content.active {
+        padding: 20px 20px 20px 20px;
+    }
+
+    .EPiServerForms .ValidationRequired .Form__Element__Caption:after {
+        content: unset !important;
+    }
+
+    .FormStep__Description {
+        display: none !important;
+    }
+
+
+    html[dir=rtl] .tab-content {
+        text-align: right;
+    }
+
+    /*     .block .b2bselectdependentdropdownblock{
+                                    width: 33%;
+                                } */
+    .half-width {
+        margin-right: unset;
+    }
+
+    .block.b2bselectdependentdropdownblock.half-width {
+        flex: 1 1 calc(50% - 20px);
+    }
+
+    /* Success Container */
+    .success-container {
+        text-align: center;
+        /* padding: 80px 20px; */
+        max-width: 900px;
+        margin: auto;
+    }
+
+    .success-icon {
+        width: 90px;
+        margin-bottom: 20px;
+    }
+
+    .success-title {
+        color: #7a8895;
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    .ticket-number {
+        color: #1a1a1a;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .success-messsage {
+        font-size: 18px;
+        line-height: 1.7;
+        color: #111;
+    }
+
+        .success-messsage a {
+            color: #000;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    /* Message Error content */
+    .message-container {
+        text-align: center;
+        /* padding: 80px 20px; */
+        max-width: 900px;
+        margin: auto;
+    }
+
+    .message-icon {
+        width: 90px;
+        margin-bottom: 20px;
+    }
+
+    /* Success Style */
+    .success .message-title {
+        color: #7a8895;
+    }
+
+    /* Error Style */
+    .error .message-title {
+        color: #d32f2f;
+    }
+
+    .message-title {
+        font-size: 32px;
+        margin-bottom: 20px;
+    }
+
+    .message-text {
+        font-size: 18px;
+        line-height: 1.7;
+        color: #111;
+    }
+
+        .message-text a {
+            color: #000;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+
+    /* Container centering */
+    .success-container,
+    .message-container.error {
+        display: flex; /* Use flex for easy centering */
+        flex-direction: column; /* Stack children vertically */
+        justify-content: center; /* Vertical centering */
+        align-items: center; /* Horizontal centering */
+        text-align: center; /* Center text */
+        /* padding: 80px 20px; */
+        max-width: 900px;
+        /*  margin: 40px auto;  Center container on page */
+    }
+
+    /* Icon styling */
+    .success-icon,
+    .message-icon {
+        width: 90px;
+        height: 90px;
+        margin-bottom: 20px;
+    }
+
+    /* Title styling */
+    .success-title,
+    .message-title {
+        font-size: 28px;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    /* Ticket number */
+    .ticket-number {
+        font-size: 26px;
+        font-weight: bold;
+        margin-bottom: 25px;
+    }
+
+    /* Paragraph styling */
+    .success-messsage,
+    .message-text {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #111;
+    }
+
+        /* Link styling */
+        .success-messsage a,
+        .message-text a {
+            color: #000;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+    .loader-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.6);
+        display: none; /* hidden by default */
+        justify-content: center;
+        align-items: center;
+    }
+
+    .loader {
+        width: 120px;
+        height: 120px;
+        border: 14px solid #eee;
+        border-top: 14px solid #00cc44;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+@{
+    async void RenderFormBody()
+    {
+        var statusDisplay = "hide";
+        var message = ViewBag.Message;
+        var submissionWarning = ViewBag.IsSuccess is not null && !ViewBag.IsSuccess;
+
+        if (!ViewBag.IsWorkingInNonJSMode)
+        {
+            @await Html.PartialAsync("FormContainerInitScript", Model)
+        }
+
+        if ((ViewBag.FormFinalized || ViewBag.IsProgressiveSubmit)
+             && (Model.SubmitSuccessMessage is null || Model.SubmitSuccessMessage.IsEmpty))
+        {
+            statusDisplay = "Form__Success__Message";
+        }
+        else if ((submissionWarning || (!ViewBag.Submittable && ViewBag.IsSuccess is null)) && !string.IsNullOrEmpty(message))
+        {
+            statusDisplay = "Form__Warning__Message";
+        }
+
+        <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormGuid" value="@Model.Form.FormGuid" data-f-type="hidden" />
+
+        <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormHostedPage" value="@FormsExtensions.GetCurrentPageLink()?.ToString()" data-f-type="hidden" />
+        <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormLanguage" value="@FormsExtensions.GetCurrentFormLanguage(Model)" data-f-type="hidden" />
+        <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormCurrentStepIndex" value="@(ViewBag.CurrentStepIndex ?? " ")" data-f-type="hidden" />
+        <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormSubmissionId" value="@ViewBag.FormSubmissionId" data-f-type="hidden" />
+        @Html.GenerateAntiForgeryToken(Model)
+
+        if (ViewBag.IsReadOnlyMode && !string.IsNullOrWhiteSpace(readOnlyModeMessage))
+        {
+            <div class="Form__Status">
+                <span class="Form__Readonly__Message" role="alert">
+                    @readOnlyModeMessage
+                </span>
+            </div>
+        }
+        RenderFormSuccessMessage();
+        <div class="Form__Status">
+            <div role="status" class="Form__Status__Message js-form-status-message @statusDisplay" data-f-form-statusmessage>
+                @Html.Raw(message)
+            </div>
+        </div>
+        <div>
+
+            @{
+                var currentStepIndex = ViewBag.CurrentStepIndex == null ? -1 : (int)ViewBag.CurrentStepIndex;
+                string stepDisplaying;
+                string btnText = string.Empty;
+            }
+            @foreach (var step in Model.Form.Steps.Select((value, i) => new { i, value }))
+            {
+                stepDisplaying = (currentStepIndex == step.i && !ViewBag.FormFinalized && (bool)ViewBag.IsStepValidToDisplay) ? "" : "hide";
+                var stepBlock = (step.value.SourceContent as ElementBlockBase);
+                var stepFormBlock = step.value.SourceContent as WPFormStepBlock;
+                btnText = stepBlock != null && !string.IsNullOrEmpty(stepFormBlock?.btnTextNew)
+                ? stepFormBlock.btnTextNew
+                : (lang == "en" ? "Continue" : "ارسال");
+
+                <section id="@step.value.ElementName"
+                         data-f-type="step"
+                         data-step-index="@step.i"
+                         data-btn-text="@btnText"
+                         data-f-element-name="@step.value.ElementName"
+                         class="Form__Element FormStep Form__Element--NonData @stepDisplaying"
+                         data-f-stepindex="@step.i"
+                         data-f-element-nondata>
+                    @if (stepBlock != null)
+                    {
+                        Html.RenderContentData(step.value.SourceContent, false);
+                    }
+                    @{
+                        Html.RenderForm(step.i, step.value.Elements);
+                    }
+                </section>
+
+            }
+
+            @{
+                var currentDisplayStepCount = Model.Form.Steps.Count();
+                if (currentDisplayStepCount > 1 && currentStepIndex > -1 && currentStepIndex < currentDisplayStepCount && !ViewBag.FormFinalized)
+                {
+                    if (Model.ShowNavigationBar)
+                    {
+                        <nav role="navigation" class="Form__NavigationBar" data-f-type="navigationbar" data-f-element-nondata>
+                            <button type="submit" name="submit" value="@SubmitButtonType.NextStep.ToString()" class="form-submit-btn Form__NavigationBar__Action FormExcludeDataRebind btnNext"
+                                    data-f-navigation-next>
+                                @btnText
+                            </button>
+                        </nav>
+                    }
+                }
+            }
+        </div>
+    }
+    async void RenderFormSuccessMessage()
+    {
+        if (Model.SubmitSuccessMessage is not null && !Model.SubmitSuccessMessage.IsEmpty && (ViewBag.FormFinalized || ViewBag.IsProgressiveSubmit))
+        {
+            <div class="Form__Success">
+                <div role="status" class="Form__SubmissionSuccess__Message Form__Success__Message" id="Success__Message__@Model.Form.FormGuid" data-f-form-successmessage>
+                    @{
+                        Html.RenderFormXhtmlString(Model.SubmitSuccessMessage);
+                    }
+                </div>
+            </div>
+        }
+    }
+}
+
+
+@if (currentMode == ContextMode.Edit)
+{
+    <link rel="stylesheet" type="text/css" data-f-resource="EPiServerForms.css" href='@EPiServer.Shell.Paths.ToClientResource(typeof(FormsModule), "ClientResources/ViewMode/EPiServerForms.css")' />
+
+    @if (Model.Form != null)
+    {
+        <div class="EPiServerForms">
+            <h2 class="Form__Title">@Html.PropertyFor(m => m.Title) </h2>
+            <h4 class="Form__Description">@Html.PropertyFor(m => m.Description)</h4>
+            @Html.PropertyFor(m => m.ElementsArea, new { Tag = "" })
+        </div>
+    }
+    else
+    {
+        <div class="EPiServerForms">
+            <span class="Form__Warning">@Html.Translate("/episerver/forms/editview/cannotbuildformmodel")</span>
+        </div>
+    }
+}
+else
+{
+    if (Model.Form != null)
+    {
+        var validationCssClass = ViewBag.ValidationFail ? "ValidationFail" : "ValidationSuccess";
+        if (ViewBag.RenderingFormUsingDivElement)
+        {
+            <div method="post" data-f-metadata="@Model.MetadataAttribute" class="EPiServerForms @validationCssClass" data-f-type="form" role="form" aria-labelledby="@formTitleId" id="@Model.Form.FormGuid">
+                @{
+                    RenderFormBody();
+                }
+            </div>
+        }
+        else
+        {
+            <section>
+                <div class="form-header inline-row">
+                    @if (!string.IsNullOrEmpty(Model?.Title))
+                    {
+                        <p class="header-text">
+                            @Model?.Title
+                        </p>
+                    }
+                </div>
+                <div class="">
+                    <form method="post" novalidate="novalidate"
+                          data-f-metadata="@Model?.MetadataAttribute" aria-labelledby="@formTitleId"
+                          enctype="multipart/form-data" class="EPiServerForms @validationCssClass" data-f-type="form" id="@Model.Form.FormGuid">
+
+                        @{
+                            RenderFormBody();
+                        }
+
+                        @if (!String.IsNullOrWhiteSpace(Model?.FormFooterMessage))
+                        {
+                            <div class="form-info-message">
+                                <span class="info-icon">i</span>
+                                @Html.Raw(Model.FormFooterMessage)
+                            </div>
+                        }
+                    </form>
+                </div>
+            </section>
+        }
+    }
+}
+<div id="formLoader" class="loader-overlay">
+    <div class="loader"></div>
+</div>
+<div class="success-container" style="display:none;">
+
+    <img src="https://staging-mobile.salammobile.sa/wp-content/themes/voifone/assets/img/complaint-success-icon.svg"
+         class="success-icon"
+         alt="Success">
+    <h2 class="success-title">@Model?.SuccessMessageTitle</h2>
+    <h3 id="ticketNumber" class="ticket-number"></h3>
+    @Html.Raw(Model?.SuccessMessageDescription)
+</div>
+
+
+
+<div class="message-container error" style="display:none;">
+    <img src="https://staging-mobile.salammobile.sa/wp-content/themes/voifone/assets/img/complaint-fail-icon.svg"
+         class="message-icon"
+         alt="Error">
+    <h2 class="message-title">@Model?.ErrorMessageTitle</h2>
+    @Html.Raw(Model?.ErrorMessageDescription)
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        sessionStorage.clear();
+        hideLoader();
+       function updateNextButtonText() {
+               const nextBtn = document.querySelector(".Form__NavigationBar .btnNext");
+               if (!nextBtn) return;
+               const activeStep = document.querySelector('.FormStep:not(.hide)');
+               if (!activeStep) return;
+               const btnText = activeStep.dataset.btnText;
+               if (btnText && btnText.trim() !== "") {
+                   nextBtn.innerText = btnText;
+           }
+       }
+        updateNextButtonText();
+        const successContainer = document.querySelector(".success-container");
+        const errorContainer = document.querySelector(".message-container.error");
+        successContainer.style.display = "none";
+        errorContainer.style.display = "none";
+            function updateNavigationCircles() {
+                const activeTab = document.querySelector('.tabs-container .tab.active');
+                if (!activeTab) return;
+                const tabId = activeTab.dataset.tab;
+                const visibleStep = document.querySelector("section.FormStep:not(.hide)");
+                if (!visibleStep) return;
+                const currentIndex = parseInt(visibleStep.dataset.fStepindex, 10) +1;
+                const circles = document.querySelectorAll('.navigation-circle .step-circle');
+                const lines = document.querySelectorAll('.navigation-circle .line');
+                if(tabId == "trackTab"){
+                    for (let i = 0; i < circles.length; i++) {
+                        circles[i].style.display = "none";
+                    }
+                    for (let i = 0; i < lines.length; i++) {
+                        lines[i].style.display = "none";
+                    }
+                }else{
+                    for (let i = 0; i < circles.length; i++) {
+                        circles[i].style.display = "block";
+                    }
+                    for (let i = 0; i < lines.length; i++) {
+                        lines[i].style.display = "block";
+                    }
+                }
+                circles.forEach(circle => {
+                    const stepNum = parseInt(circle.dataset.step, 10);
+                    if (stepNum < currentIndex) {
+                        circle.classList.add("completed");
+                        circle.classList.remove("active", "upcoming");
+                    }
+                    else if (stepNum === currentIndex) {
+                        circle.classList.add("active");
+                        circle.classList.remove("completed", "upcoming");
+                    }
+                    else {
+                        circle.classList.add("upcoming");
+                        circle.classList.remove("completed", "active");
+                    }
+                });
+                lines.forEach((line, idx) => {
+                    const stepBefore = idx + 1;
+                    if (stepBefore < currentIndex) {
+                        line.classList.add("completed");
+                    } else {
+                        line.classList.remove("completed");
+                    }
+                });
+            }
+
+            
+       function MobilePhoneComparison(){
+            const verifiedMobileNum = document.querySelector(".salam_mobile_number.form-input");
+            const SalamMobileNum = document.querySelector(".mobilenumber.form-input");
+
+            if (verifiedMobileNum && SalamMobileNum) {
+                SalamMobileNum.disabled=true;
+                const value1 = SalamMobileNum.value.trim();
+                const value2 = verifiedMobileNum.value.trim();
+
+                if (value1 == value2) {
+                    alert("Mobile Number and Salam Mobile Number could not be same");
+                    return true;
+                }
+            }
+            return false;
+    }
+
+
+        function setAdditionalTicketDetailsParam(data) {
+            const extra = data.returnedResult?.additionalParams || {};
+
+            if (extra.ticketNumber) {
+                document.getElementById("TicketNumber").textContent = extra.ticketNumber;
+            }
+            if (extra.ticketOpenStatus) {
+                document.getElementById("ticketOpenStatus").textContent = extra.ticketOpenStatus;
+            }
+            if (extra.ticketClosedStatus) {
+                document.getElementById("ticketClosedStatus").textContent = extra.ticketClosedStatus;
+            }
+            if (extra.ticketMobileNumber) {
+                document.getElementById("ticketMobileNumber").textContent = extra.ticketMobileNumber;
+            }
+        }
+
+        if (typeof $$epiforms !== "undefined") {
+            $$epiforms(".EPiServerForms").on("formsSubmitted", function (event, data) {
+                showLoader();
+                const visibeFinalStep = document.querySelector("section.FormStep:not(.hide)");
+                const formContainer = document.querySelector(".EPiServerForms");
+                if (!visibeFinalStep) return;
+                const FinalIndex = parseInt(visibeFinalStep.dataset.fStepindex, 10) +1;
+                const activeTab = document.querySelector('.tabs-container .tab.active');
+                if (!activeTab) return;
+                const tabId = activeTab.dataset.tab;
+                if(FinalIndex==1 && tabId == "trackTab"){
+                      showLoader();
+                        if (event.isSuccess) {
+                            setAdditionalTicketDetailsParam(event);
+                            document.querySelectorAll('.EPiServerForms .Form__NavigationBar').forEach(el => {
+                                el.remove();
+                            });
+                        }else{
+                            alert("Reference number Complaint does not exist");
+                        }
+                    hideLoader();
+                }
+                if(FinalIndex ==3){
+                    if (event.isSuccess) {
+                        successContainer.style.display = "flex";
+                        if (formContainer) {
+                            formContainer.style.display = "none";
+                        }
+                        if (event.returnedResult && event.returnedResult.message) {
+                            document.getElementById("ticketNumber").innerText = event.returnedResult.message;
+                        }
+                    } else {
+                        if (formContainer) {
+                            formContainer.style.display = "none";
+                        }
+                        errorContainer.style.display = "flex";
+                    }
+                }
+                hideLoader();
+            });
+        }
+        function updateMobileNumberText(){
+                const mobileField = document.querySelector("input.mobilenumber");
+                if (mobileField?.value !== null && mobileField?.value !== "" && mobileField?.value.length >9) {
+                       let el = document.getElementById("mobilenumber");
+                       let currentText = el.innerText;
+                       let updatedText = currentText.replace('MobileNumber', mobileField?.value );
+                       el.innerText = updatedText;
+                }
+           }
+
+                   if (typeof $$epiforms !== 'undefined') {
+
+        $$epiforms('.EPiServerForms')
+            .on('formsStartSubmitting', function () {
+                showLoader();
+            })
+
+            .on('formsSubmitted', function () {
+                hideLoader();
+            })
+
+            .on('formsSubmittedError', function () {
+                      hideLoader();
+            });
+    }
+        function updateDisabledInputValue(){
+            const mobileField = document.querySelector("input.mobilenumber");
+            const disabledField = document.querySelector("input[disabled]");
+            const visibeFinalStep = document.querySelector("section.FormStep:not(.hide)");
+            if (!visibeFinalStep) return;
+            const FinalIndex = parseInt(visibeFinalStep.dataset.fStepindex, 10) +1;
+            if(FinalIndex == 3){
+                if (mobileField && disabledField) {
+                    localStorage.setItem("mobileValue", mobileField.value);
+                    const savedValue = localStorage.getItem("mobileValue");
+                    if (savedValue !== null) {
+                      disabledField.disabled = false;
+                      disabledField.value = savedValue;
+                      disabledField.disabled = true;
+                    }
+                    localStorage.removeItem("mobileValue");
+                }
+            }
+        }
+
+        function updateNextState() {
+            const activeTab = document.querySelector('.tabs-container .tab.active');
+            if (!activeTab) return;
+            const tabId = activeTab.dataset.tab;
+            const tabSection = document.getElementById(tabId);
+            const subCategory = document.querySelector("select[name='SubCategory']");
+            const tier2Form = subCategory?.selectedOptions[0]?.value;
+            const tier1Form = subCategory?.selectedOptions[0]?.dataset.tier1;
+            const tier2 = document.querySelector(".tier2");
+            const tier1 = document.querySelector(".tier1");
+            if (tier1) tier1.value = tier1Form || "";
+            if (tier2) tier2.value = tier2Form || "";
+            const tier3Form = subCategory?.selectedOptions[0]?.dataset.tier3;
+            const tier3 = document.querySelector(".tier3");
+            if (tier3) tier3.value = tier3Form || "";
+            if (!tabSection) return;
+            const visibleStep = tabSection.querySelector(
+                "section.Form__Element.FormStep.Form__Element--NonData:not(.hide)"
+            );
+            if (!visibleStep) return;
+            const nextBtn = tabSection.querySelector(".Form__NavigationBar .btnNext") || document.querySelector(".Form__NavigationBar .btnNext");
+            if (!nextBtn) return;
+            const requiredFields = Array.from(
+                visibleStep.querySelectorAll("input[required], textarea[required], select")
+            ).filter(field => {
+                const isVisible =
+                    field.offsetParent !== null &&
+                    window.getComputedStyle(field).display !== "none" &&
+                    !field.closest(".hide");
+                const isEmptySelect = field.tagName.toLowerCase() === "select" && field.value.trim() === "";
+                if (isEmptySelect) return true;
+                return field.required && !field.disabled && isVisible;
+            });
+            let allValid = true;
+            requiredFields.forEach(field => {
+                if (!field.value.trim() || !field.checkValidity()) {
+                    allValid = false;
+                }
+            });
+            nextBtn.disabled = !allValid;
+            nextBtn.classList.toggle("disabled", !allValid);
+        }
+
+        const tabss = document.querySelectorAll('.tabs-container .tab');
+        tabss.forEach(tab => {
+            tab.addEventListener('click', function () {
+                setTimeout(() => {
+                    updateNextState();
+                    updateNavigationCircles();
+                }, 50); 
+            });
+        });
+
+       document.addEventListener("click", function (e) {
+           const btn = e.target.closest("button[data-f-navigation-next]");
+           if (!btn) return;
+           const visibleStep = document.querySelector("section.FormStep:not(.hide)");
+           if (!visibleStep) return;
+           const stepIndex = parseInt(visibleStep.dataset.fStepindex, 10)+1;
+           if(stepIndex == 1){
+               updateMobileNumberText();
+           }
+          if (stepIndex == 3) {
+               var isDuplicate = MobilePhoneComparison();
+               if(isDuplicate){
+                   e.preventDefault();
+                   e.stopImmediatePropagation();
+                   return;
+               }
+           }
+       }, true);
+
+        function showLoader(){
+              document.querySelectorAll(".loader-overlay").forEach(el => el.style.display = "flex");
+        }
+
+        function hideLoader(){
+              document.querySelectorAll(".loader-overlay").forEach(el => el.style.display = "none");
+        }
+
+       $$epiforms('.EPiServerForms')
+               .on('formsStepValidating formsNavigateToStep afterNavigateNextStep formsSetupCompleted formsStepValidating', function () {
+                   setTimeout(updateNextButtonText, 50);
+                   updateNextState
+                   updateDisabledInputValue
+       });
+
+        // Field changes
+        document.body.addEventListener("input", ()=>{
+                 updateNextState();
+                 updateNavigationCircles();
+        });
+
+        document.body.addEventListener("change", ()=>{
+                 updateNextState();
+                 updateNavigationCircles();
+        });
+
+        // Step navigation buttons
+        document.body.addEventListener("click", function (e) {
+            if (e.target.matches(".btnNext, .btnPrev")) {
+                 showLoader();
+                    setTimeout(() => {
+                        updateNextState();
+                        updateNavigationCircles();
+                        updateDisabledInputValue();
+                        hideLoader();
+                    }, 20);
+                }
+        });
+
+        // Run initial check
+        updateNextState();
+        updateNavigationCircles();
+        updateDisabledInputValue();
+    });
+</script>

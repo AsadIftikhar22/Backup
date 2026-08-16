@@ -1,0 +1,18 @@
+@using Salam.Cms.Web.Features.Common.Components.PageNavigator.ViewModels
+@model PageNavigatorViewModel
+
+@if (Model?.Items != null && Model.Items.Any())
+{
+    <div class="anchor-links-block">
+        <div class="anchor-links-block__container">
+            <div class="anchor-links">
+                @foreach (var item in Model.Items)
+                {
+                    <a class="anchor-link" href="#@item.AnchorId">
+                        <span class="anchor-link__text">@item.Title</span>
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+}

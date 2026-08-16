@@ -1,0 +1,26 @@
+﻿@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using static Salam.Cms.Shared.Models.SalamConstants
+
+@model ProductSku
+
+@if (Model.CountriesAllowedPerPlan.HasValue && Model.CountriesAllowedPerPlan.Value > 0)
+{
+    <li class="list-item">
+        <div class="list-item__content">
+            <span class="list-item__content__text">
+                @if (Model.Language == "en")
+                {
+                    <strong>@Model.CountriesAllowedPerPlan</strong>
+                    @ContentHelper.GetDefaultFrontendLabel(Model, CatalogueAPIfields.Eligible_Countries)
+                }
+                else
+                {
+                    @ContentHelper.GetDefaultFrontendLabel(Model, CatalogueAPIfields.Eligible_Countries)
+                    <strong>@Model.CountriesAllowedPerPlan</strong>
+                }
+            </span>
+        </div>
+        <div class="list-item__tooltip"></div>
+    </li>
+}

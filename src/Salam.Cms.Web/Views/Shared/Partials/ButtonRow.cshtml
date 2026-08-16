@@ -1,0 +1,47 @@
+﻿@model EPiServer.SpecializedProperties.LinkItemCollection
+
+@{
+    var buttonClassPrimary = "button button-theme--primary";
+    var simpleButton = "button button-theme--simple-primary";
+    var buttonClassTransparent = "button button-theme--transparent-primary";
+    var linkCount = Model?.Count ?? 0;
+}
+
+@if (linkCount > 0)
+{
+    if (linkCount == 1)
+    {
+        var link = Model[0];
+        <a href="@Url.ContentUrl(link.Href)" target="@link.Target" title="@link.Title" class="@buttonClassPrimary">
+            <span>@link.Text</span>
+            <div class="arrow">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </a>
+    }
+    else
+    {
+        <div class="button-row">
+            @for (int i = 0; i < linkCount; i++)
+            {
+                var link = Model[i];
+                var buttonClass = i == 0 ? simpleButton : buttonClassTransparent;
+
+                <a href="@Url.ContentUrl(link.Href)" target="@link.Target" title="@link.Title" class="@buttonClass">
+                    <span>@link.Text</span>
+                    <div class="arrow">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+}

@@ -1,0 +1,56 @@
+﻿@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Web
+@using EPiServer.ServiceLocation
+@using EPiServer.Forms.Core.Internal
+@using EPiServer.Web.Mvc.Html;
+
+@model B2BFormHeadingBlock;
+
+@{
+    var formBusinessService = EPiServer.ServiceLocation.ServiceLocator.Current.GetInstance<FormBusinessService>();
+    var formElement = Model.FormElement;
+    var paragraphText = Model.ParagraphText;
+    var originalTextId = formElement.Guid + "__OriginalText";
+    var cssClasses = Model.GetValidationCssClasses();
+    string HintTextFontColor = Model.FontColor ?? " #666";
+    string HintTextFontSize = Model.FontSize ?? "28px";
+    string MobileTextFontSize = Model.MobileTextFontSize ?? "22px";
+    var ParagraphTextElementBlock_js = ModuleHelper.GetWebResourceContent(typeof(EPiServer.Forms.Implementation.Elements.ParagraphTextElementBlock), "EPiServer.Forms.ClientResources.ViewMode.ParagraphTextElementBlock.js");
+    ParagraphTextElementBlock_js = ParagraphTextElementBlock_js
+        .Replace("___FormElementGuid___", formElement.Guid.ToString())
+        .Replace("___DoPlaceholder___", ((!Model.DisablePlaceholdersReplacement && Model.HasPlaceHolder()) || Model.FindOwnerForm() == null).ToString().ToLower());
+
+    EPiServer.Framework.Web.Resources.ClientResources.RequireScriptInline(ParagraphTextElementBlock_js).AtFooter();
+}
+<style>
+    .heading-@formElement.Guid {
+        font-size: @HintTextFontSize;
+        color: @HintTextFontColor;
+    }
+    @@media(min-width: 992px) {
+        [dir="rtl"] .heading-@formElement.Guid {
+            margin-right: 28px;
+        }
+    }
+    @@media(max-width: 768px) {
+        .heading-@formElement.Guid {
+            font-size: @MobileTextFontSize;
+        }
+    }
+</style>
+@using (Html.BeginElement(Model, new { @class = "FormParagraphText Form__Element--NonData" + cssClasses, @data_f_element_nondata = "" }))
+{
+    if (ServiceLocator.Current.GetInstance<IContextModeResolver>().CurrentMode == ContextMode.Edit)
+    {
+        <div class="">
+            <label for="@formElement.Guid" class="heading-@formElement.Guid Form__Element__Caption">@Model?.Heading</label>
+        </div>
+        @* <div id="@formElement.Guid" @Html.Raw(Model.AttributesString)>@Html.Raw(Model.EditViewFriendlyTitle)</div> *@
+    }
+    else
+    {
+        <div class="">
+            <label for="@formElement.Guid" class="heading-@formElement.Guid Form__Element__Caption">@Model?.Heading</label>
+        </div>
+    }
+}

@@ -1,0 +1,19 @@
+﻿@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.Common.Extensions
+@using PictureRenderer
+@using PictureRenderer.Profiles
+@using Salam.Cms.Web.Features.HowToGetESim.ViewModels
+
+@model HowToGetESimBlockViewModel
+
+
+<div class="section-wrapper">
+    <div @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle) class="product-selector product-selector__wrapper product-selector__wrapper--bg-light" style="scroll-margin-top: 194px;">
+        <section class="esim-section">
+            <h2>@Model.CurrentBlock.Heading</h2>
+            <div class="divider"></div>
+            @Html.Raw(Model.CurrentBlock.MainDescription)
+            <div class="divider"></div>
+        </section>
+    </div>
+</div>

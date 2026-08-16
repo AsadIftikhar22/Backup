@@ -1,0 +1,1290 @@
+﻿@using EPiServer.Framework.ClientResources
+@using EPiServer.ServiceLocation
+@using EPiServer.Forms
+@using EPiServer.Forms.Core
+@using EPiServer.Forms.Core.Internal
+@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.EditView.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web
+@using EPiServer.Shell.Web.Mvc.Html
+@using EPiServer.Web.Routing
+@using Salam.Cms.Web.Features.Forms.ProtectorChannelFormContainerBlock
+@using Salam.Cms.Web.Features.Forms.WPFormStepBlock
+@using Salam.Cms.Web.Infrastructure.Forms.Services
+@using EPiServer.Core
+@using EPiServer.Globalization
+
+@model ProtectorChannelFormContainerBlock
+@inject UrlResolver UrlResolver
+@{
+    var dataSubmissionService = ServiceLocator.Current.GetInstance<ProtectorChannelFormDataSubmissionService>();
+    var readOnlyModeMessage = dataSubmissionService.GetReadOnlyModeMessage();
+    var currentMode = ServiceLocator.Current.GetInstance<IContextModeResolver>().CurrentMode;
+    var formTitleId = Model.Form.FormGuid + "_label";
+    var _cspNonceService = ServiceLocator.Current.GetInstance<ICspNonceService>();
+    var nonceAttribute = string.IsNullOrEmpty(_cspNonceService.GetNonce()) ? "" : $"nonce = \"{_cspNonceService.GetNonce()}\"";
+
+    var bgColor = Model.SelectedHexColor;
+    var headingFontSize = Model.HeadingFontSize;
+    var headingFontWeight = Model.HeadingFontWeight;
+    var MobileheadingFontSize = Model.MobileHeadingFontSize ?? "35px";
+    var MobileheadingFontWeight = Model.MobileHeadingFontWeight ?? "400";
+    var paragraphFontSize = Model.ParagraphFontSize;
+    var MobileParagraphFontSize = Model.MobileParagraphFontSize ?? "16px";
+    var formWidth = Model.FormWidth ?? "676px";
+    ViewBag.SubmitMessage = Model.SubmitSuccessMessage;
+    var LabelFormFontColor = Model.LabelFormColor ?? "#2e7d32";
+    var LabelFormFontSize = Model.LabelFormSize ?? "14px";
+    var lang = ContentLanguage.PreferredCulture.TwoLetterISOLanguageName;
+}
+<style>
+    .form-container {
+        background: @bgColor;
+    }
+
+    button.form-submit-btn.Form__NavigationBar__Action.FormExcludeDataRebind.btnNext.disabled {
+        color: #80909a !important;
+        background: rgba(128, 144, 154, 0.2) !important;
+        pointer-events: none;
+        border: none !important;
+    }
+
+    .form-header {
+        text-align: left !important;
+    }
+
+    .form-box {
+        margin: 0 auto;
+        background: unset !important;
+    }
+
+    .containers {
+        margin: auto;
+        max-width: 1312.67px;
+    }
+
+    .form-header p {
+        font-size: @paragraphFontSize;
+    }
+
+    .form-header h1 {
+        font-size: @headingFontSize;
+        font-weight: @headingFontWeight;
+    }
+
+    .form-main-bg {
+        width: @formWidth;
+    }
+
+    .form-field label {
+        font-size: @LabelFormFontSize;
+        color: #80909a;
+    }
+
+    .EPiServerForms .Form__NavigationBar .Form__NavigationBar__Action:disabled{
+        opacity: unset;
+    }
+    .EPiServerForms .Form__Element .Form__Element__Caption {
+        font-size: 16px;
+    }
+
+    @@media(max-width: 768px) {
+        .form-main-bg {
+            width: 100%;
+        }
+
+        .half-width {
+            display: block;
+            width: 100%;
+            margin-right: 0;
+            vertical-align: initial;
+        }
+
+        .form-header p {
+            font-size: @MobileParagraphFontSize;
+            font-weight: 700px;
+        }
+
+        .business-solution-card {
+            height: 100%;
+        }
+    }
+
+    .btnNext {
+        height: unset !important;
+        background: rgba(128, 144, 154, 0.2) !important;
+        color: #80909A !important;
+        max-width: 200px !important;
+        padding: 18px 12px !important;
+        border-radius: 50px !important;
+        background: #00b140 !important;
+        color: #fff !important;
+        text-align: center !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        line-height: 120% !important;
+        text-transform: capitalize !important;
+        margin: 40px auto !important;
+        display: block !important;
+        border: 1px solid rgba(41, 128, 189, 0.5);
+    }
+
+    .form-result-modal__content .form-result-modal__close {
+        cursor: pointer;
+    }
+
+    .form-result-modal {
+        position: fixed;
+        inset: 0;
+        display: none;
+        z-index: 9999;
+    }
+
+        .form-result-modal.active {
+            display: block;
+        }
+
+    .form-result-modal__overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.6);
+    }
+
+    .form-result-modal__content {
+        position: relative;
+        max-width: 600px;
+        margin: 10vh auto;
+        background: #fff;
+        padding: 24px;
+        border-radius: 8px;
+        height: 372px;
+    }
+
+    .form-result-modal__close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        font-size: 24px;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .form-input {
+        padding: 8px 12px !important;
+    }
+
+    #goHomeBtn {
+        margin-top: 70px;
+    }
+    /* ============================= */
+    /* Mobile Responsive Fix */
+    /* ============================= */
+    @@media (max-width: 768px) {
+        .form-box {
+            padding: 0 !important;
+        }
+
+        .block.b2bnumberelementblock p {
+            margin-top: 18px;
+        }
+
+        .form-header {
+            padding: 0 !important;
+        }
+        /* Tabs */
+        .tabs-container {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tab {
+            flex: 1 1 100%;
+            border-radius: 8px;
+        }
+        /* Form wrapper */
+        .form-main-bg {
+            width: 100%;
+        }
+        /* Header row */
+        .form-header.inline-row {
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+            .form-header.inline-row .header-text {
+                font-size: 14px;
+                white-space: normal;
+            }
+
+        .FormStep__Title {
+            font-size: 16px;
+        }
+        /* Make input + button stack */
+        .EPiServerForms > div {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px !important;
+        }
+
+            .EPiServerForms > div > section + nav {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px !important;
+            }
+        /* Input full width */
+        .form-input,
+        .EPiServerForms .FormTextbox {
+            width: 100%;
+        }
+        /* Button full width */
+        .EPiServerForms .btnNext {
+            width: 100%;
+            margin: 10px 0 0 0 !important;
+            padding: 14px 0 !important;
+        }
+        /* Remove massive desktop spacing */
+        .EPiServerForms > div {
+            gap: 12px !important;
+        }
+        /* Modal responsive */
+        .modal-content {
+            width: 90%;
+            max-width: 95%;
+        }
+
+        select.form-input {
+            background-color: #fff;
+            border-radius: 8px;
+            border: solid 2px gainsboro;
+            background-color: white;
+            width: 100%;
+            position: relative;
+            margin: 0 auto;
+            cursor: pointer;
+            border: unset !important;
+            border-radius: unset !important;
+            height: 61px;
+            font-size: 22px;
+        }
+
+            select.form-input ::after {
+                appearance: none;
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238AA3A0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                right: 7px;
+                top: 10px;
+            }
+
+        .EPiServerForms .Form__NavigationBar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* optional: stack vertically */
+        }
+
+            .EPiServerForms .Form__NavigationBar .Form__NavigationBar__Action {
+                margin: 0.5rem 0; /* spacing between buttons */
+                width: 100%; /* optional: full width on mobile */
+                max-width: 300px; /* optional limit */
+            }
+    }
+
+    .form-submit-btn {
+        background-color: #003831;
+        color: #01ec0d;
+        cursor: pointer;
+        display: flex;
+        font-family: inherit;
+        font-size: 18px;
+        font-weight: 700;
+        position: relative;
+        width: 100%;
+    }
+
+    .form-submit-btn {
+        border: none;
+        border-radius: 16px;
+        gap: 0;
+        padding: 14px 20px;
+    }
+
+    /* Root wrapper */
+    .fraud-modal-wrapper {
+        margin: 0;
+        background: #f3f3f3;
+        display: none;
+    }
+
+    #success-view {
+        display: none;
+    }
+    /* Overlay */
+    .fraud-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999999;
+    }
+
+    /* Modal */
+    .fraud-modal-box {
+        background: #fff;
+        width: 420px;
+        max-width: 90%;
+        border-radius: 12px;
+        padding: 30px 26px 28px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.15);
+        position: relative;
+    }
+
+    /* Close */
+    .fraud-modal-close {
+        position: absolute;
+        right: 18px;
+        top: 14px;
+        font-size: 24px;
+        cursor: pointer;
+        color: #333;
+    }
+
+    /* Heading */
+    .fraud-modal-title {
+        font-size: 20px;
+        line-height: 1.4;
+        font-weight: 700;
+        margin: 0 0 25px;
+        text-align: center;
+        color: #0d2235;
+    }
+
+    /* Options */
+    .fraud-modal-option {
+        display: flex;
+        align-items: center;
+        padding: 14px 0;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        font-size: 15px;
+        color: #111;
+    }
+
+        .fraud-modal-option:last-of-type {
+            border-bottom: none;
+        }
+
+        /* Hide native radio */
+        .fraud-modal-option input {
+            display: none;
+        }
+
+    /* Custom radio */
+    .fraud-modal-radio {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid #bbb;
+        margin-right: 12px;
+        position: relative;
+        flex-shrink: 0;
+        transition: 0.2s;
+    }
+
+    .fraud-modal-option input:checked + .fraud-modal-radio {
+        border-color: #28a745;
+        background: #28a745;
+    }
+
+        .fraud-modal-option input:checked + .fraud-modal-radio::after {
+            content: "";
+            position: absolute;
+            inset: 4px;
+            background: #fff;
+            border-radius: 50%;
+        }
+
+    /* Button */
+    .fraud-modal-btn {
+        margin-top: 26px;
+        width: 100%;
+        background: #2ca745;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 13px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.25s;
+    }
+
+        .fraud-modal-btn:hover {
+            background: #23913d;
+        }
+    /* Textarea container */
+    .fraud-modal-textarea {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+        /* Textarea label */
+        .fraud-modal-textarea label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0d2235;
+            margin-bottom: 6px;
+        }
+
+        /* Textarea input */
+        .fraud-modal-textarea textarea {
+            resize: vertical; /* User can resize vertically only */
+            min-height: 100px; /* Minimum height */
+            padding: 10px 12px; /* Padding inside textarea */
+            font-size: 14px;
+            font-family: inherit; /* Match modal font */
+            border: 1px solid #ccc; /* Light gray border */
+            border-radius: 8px;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+
+            /* Focus state */
+            .fraud-modal-textarea textarea:focus {
+                border-color: #28a745;
+                box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
+            }
+
+    .EPiServerForms .Form__NavigationBar .Form__NavigationBar__Action {
+        width: 100%;
+    }
+
+    .success-container {
+        text-align: center;
+        background-color: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        /* box-shadow: 0 10px 30px rgba(0,0,0,0.1); */
+    }
+
+    .success-header {
+        padding: 239px 24px 0;
+        /* background: linear-gradient(to bottom, #002035, #002035 65%, #DCDCDC 65%, #DCDCDC 100%); */
+        position: relative;
+    }
+
+        .success-header img {
+            width: 227px;
+            height: auto;
+            border-radius: 50%;
+            padding: 20px;
+            position: absolute;
+            top: 51px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+    .success-body {
+        padding: 80px 20px 40px 20px;
+    }
+
+        .success-body h1 {
+            font-size: 26px;
+            color: #00b140; /* green */
+            margin-bottom: 20px;
+        }
+
+        .success-body p {
+            font-size: 16px;
+            color: #111;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+            .success-body p strong {
+                font-weight: 700;
+            }
+
+        .success-body .home-btn {
+            display: inline-block;
+            margin-top: 30px;
+            background-color: #00b140;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            padding: 14px 28px;
+            border-radius: 50px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+            .success-body .home-btn:hover {
+                background-color: #019935;
+            }
+
+    @@media (max-width: 480px) {
+        .success-header {
+            padding: 80px 20px 20px 20px;
+        }
+
+            .success-header img {
+                width: 100px;
+                padding: 15px;
+                top: -50px;
+            }
+
+        .success-body h1 {
+            font-size: 22px;
+        }
+
+        .success-body p {
+            font-size: 14px;
+        }
+    }
+
+    hr {
+        margin-top: 20px;
+    }
+
+    html[dir=rtl] .form-header h1, html[dir=rtl] .form-header p {
+        text-align: right !important;
+    }
+
+    html[dir=rtl] .form-header {
+        text-align: right !important;
+    }
+
+    }
+
+    .note-icon {
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 5px;
+    }
+
+    .success-body h1 {
+        font-size: 45px;
+    }
+
+    .success-body p {
+        font-size: 23px;
+    }
+
+    .loader-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.6);
+        display: none; /* hidden by default */
+        justify-content: center;
+        align-items: center;
+    }
+
+    .loader {
+        width: 120px;
+        height: 120px;
+        border: 14px solid #eee;
+        border-top: 14px solid #00cc44;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .success-section {
+        text-align: center;
+    }
+
+    /* Top dark section */
+    .top-bg {
+        height: 180px;
+        background-color: #062f3f; /* dark blue */
+    }
+
+    /* Main content */
+    .content {
+        margin-top: -100px;
+        padding: 20px;
+    }
+
+    /* Image */
+    .success-img {
+        width: 180px;
+        margin-bottom: 20px;
+    }
+
+    /* Heading */
+    h1 {
+        color: #1aa34a;
+        font-size: 38px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    /* Text */
+    .subtitle {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .note {
+        color: #333;
+        margin-bottom: 30px;
+    }
+
+    /* Button */
+    .btn {
+        background-color: #1aa34a;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 30px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        .btn:hover {
+            background-color: #14873c;
+        }
+</style>
+
+@{
+    async void RenderFormBody()
+    {
+        var statusDisplay = "hide";
+        var message = ViewBag.Message;
+        var submissionWarning = ViewBag.IsSuccess is not null && !ViewBag.IsSuccess;
+
+        if (!ViewBag.IsWorkingInNonJSMode)
+        {
+            @await Html.PartialAsync("FormContainerInitScript", Model)
+        }
+
+        if ((ViewBag.FormFinalized || ViewBag.IsProgressiveSubmit)
+             && (Model.SubmitSuccessMessage is null || Model.SubmitSuccessMessage.IsEmpty))
+        {
+            statusDisplay = "Form__Success__Message";
+        }
+        else if ((submissionWarning || (!ViewBag.Submittable && ViewBag.IsSuccess is null)) && !string.IsNullOrEmpty(message))
+        {
+            statusDisplay = "Form__Warning__Message";
+        }
+
+        <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormGuid" value="@Model.Form.FormGuid" data-f-type="hidden" />
+
+        <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormHostedPage" value="@FormsExtensions.GetCurrentPageLink()?.ToString()" data-f-type="hidden" />
+        <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormLanguage" value="@FormsExtensions.GetCurrentFormLanguage(Model)" data-f-type="hidden" />
+        <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormCurrentStepIndex" value="@(ViewBag.CurrentStepIndex ?? " ")" data-f-type="hidden" />
+        <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormSubmissionId" value="@ViewBag.FormSubmissionId" data-f-type="hidden" />
+        @Html.GenerateAntiForgeryToken(Model)
+
+        if (ViewBag.IsReadOnlyMode && !string.IsNullOrWhiteSpace(readOnlyModeMessage))
+        {
+            <div class="Form__Status">
+                <span class="Form__Readonly__Message" role="alert">
+                    @readOnlyModeMessage
+                </span>
+            </div>
+        }
+
+
+        RenderFormSuccessMessage();
+
+        <div class="Form__Status">
+            <div role="status" class="Form__Status__Message js-form-status-message @statusDisplay" data-f-form-statusmessage>
+                @Html.Raw(message)
+            </div>
+        </div>
+        <div>
+            @{
+                var currentStepIndex = ViewBag.CurrentStepIndex == null ? -1 : (int)ViewBag.CurrentStepIndex;
+                string stepDisplaying;
+                string btnText = string.Empty;
+            }
+            @foreach (var step in Model.Form.Steps.Select((value, i) => new { i, value }))
+            {
+                stepDisplaying = (currentStepIndex == step.i && !ViewBag.FormFinalized && (bool)ViewBag.IsStepValidToDisplay) ? "" : "hide";
+                var stepBlock = (step.value.SourceContent as ElementBlockBase);
+
+                // Get your custom step block
+                var stepFormBlock = step.value.SourceContent as WPFormStepBlock;
+
+                // Fallback if not set
+                btnText = stepBlock != null && !string.IsNullOrEmpty(stepFormBlock?.btnTextNew)
+                ? stepFormBlock.btnTextNew
+                : (lang == "en" ? "Continue" : "ارسال");
+
+                <section id="@step.value.ElementName"
+                         data-f-type="step"
+                         data-step-index="@step.i"
+                         data-btn-text="@btnText"
+                         data-f-element-name="@step.value.ElementName"
+                         class="Form__Element FormStep Form__Element--NonData @stepDisplaying"
+                         data-f-stepindex="@step.i"
+                         data-f-element-nondata>
+                    @if (stepBlock != null)
+                    {
+                        Html.RenderContentData(step.value.SourceContent, false);
+                    }
+                    @{
+                        Html.RenderForm(step.i, step.value.Elements);
+                    }
+                </section>
+
+            }
+
+            @{
+                var currentDisplayStepCount = Model.Form.Steps.Count();
+                if (currentDisplayStepCount > 1 && currentStepIndex > -1 && currentStepIndex < currentDisplayStepCount && !ViewBag.FormFinalized)
+                {
+                    if (Model.ShowNavigationBar)
+                    {
+                        <nav role="navigation" class="Form__NavigationBar" data-f-type="navigationbar" data-f-element-nondata>
+                            <button type="submit" name="submit" value="@SubmitButtonType.NextStep.ToString()" class="form-submit-btn Form__NavigationBar__Action FormExcludeDataRebind btnNext"
+                                    data-f-navigation-next>
+                                @btnText
+                            </button>
+                        </nav>
+                    }
+                }
+            }
+        </div>
+
+    }
+
+    async void RenderFormSuccessMessage()
+    {
+        if (Model.SubmitSuccessMessage is not null && !Model.SubmitSuccessMessage.IsEmpty && (ViewBag.FormFinalized || ViewBag.IsProgressiveSubmit))
+        {
+            <div class="Form__Success">
+                <div role="status" class="Form__SubmissionSuccess__Message Form__Success__Message" id="Success__Message__@Model.Form.FormGuid" data-f-form-successmessage>
+                    @{
+                        Html.RenderFormXhtmlString(Model.SubmitSuccessMessage);
+                    }
+                </div>
+            </div>
+        }
+    }
+}
+
+
+@if (currentMode == ContextMode.Edit)
+{
+    <link rel="stylesheet" type="text/css" data-f-resource="EPiServerForms.css" href='@EPiServer.Shell.Paths.ToClientResource(typeof(FormsModule), "ClientResources/ViewMode/EPiServerForms.css")' />
+
+    @if (Model.Form != null)
+    {
+        <div class="EPiServerForms">
+            <h2 class="Form__Title">@Html.PropertyFor(m => m.Title) </h2>
+            <h4 class="Form__Description">@Html.PropertyFor(m => m.Description)</h4>
+            @Html.PropertyFor(m => m.ElementsArea, new { Tag = "" })
+        </div>
+    }
+    else
+    {
+        <div class="EPiServerForms">
+            <span class="Form__Warning">@Html.Translate("/episerver/forms/editview/cannotbuildformmodel")</span>
+        </div>
+    }
+}
+else
+{
+    if (Model.Form != null)
+    {
+        var validationCssClass = ViewBag.ValidationFail ? "ValidationFail" : "ValidationSuccess";
+        if (ViewBag.RenderingFormUsingDivElement)
+        {
+            <div method="post" data-f-metadata="@Model.MetadataAttribute" class="EPiServerForms @validationCssClass" data-f-type="form" role="form" aria-labelledby="@formTitleId" id="@Model.Form.FormGuid">
+                @{
+                    RenderFormBody();
+                }
+            </div>
+        }
+        else
+        {
+            <section class="">
+                <div class="">
+                    <div class="containers">
+                        <div class="form-header">
+                            @if (!string.IsNullOrEmpty(Model.Title))
+                            {
+                                <h1 id="@formTitleId">@Model.Title</h1>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.FormDescrption))
+                            {
+                                <p>@Model.FormDescrption</p>
+                            }
+                        </div>
+                        <div class="form-box">
+                            <form method="post" novalidate="novalidate"
+                                  data-f-metadata="@Model.MetadataAttribute" aria-labelledby="@formTitleId"
+                                  enctype="multipart/form-data" class="EPiServerForms @validationCssClass" data-f-type="form" id="@Model.Form.FormGuid">
+                                @{
+                                    RenderFormBody();
+                                }
+
+                            </form>
+                        </div>
+
+                        @if (Model.NoteProtectionChannelFooter != null)
+                        {
+                            <hr />
+                            <p><strong>@Html.Raw(Model.NoteProtectionChannelFooter)</strong></p>
+                            <br />
+                        }
+                    </div>
+                </div>
+            </section>
+        }
+
+    }
+}
+<div class="fraud-modal-wrapper">
+    <div class="fraud-modal-overlay">
+        <div class="fraud-modal-box">
+            <div class="fraud-modal-close">&times;</div>
+            @if (!String.IsNullOrEmpty(Model?.ProtectorChannelModelElementBlock?.FraudModelTitle))
+            {
+                <h2 class="fraud-modal-title">@Model?.ProtectorChannelModelElementBlock?.FraudModelTitle</h2>
+            }
+
+            <div id="modalStepContent">
+                @foreach (var ratingItem in Model?.ProtectorChannelModelElementBlock?.RatingDetails)
+                {
+                    <label class="fraud-modal-option">
+                        <input type="radio" name="rating" value="@ratingItem?.Value">
+                        <span class="fraud-modal-radio"></span>
+                        @ratingItem?.Text
+                    </label>
+                }
+                <div class="fraud-modal-textarea" id="ratingFeedback" style="display:none;">
+                    <label>@Model?.ProtectorChannelModelElementBlock?.RatingFeedbackLabel</label>
+                    <textarea name="ratingDetails"
+                              rows="4"
+                              class="form-input"></textarea>
+                </div>
+
+                <button type="button" class="fraud-modal-btn">@Model?.ProtectorChannelModelElementBlock?.FraudModelBtnText</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="fraud-modal-wrapper" id="success-modal">
+    <div class="fraud-modal-overlay">
+        <div class="fraud-modal-box">
+            <div class="fraud-modal-close">&times;</div>
+            <div class="success-container">
+                <div class="success-header">
+                    <img src="https://staging-mobile.salammobile.sa/wp-content/uploads/2025/05/Status.png.webp" />
+                    <div class="success-body">
+                        <h1>@Model?.SuccessMessageTxt</h1>
+                        <p>@Model?.SuccessMessageDescp</p>
+                        @if (LinkItemExtensions.IsValid(Model?.SuccessHomePageUrl))
+                        {
+                            <a href="@Url.ContentUrl(Model?.SuccessHomePageUrl?.Href)" title="@Model?.SuccessHomePageUrl?.Title" target="@Model?.SuccessHomePageUrl?.Target"
+                               class="home-btn">@Model?.SuccessHomePageUrl?.Text</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="success-view">
+    <section class="success-section">
+        <div class="top-bg"></div>
+        <div class="content">
+            <img src="https://staging-mobile.salammobile.sa/wp-content/uploads/2023/10/absherVerified.svg"
+                 alt="Success"
+                 class="success-img" />
+            <h1>@Model?.SuccessMessagePageTxt</h1>
+            @Html.Raw(Model?.SuccessMessagePageDescp)
+            @if (LinkItemExtensions.IsValid(Model?.SuccessHomePageUrl))
+            {
+                <button href="@Url.ContentUrl(Model?.SuccessHomePageUrl?.Href)" title="@Model?.SuccessHomePageUrl?.Title" target="@Model?.SuccessHomePageUrl?.Target"
+                        class="btn">
+                    @Model?.SuccessHomePageUrl?.Text
+                </button>
+            }
+        </div>
+    </section>
+</div>
+<div id="formLoader" class="loader-overlay">
+    <div class="loader"></div>
+</div>
+<script>
+       document.addEventListener("DOMContentLoaded", function (e) {
+        sessionStorage.clear();
+       if (typeof epi !== 'undefined' && epi.EPiServer.Forms) {
+            console.log("Form JS Enabled");
+            epi.EPiServer.Forms.AsyncSubmit = true;
+       }
+
+       MobilePhoneOTPValidation();
+       const form = document.querySelector(".EPiServerForms");
+       if (!form) return;
+        function updateNextButtonText() {
+
+               const nextBtn = document.querySelector(".Form__NavigationBar .btnNext");
+               if (!nextBtn) return;
+               const activeStep = document.querySelector('.FormStep:not(.hide)');
+               if (!activeStep) return;
+               const btnText = activeStep.dataset.btnText;
+               if (btnText && btnText.trim() !== "") {
+                   nextBtn.innerText = btnText;
+           }
+       }
+
+       updateNextButtonText();
+           if (typeof $$epiforms !== 'undefined') {
+
+        $$epiforms('.EPiServerForms')
+            .on('formsStartSubmitting', function () {
+                showLoader();
+            }).on('formsSubmitted', function () {
+                hideLoader();
+            }).on('formsSubmittedError', function () {
+                      hideLoader();
+            });
+    }
+       $$epiforms('.EPiServerForms')
+               .on('formsNavigateToStep afterNavigateNextStep formsStepValidating', function () {
+                   setTimeout(updateNextButtonText, 50);
+       });
+       const wrapper = document.querySelector('.fraud-modal-wrapper');
+       const successModal = document.getElementById('success-modal');
+       const closeBtn = successModal.querySelector('.fraud-modal-close');
+       const modalOverlay = document.querySelector('.fraud-modal-overlay');
+       const ModalSubmitBtn=document.querySelector('.fraud-modal-btn');
+       const SuccessPageContent=document.getElementById('success-view');
+       wrapper.style.display = "none";
+       modalOverlay.querySelector(".fraud-modal-close")
+           ?.addEventListener("click", hideModal);
+       modalOverlay.addEventListener("click", e => {
+           if (e.target === modalOverlay) {
+           hideModal();
+           hideLoader();
+           }
+       });
+       function showModal() {
+           document.querySelector('.fraud-modal-wrapper').style.display = "block";
+
+       }
+
+       function hideModal() {
+           document.querySelector('.fraud-modal-wrapper').style.display = "none";
+           hideLoader();
+       }
+       function showLoader(){
+              const loader = document.getElementById("formLoader");
+                if (loader) loader.style.display = "flex";
+       }
+
+       function hideLoader(){
+              const loader = document.getElementById("formLoader");
+                if (loader) loader.style.display = "none";
+       }
+
+       let modalConfirmed = false;
+
+        function getModalValues() {
+            const selectedRating = document.querySelector(
+                   '.fraud-modal-option input[type="radio"]:checked'
+            );
+
+            return {
+                   rating: selectedRating ? selectedRating.value : ""
+            };
+        }
+            document.addEventListener("keydown", function (e) {
+                  if (e.code === "Enter") {
+                         updateMobileNumberText();
+                  }
+                    showLoader();
+                    const visibleStep = document.querySelector("section.FormStep:not(.hide)");
+                    if (!visibleStep) return;
+                    const stepIndex = parseInt(visibleStep.dataset.fStepindex, 10);
+                       if (stepIndex === 2 && !modalConfirmed && e.code === "Enter") {
+                            e.preventDefault();
+                            e.stopImmediatePropagation();
+                            showModal();
+
+                       }
+                    hideLoader();
+                 // }
+            }, true);
+
+            document.addEventListener("click", function (e) {
+                   updateMobileNumberText();
+            });
+
+            function updateMobileNumberText(){
+                const mobileField = document.querySelector("input.mobilenumber");
+                if (mobileField?.value !== null && mobileField?.value !== "" && mobileField?.value.length >9) {
+                       let el = document.getElementById("mobilenumber");
+                       let currentText = el.innerText;
+                       let updatedText = currentText.replace('MobileNumber', mobileField?.value );
+                       el.innerText = updatedText;
+                }
+           }
+
+           document.addEventListener("click", function (e) {
+           const btn = e.target.closest("button[data-f-navigation-next]");
+           if (!btn) return;
+           const visibleStep = document.querySelector("section.FormStep:not(.hide)");
+           if (!visibleStep) return;
+           const stepIndex = parseInt(visibleStep.dataset.fStepindex, 10);
+           if(stepIndex == 0){
+               updateMobileNumberText();
+           }
+           if (stepIndex === 2 && !modalConfirmed) {
+               showLoader();
+               e.preventDefault();
+               e.stopImmediatePropagation();
+               var isDuplicate = MobilePhoneComparison();
+               var isInvalidPhone = MobilePhoneValidation();
+               if(isDuplicate || isInvalidPhone){
+                   return;
+               }
+               showModal();
+               hideLoader();
+           }
+       }, true);
+
+       function MobilePhoneComparison(){
+            const blocks = document.querySelectorAll(".b2bnumberelementblock");
+            const values = [];
+
+            blocks.forEach(block => {
+                    const input = block.querySelector("input[type='text']");
+                  if (input) {
+                        values.push(input.value.trim());
+                  }
+            });
+            const uniqueValues = [...new Set(values)];
+
+            if (uniqueValues.length < values.length) {
+                    alert("The Reported Identity and Reported Number could not be same");
+                    return true;
+            }
+            return false;
+       }
+
+       function MobilePhoneOTPValidation(){
+                const inputs = document.querySelectorAll(".mobilenumber");
+                inputs.forEach(input => {
+                  input.addEventListener("input", () => {
+                    const value = input.value.trim();
+                    const patternText = input.pattern;
+                    const regex = new RegExp(patternText);
+
+                        // Get the outer error container
+                        const outerError = input.nextElementSibling;
+                        // Get the inner error span inside it
+                        const innerError = outerError?.querySelector(".Form__Element__ValidationError");
+
+                        if (value.length === 10 && !regex.test(value)) {
+                            // Show the outer span
+                            if (outerError) {
+                                document.querySelector('.error-message').style.removeProperty("display")
+                            }
+                            // Add your error text
+                            if (innerError) {
+                                innerError.textContent = "Please enter number in valid format";
+                                innerError.classList.remove("hidden");
+                            }
+                        } else {
+                            // Clear outer and inner
+                            if (outerError) {
+                                outerError.style.display = "none"; // hide it
+                            }
+                            if (innerError) {
+                                innerError.textContent = "";
+                                innerError.classList.add("hidden");
+                            }
+                        }
+                    });
+                });
+       }
+
+       function MobilePhoneValidation() {
+        setTimeout(showLoader, 20);
+        let valid = false;
+
+        let senderMobileWrapper = document.querySelector('.sender-mobile');
+        let callerMobileWrapper = document.querySelector('.caller-mobile');
+        let internationalMobileWrapper = document.querySelector('.international-sender-mobile');
+        let localLandlineNumberWrapper = document.querySelector('.local-landline-sender-mobile');
+
+        // Sender Mobile
+        if (senderMobileWrapper) {
+            const number = (senderMobileWrapper.value || '').trim();
+
+            if (!number.startsWith('0') || number.length !== 10) {
+                showError(senderMobileWrapper, 'Oops, you entered the wrong number');
+                valid = true;
+            } else {
+                hideError(senderMobileWrapper);
+            }
+        }
+
+        // Caller Mobile
+        if (callerMobileWrapper) {
+            const number = (callerMobileWrapper.value || '').trim();
+
+            if (!number.startsWith('0') || number.length !== 10) {
+                showError(callerMobileWrapper, 'Oops, you entered the wrong number');
+                valid = true;
+            } else {
+                hideError(callerMobileWrapper);
+            }
+        }
+
+        // International Sender Mobile
+        if (internationalMobileWrapper) {
+            const number = (internationalMobileWrapper.value || '').trim();
+
+            if (!number.startsWith('00') || number.length < 12) {
+                showError(internationalMobileWrapper, 'Oops, you entered the wrong number');
+                valid = true;
+            } else {
+                hideError(internationalMobileWrapper);
+            }
+        }
+
+        // Local Landline
+        if (localLandlineNumberWrapper) {
+            const number = (localLandlineNumberWrapper.value || '').trim().replace(/\s/g, '');
+
+            if (!number.startsWith('01') || number.length !== 10) {
+                showError(localLandlineNumberWrapper, 'Oops, you entered the wrong number');
+                valid = true;
+            } else {
+                hideError(localLandlineNumberWrapper);
+            }
+        }
+        setTimeout(hideLoader, 20);
+        return valid;
+    }
+
+        function showError(wrapper, message) {
+            if (!wrapper) return;
+            const forField = wrapper.closest('.form-field');
+                if (forField) {
+                    const errorWrapper = forField.querySelector('.error-message');
+                    const errorText = forField.querySelector('.Form__Element__ValidationError');
+                    if (errorWrapper && errorText) {
+                        errorText.textContent = message;
+                        errorText.classList.remove('hidden');
+                        errorWrapper.style.display = 'block';
+                    }
+                }
+        }
+
+        function hideError(wrapper) {
+
+            if (!wrapper) return;
+
+            const forField = wrapper.closest('.form-field');
+            if (forField) {
+                const errorWrapper = forField.querySelector('.error-message');
+                const errorText = forField.querySelector('.Form__Element__ValidationError');
+                if (errorWrapper && errorText) {
+                    errorText.textContent = '';
+                    errorText.classList.add('hidden');
+                    errorWrapper.style.display = 'none';
+                }
+            }
+            hideLoader();
+        }
+
+        document.querySelectorAll('input[name="rating"]').forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                var selectedValue = parseInt(this.value);
+                if (selectedValue === 3 || selectedValue === 4 || selectedValue === 5) {
+                    document.getElementById("ratingFeedback").style.display = "block";
+                } else {
+                    document.getElementById("ratingFeedback").style.display = "none";
+                }
+            });
+         });
+
+
+        if (typeof $$epiforms !== "undefined") {
+            $$epiforms(".EPiServerForms").on("formsSubmitted", function (event, data) {
+            const visibleStep = document.querySelector("section.FormStep:not(.hide)");
+            if (!visibleStep) return;
+            const stepIndex = parseInt(visibleStep.dataset.fStepindex, 10);
+                if (event.isSuccess && stepIndex==2) {
+                setTimeout(showLoader, 20);
+                const formContainer = document.querySelector(".EPiServerForms");
+                if (formContainer) {
+                    formContainer.style.display = "none";
+                }
+                 successModal.style.display = "block";
+                 successPageContent.style.display = "block";
+                }
+                modalConfirmed=false;
+                hideLoader();
+            });
+        }
+            closeBtn.addEventListener("click", closeSuccessModal);
+            function closeSuccessModal() {
+                successModal.style.display = "none";
+                hideLoader();
+            }
+
+
+       ModalSubmitBtn.addEventListener("click", function () {
+        showLoader();
+        modalConfirmed = true;
+        hideModal();
+        const modal = getModalValues();
+        const subCategory = document.querySelector("select[name='SubCategory']");
+        const typeOfComplaint = subCategory?.selectedOptions[0]?.dataset.typeofcomplaint;
+        const textArea = document.querySelector(".SMS")?.value;
+        // const numberValue = document.querySelector(".MobileNumber")?.value.trim();
+        const numberValue =Array.from(document.querySelectorAll("input.MobileNumber"))
+                            .map(i => i.value.trim())
+                            .find(v => v !== "") || "";
+        const ratingDetails=document.querySelector('textarea[name="ratingDetails"]')?.value;
+        const ratingField = document.querySelector(".ModalRatingHdnField");
+        const subCategoryField = document.querySelector(".SubCategoryHdnField");
+        const MobileNumField = document.querySelector(".MobileHdnField");
+        const feedBackField = document.querySelector(".FeedbackHdnField");
+        const ratingHdnDetails = document.querySelector(".ratingHdnDetails");
+
+        if (ratingField) ratingField.value = modal.rating || "";
+        if (subCategoryField) subCategoryField.value = typeOfComplaint || "";
+        if (textArea) feedBackField.value = textArea|| "";
+        if(numberValue) MobileNumField.value = numberValue || "";
+        if(ratingDetails) ratingHdnDetails.value=ratingDetails||"";
+        setTimeout(() => {
+                    const nextBtn = document.querySelector(".EPiServerForms button[data-f-navigation-next]");
+                    if (nextBtn) nextBtn.click();
+
+            }, 50);
+       hideLoader();
+       });
+    });
+</script>

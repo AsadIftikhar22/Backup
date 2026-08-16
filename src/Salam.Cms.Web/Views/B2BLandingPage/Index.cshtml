@@ -1,0 +1,38 @@
+﻿@using Salam.Cms.Core.Settings.Abstract
+@using Salam.Cms.Web.Features.B2BLanding.ViewModels
+@using Salam.Cms.Web.Features.Cards.Components
+@using Salam.Cms.Web.Features.Settings.Models
+@{
+    Layout = "_B2B_Layout";
+}
+@model B2BLandingPageViewModel
+<style>
+    .header-navigation-link-wrapper {
+        position: relative;
+    }
+
+    .hover-overlay {
+        position: absolute;
+        inset: 0;
+        background: transparent;
+        pointer-events: none; /* Allows hover events to pass through */
+        transition: background 0.3s;
+    }
+
+    .header-navigation-link-wrapper .navigation-flyout-card:hover ~ .hover-overlay {
+        background: lightblue;
+    }
+</style>
+@Html.PropertyFor(x => x.CurrentPage.MainContent, new { CssClass = "section-container bg-ltr" })
+@Html.Raw(Model.CurrentPage.HTMLCSS)
+@Html.Raw(Model.CurrentPage.HTMLBody)
+@if (Model.CurrentPage.NotShowFromWebLayoutB2B){
+    @Html.PropertyFor(x => x.CurrentPage.EndPageMainContent, new { CssClass = "section-container bg-ltr" })
+    }
+else
+{
+    @inject ISettingsManager _settingsManager;
+    var webLayoutSettings = _settingsManager.GetSettings<WebLayoutSettings>();
+    @await Component.InvokeAsync(typeof(CardListBlockViewComponent), webLayoutSettings.CardListBlockView)
+    ;
+    }

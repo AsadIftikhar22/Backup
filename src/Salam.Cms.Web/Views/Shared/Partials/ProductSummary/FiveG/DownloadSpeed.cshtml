@@ -1,0 +1,23 @@
+﻿@using Salam.Cms.Shared.Models.Catalogue.Data
+@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using static Salam.Cms.Shared.Models.SalamConstants
+
+@model ProductSku
+
+<div class="plan-info-card plan-info-card--featured plan-info-card-theme--tertiary">
+    <div class="plan-info-card__icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 1.25C17.9371 1.25 22.75 6.06294 22.75 12C22.75 17.9371 17.9371 22.75 12 22.75C6.06294 22.75 1.25 17.9371 1.25 12C1.25 6.06294 6.06294 1.25 12 1.25ZM12.0059 7C11.4536 7 11.0059 7.44772 11.0059 8V12.5H10.4111C10.2356 12.4999 10.02 12.4994 9.84375 12.5215L9.84082 12.5225C9.71437 12.5382 9.13764 12.6102 8.86328 13.1758C8.58869 13.7424 8.89075 14.2424 8.95605 14.3506L8.95801 14.3545C9.05022 14.5075 9.18458 14.6788 9.29492 14.8193L9.31934 14.8496C9.61392 15.2254 9.99568 15.7097 10.376 16.1006C10.5657 16.2956 10.7829 16.4965 11.0137 16.6553C11.2189 16.7965 11.5693 17 12 17C12.4307 17 12.7811 16.7965 12.9863 16.6553C13.2171 16.4965 13.4343 16.2956 13.624 16.1006C14.0045 15.7096 14.387 15.2254 14.6816 14.8496L14.7051 14.8193C14.8154 14.6788 14.9498 14.5075 15.042 14.3545L15.0439 14.3506C15.1093 14.2424 15.4113 13.7424 15.1367 13.1758C14.8624 12.6102 14.2856 12.5382 14.1592 12.5225L14.1562 12.5215C13.98 12.4994 13.7644 12.4999 13.5889 12.5H13.0059V8C13.0059 7.44772 12.5581 7 12.0059 7Z" fill="#00F249" />
+        </svg>
+
+    </div>
+    <div class="plan-info-card__header">
+        <h4 class="plan-info-card__header__featured-title">
+            @Model.DownloadSpeed
+        </h4>
+        <div class="plan-info-card__header__title">
+            @ContentHelper.GetDefaultFrontendLabel(Model, CatalogueAPIfields.DownloadSpeed)
+        </div>
+    </div>
+</div>

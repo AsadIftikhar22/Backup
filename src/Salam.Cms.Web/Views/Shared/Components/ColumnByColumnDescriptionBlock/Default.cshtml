@@ -1,0 +1,7 @@
+﻿@using Salam.Cms.Web.Features.ColumnByColumnDescriptionBlock.ViewModels
+@model ColumnByColumnDescriptionBlockViewModel
+
+<div class="tilelist-container" @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle)>
+    <h1 class="tilelist-base-font">@Html.PropertyFor(x=>x.CurrentBlock.Heading)</h1>
+    <p class="tilelist-description base-font">@Html.PropertyFor(x => x.CurrentBlock.Description)</p>
+</div>

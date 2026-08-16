@@ -1,0 +1,87 @@
+﻿@using PictureRenderer
+@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.InternetCards.ViewModels
+@model CarouselCardBlockViewModel
+@{
+    var guid = Guid.NewGuid().ToString();
+}
+ <style>
+      .card-content {
+        height: @Model.CurrentBlock?.CarouselCardContentHeight;
+      }
+
+      .button-theme--transparent-primary, .button-theme--transparent-secondary .uniqueid-@guid {
+          flex-direction: row-reverse;
+      }
+
+      .flex-para-btn {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: center;
+      }
+
+          .flex-para-btn p {
+              flex: 1;
+              margin: 0;
+              min-width: 250px;
+              height: @Model.CurrentBlock?.CarouselParagraphHeight;
+          }
+
+          .flex-para-btn a {
+              flex-shrink: 0;
+          }
+
+      /* Mobile */
+      @@media (max-width: 768px) {
+          .flex-para-btn {
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 16px;
+              align-items: center;
+          }
+
+              .flex-para-btn a {
+                  width: fit-content;
+              }
+      }
+</style>
+<div class="industry-card">
+    <div class="card-image">
+        @await Html.Picture(Model.CurrentBlock?.CardImage,
+        PictureProfiles.CarouselCards, new PictureAttributes
+        {
+            LazyLoading = LazyLoading.Browser,
+            ImgDecoding = ImageDecoding.Async,
+            ImgFetchPriority = FetchPriority.Auto
+        })
+    </div>
+    <div class="card-content">
+        <h3>@Model?.CurrentBlock?.Heading</h3>
+        <div class="flex-para-btn">
+            @if (!String.IsNullOrWhiteSpace(Model.CurrentBlock?.Description2))
+            {
+                <p>@Model.CurrentBlock?.Description2</p>
+            }
+            @if (Model.CurrentBlock.ExploreLink != null)
+            {
+                <a href="@Url.ContentUrl(@Model.CurrentBlock.ExploreLink.Href)"
+                   target="@Model.CurrentBlock.ExploreLink.Target" title="@Model.CurrentBlock.ExploreLink.Title"
+                   class="button button-theme--transparent-secondary uniqueid-@guid">
+                    <span>@Model.CurrentBlock.ExploreLink.Text</span>
+                    <div class="arrow">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+

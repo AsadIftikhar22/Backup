@@ -1,0 +1,55 @@
+﻿@using Salam.Cms.Web.Features.InternetCards.ViewModels
+
+@model InternetCardsBlockViewModel
+
+
+<div class="internet-solution-card" >
+    <div class="internet-card-inner" @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle)>
+        <div class="internet-card-labels">
+            @if (Model.CurrentBlock.Labels != null && Model.CurrentBlock.Labels.Any())
+            {
+                foreach (var label in Model.CurrentBlock.Labels)
+                {
+                    <span class="internet-label">@label</span>
+                }
+            }
+        </div>
+        @if (!String.IsNullOrEmpty(Model.CurrentBlock.Heading))
+        {
+            <h3>@Model.CurrentBlock.Heading</h3>
+        }
+        @if (Model.CurrentBlock.Description != null)
+        {
+            @Html.Raw(Model.CurrentBlock.Description)
+        }
+         <ul class="internet-features">
+            @if (Model.CurrentBlock.InternetList != null && Model.CurrentBlock.InternetList.Any())
+            {
+                foreach (var InternetList in Model.CurrentBlock.InternetList)
+                {
+                    <li>@InternetList</li>
+                }
+            }
+        </ul>
+    </div>
+    <div class="internet-card-actions">
+     @*    @if (Model.CurrentBlock?.ViewDetailCtaButton != null)
+        {
+         <button class="internet-btn-outline"
+                    href="@Model?.CurrentBlock?.ViewDetailCtaButton?.Href"
+                    aria-label="View Details" style="transition: transform 0.6s, color 0.6s; transform: translateX(0px); color: rgb(230, 253, 231);"> 
+            <svg width="13" height="10" viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg" style="transition: transform 0.6s; transform: translateX(0px);"> <g opacity="0.3"> <path opacity="0.8" d="M1.66748 1L5.66748 5.05479L1.77559 9" stroke="#55F25D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M7.66748 1L11.6675 5.05479L7.77559 9" stroke="#55F25D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g> 
+                </svg>@Model.CurrentBlock?.ViewDetailCtaButton?.Text 
+        </button> 
+        } *@
+ 
+        @if (Model.CurrentBlock?.EnquireCtaButton != null)
+        {
+          <button class="internet-btn-solid"
+                    href="#"
+                    style="transition: transform 0.6s, color 0.6s; background: rgb(0, 56, 49); color: rgb(230, 253, 231); transform: translateX(0px);">
+                @Model.CurrentBlock.EnquireCtaButton?.Text
+          </button>
+        }
+        </div>
+</div>

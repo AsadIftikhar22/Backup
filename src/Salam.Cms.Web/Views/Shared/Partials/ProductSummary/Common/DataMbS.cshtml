@@ -1,0 +1,33 @@
+﻿@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using static Salam.Cms.Shared.Models.SalamConstants
+
+@model ProductSku
+
+
+@if (!string.IsNullOrEmpty(Model.DataMbS))
+{
+<div class="plan-info-card plan-info-card--featured plan-info-card-theme--tertiary">
+    <div class="plan-info-card__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" viewBox="0 0 16 20" fill="none">
+            <path d="M15.296 3.08333L13.04 0.733331C12.592 0.266664 11.984 0 11.344 0H5.6C4.272 0 3.2 1.11667 3.2 2.5V16.6667H16V4.85C16 4.18333 15.744 3.55 15.296 3.08333ZM5.648 8.75C5.648 8.06667 6.192 7.5 6.848 7.5H9.648V10H5.648V8.75ZM8.048 14.1667H6.848C6.192 14.1667 5.648 13.6 5.648 12.9167V11.6667H8.048V14.1667ZM13.648 12.9167C13.648 13.6 13.104 14.1667 12.448 14.1667H9.648V11.6667H13.648V12.9167ZM13.648 10H11.248V7.5H12.448C13.104 7.5 13.648 8.06667 13.648 8.75V10ZM1.6 18.3333H12.8V20H0V8.18333C0 7.51667 0.256 6.88333 0.704 6.41666L1.6 5.48333V18.3333Z" fill="currentColor" />
+        </svg>
+    </div>
+    <div class="plan-info-card__header">
+        <h4 class="plan-info-card__header__featured-title">
+                @if (int.TryParse(Model.DataMbS, out var _))
+                {
+                    var formattedValue = @ContentHelper.FormatSize(int.Parse(Model.DataMbS));
+                    @formattedValue
+                }
+                else
+                {
+                    @Model.DataMbS
+                }
+        </h4>
+        <div class="plan-info-card__header__title">
+            @ContentHelper.GetDefaultFrontendLabel(Model, CatalogueAPIfields.DataMbS)
+        </div>
+    </div>
+</div>
+}

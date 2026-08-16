@@ -1,0 +1,39 @@
+﻿@using EPiServer.Core
+@using Salam.Cms.Web.Features.BusinessCardDescription.Models
+@using Salam.Cms.Web.Features.BusinessCardDescription.ViewModels
+@using Salam.Cms.Web.Features.Common.Extensions
+
+@model BusinessCardDescriptionBlockViewModel
+
+<div class="business-block__wrapper">
+    <div class="business-content">
+        <div class="business-content__text">
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock.Heading))
+            {
+                <h2 class="business-content__heading">@Html.PropertyFor(x => x.CurrentBlock.Heading)</h2>
+            }
+
+            @if (!String.IsNullOrEmpty(Model.CurrentBlock.Description))
+            {
+                <p class="business-content__description">@Model.CurrentBlock.Description</p>
+            }
+        </div>
+    </div>
+    <div class="business-cards">
+        @foreach (var item in Model.CurrentBlock.businessCardsItems)
+        {
+            <div class="business-card">
+                @if (!String.IsNullOrEmpty(item.Heading))
+                {
+                    <h3 class="business-card__title">
+                        @Html.PropertyFor(x => item.Heading)
+                    </h3>
+                }
+                @if (!String.IsNullOrEmpty(item.Description))
+                {
+                    <p class="business-card__description">@item.Description</p>
+                }
+            </div>
+        }
+    </div>
+</div>

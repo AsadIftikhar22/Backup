@@ -1,0 +1,311 @@
+@using Salam.Cms.Web.Features.FaqBlock.ViewModels
+@using EPiServer.Core
+@using Salam.Cms.Web.Features.Common.Extensions
+@using System
+
+@model FaqBlockViewModel
+
+@{
+    var accordionId = "accordionFaq-" + Guid.NewGuid().ToString("N");
+    var itemIndex = 0;
+}
+
+<style>
+/* =========================
+   Layout scaffolding
+   ========================= */
+.dxp-layout-content-area { padding: 50px 0 0; }
+.support-page-wrapper div, * { box-sizing: border-box; }
+
+.vc_row { margin-left: 0; margin-right: 0; }
+.vc_row:before, .vc_row:after { content: " "; display: table; }
+
+.vc_column_container { padding-left: 0; padding-right: 0; }
+.vc_column_container > .vc_column-inner {
+  box-sizing: border-box;
+  padding-left: 0; padding-right: 0;
+  width: 100%;
+}
+
+/* Center the FAQ content */
+.faq-wrap-section {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.single-faq-category {
+  width: 100%;
+}
+
+.faq-content {
+  width: 100%;
+}
+
+/* Ensure accordion container is properly aligned */
+.accordion {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container alignment */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.text-center { text-align: center !important; }
+
+.single-counter,
+.single-faq-category { margin-bottom: 50px; }
+
+.single-faq-category .faq-content .single-faq {
+  margin-bottom: 0;
+  padding-bottom: 15px;
+}
+
+/* =========================
+   FAQ item surface + spacing
+   ========================= */
+.single-faq { margin-bottom: 18px; }
+
+/* Give room for the left chevron */
+.single-faq-category .faq-content .single-faq .faq-question {
+  position: relative;
+  padding-left: 24px;   /* space for icon on the LEFT */
+  padding-right: 0;
+  margin-bottom: 6px;
+}
+
+/* Indent answers */
+.single-faq-category .faq-content .single-faq .faq-answer,
+.single-faq-category .faq-content .single-faq li ul { padding-left: 20px; }
+
+/* Reset generics */
+h1, h2, h3, h4, h5, h6, p { margin-bottom: 0; padding: 0; }
+body .post--content p { color: initial !important; }
+
+/* Remove any previous Font Awesome glyphs (prevents rectangles) */
+.single-faq-category .faq-content .single-faq .faq-question:after {
+  content: none !important;
+}
+
+/* =========================
+   Typography (exact fonts)
+   ========================= */
+/* Questions: ModernEra 16px */
+.single-faq .faq-question,
+.single-faq .faq-question p {
+  font-family: "ModernEra", Arial, sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 400;
+  line-height: 1.5;
+  cursor: pointer;
+  -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+}
+
+/* Answers: Codec Pro 16px */
+.single-faq .faq-answer,
+.single-faq .faq-answer p {
+  font-family: "Codec Pro", Arial, sans-serif !important;
+  font-size: 16px !important;
+  line-height: 26px;
+}
+
+/* Keep inherited font for nested nodes inside the answer */
+.single-faq .faq-answer * {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+/* =========================
+   Chevron on the LEFT
+   Collapsed  → points LEFT (‹)
+   Expanded   → points DOWN (˅)
+   ========================= */
+
+/* Kill any theme after-icon */
+.single-faq .faq-question::after { content: none !important; }
+
+/* Base SVG: natively points LEFT (collapsed state) */
+.single-faq .faq-question::before {
+  content:'';
+  position:absolute;
+  left:0; top:3px;
+  width:14px; height:14px;
+  background: no-repeat center / 14px 14px
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23002318' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='14 4 6 12 14 20'/%3E%3C/svg%3E");
+  transform: rotate(180deg); /* LEFT when collapsed */
+  transition: transform .25s ease;
+}
+
+/* Expanded state → DOWN (rotate 90deg clockwise) */
+.single-faq .faq-question:not(.collapsed)::before,
+.single-faq .faq-question[aria-expanded="true"]::before {
+  transform: rotate(180deg) !important;
+}
+
+/* Explicit collapsed state → LEFT */
+.single-faq .faq-question.collapsed::before {
+  transform: rotate(180deg) !important;
+}
+
+/* =========================
+   Collapse behavior (scoped to FAQ only)
+   ========================= */
+.single-faq-category .faq-collapse.collapse {
+  display: none !important;
+}
+
+.single-faq-category .faq-collapse.collapse.show {
+  display: block !important;
+}
+
+/* =========================
+   Responsive columns
+   ========================= */
+.wpb_column.vc_column_container.vc_col-sm-12.vc_col-md-6 { width: 100%; padding: 15px; }
+
+@@media (max-width: 767px) {
+  .wpb_column.vc_column_container.vc_col-sm-12.vc_col-md-6 {
+    width: 100% !important;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+}
+
+@@media (min-width: 768px) and (max-width: 991px) {
+  .wpb_column.vc_column_container.vc_col-sm-12.vc_col-md-6 {
+    width: 50% !important;
+    padding: 20px;
+  }
+}
+
+@@media (min-width: 992px) {
+  .wpb_column.vc_column_container.vc_col-sm-12.vc_col-md-6 {
+    width: 50% !important;
+    float: left;
+    padding: 25px;
+  }
+}
+.faq-answer-styling a, .footer .widget ul li a:hover, .header-top a:hover {
+    color: #00b140 !important;
+    font-weight: 700;
+}
+
+/* ========== RTL (Arabic) ========== */
+html[dir="rtl"] .single-faq .faq-question,
+html[dir="rtl"] .single-faq .faq-answer * { font-family: Frutigerlt, ModernEra, Arial, sans-serif !important; }
+html[dir="rtl"] .single-faq-category .faq-content .single-faq .faq-question {
+    padding-left: 0;
+    padding-right: 24px;
+}
+html[dir="rtl"] .single-faq .faq-question::before {
+    left: auto;
+    right: 0;
+}
+html[dir="rtl"] .single-faq-category .faq-content .single-faq .faq-answer,
+html[dir="rtl"] .single-faq-category .faq-content .single-faq li ul {
+    padding-left: 0;
+    padding-right: 20px;
+}
+@@media (min-width: 992px) {
+    html[dir="rtl"] .wpb_column.vc_column_container.vc_col-sm-12.vc_col-md-6 { float: right; }
+}
+</style>
+
+<div class="wpb_column vc_column_container vc_col-sm-12 vc_col-md-6">
+    <div class="vc_column-inner">
+        <div class="wpb_wrapper">
+            <div id="voiphonefaq-@Guid.NewGuid().ToString("N")" class="faq-wrap-section">
+                <div class="single-faq-category">
+                    <div class="faq-content">
+                        <div id="@accordionId" class="accordion">
+                            @if (Model.CurrentBlock.Items != null)
+                            {
+                                foreach (var item in Model.CurrentBlock.Items.FilteredItems)
+                                {
+                                    var content = item.GetContent() as Salam.Cms.Web.Features.FaqBlock.Models.FaqItemBlock;
+                                    if (content != null)
+                                    {
+                                        itemIndex++;
+                                        var itemId = accordionId + "-item-" + itemIndex;
+                                        ViewData["AccordionId"] = accordionId;
+                                        ViewData["ItemId"] = itemId;
+                                        ViewData["IsFirst"] = itemIndex == 1;
+                                        @await Html.PartialAsync("~/Views/Shared/Blocks/FaqItemBlock.cshtml", content)
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function(){
+  if (window.__faqAccordionBound) return;
+  window.__faqAccordionBound = true;
+
+  function closest(el, sel){
+    while (el && el.nodeType === 1){
+      if (el.matches && el.matches(sel)) return el;
+      if (el.msMatchesSelector && el.msMatchesSelector(sel)) return el;
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  document.addEventListener('click', function(e){
+    var q = closest(e.target, '.faq-question');
+    if(!q) return;
+
+    var targetSel = q.getAttribute('data-target');
+    if(!targetSel) return;
+    if(targetSel.indexOf('#') !== 0) targetSel = '#' + targetSel;
+
+    var panel = document.querySelector(targetSel);
+    if(!panel || !panel.classList.contains('faq-collapse')) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    var parentSel = panel.getAttribute('data-parent');
+    if (parentSel){
+      var parent = document.querySelector(parentSel);
+      if (parent) {
+        var allPanels = parent.querySelectorAll('.faq-collapse.collapse.show');
+        for (var i = 0; i < allPanels.length; i++) {
+          var open = allPanels[i];
+          if (open !== panel){
+            open.classList.remove('show');
+            var q2 = open.previousElementSibling;
+            if (q2 && q2.classList) {
+              q2.classList.add('collapsed');
+              q2.setAttribute('aria-expanded', 'false');
+            }
+          }
+        }
+      }
+    }
+
+    var isExpanded = panel.classList.contains('show');
+    if (isExpanded) {
+      panel.classList.remove('show');
+      q.classList.add('collapsed');
+      q.setAttribute('aria-expanded', 'false');
+    } else {
+      panel.classList.add('show');
+      q.classList.remove('collapsed');
+      q.setAttribute('aria-expanded', 'true');
+    }
+  });
+})();
+</script>
+

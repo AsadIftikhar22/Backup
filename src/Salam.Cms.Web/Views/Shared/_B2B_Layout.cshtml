@@ -1,0 +1,225 @@
+﻿@using EPiServer.Framework.Web
+@using EPiServer.Framework.Web.Mvc.Html
+@using Salam.Cms.Core.Settings.Abstract
+@using Salam.Cms.Web.Features.ClientResources.Common
+@using Salam.Cms.Web.Features.Common.Components.Footer
+@using Salam.Cms.Web.Features.Common.Components.Navigation
+@using Salam.Cms.Web.Features.Common.Components.PageNavigator.Components
+@using Salam.Cms.Web.Features.Common.Interfaces
+@using Salam.Cms.Web.Features.Common.Components.MetaData
+@using Salam.Cms.Web.Features.Common.Components.TagManager
+@using Salam.Cms.Web.Features.Common.Models
+@using Salam.Cms.Web.Features.Hero.Components
+@using EPiServer.Core
+@using EPiServer.Web
+@using EPiServer.Web.Mvc.Html
+@using Salam.Cms.Web.Features.Hero.Models
+@using Salam.Cms.Web.Features.Landing.Models
+@using Salam.Cms.Web.Features.Settings.Models
+@using Salam.Cms.Web.Features.Support.Components
+@using Salam.Cms.Web.Features.WholesaleLanding.Models
+@using Salam.Cms.Web.Features.CustomerRightsPage.Models
+@using Salam.Cms.Web.Features.UserRightsPage.Models
+@using Salam.Cms.Web.Features.TelecomItRightsPage.Models
+@using Salam.Cms.Web.Features.OurStoresPage.Models
+@using Salam.Cms.Web.Features.FaqPage.Models
+@model ISitePageViewModel<SitePageData>
+
+@{
+    var hasPageNavigator = false;
+    @inject ISettingsManager _settingsManager;
+    bool HideCookieBanner = _settingsManager.GetSettings<WebLayoutSettings>().HideCookieBanner;
+}
+
+<!DOCTYPE html>
+<html lang="@(Model.CurrentPage?.Language)" dir="@(Model.CurrentPage?.Language.TextInfo.IsRightToLeft == true ? "rtl" : "ltr")">
+<head>
+    @await Component.InvokeAsync(typeof(MetaDataViewComponent),   new
+    {
+        currentPage = Model.CurrentPage,
+        showSiteTitle = true
+        })
+    @await Component.InvokeAsync(typeof(SocialMetaDataViewComponent), Model.CurrentPage)
+    @await Html.PartialAsync("_Hreflang", Model.CurrentPage)
+    @if (Model.CurrentPage is not FinanceInvestorSitePageData && Model.CurrentPage is not B2bSupportPageData)
+    {
+        <style nonce>
+            @Html.RenderCssInline("critical-*.css")
+        </style>
+
+        <style>
+            ul li svg[viewBox="0 0 19 18"] {
+                width: 19px !important;
+                height: 18px !important;
+                flex-shrink: 0;
+            }
+
+            .infrastructure-block.infrastructure-block__wrapper {
+                margin: 0 auto 70px;
+            }
+        </style>
+        <link asp-href-include="~/static/assets/css/main-*.css" rel="stylesheet" />
+    }
+    @if (HideCookieBanner)
+    {
+        <style>
+            .cookie-box {
+                display: none !important;
+            }
+        </style>
+    }
+
+    @if (!HideCookieBanner)
+    {
+        <link rel="preconnect" href="https://cdn.optimizely.com" crossorigin>
+        <link rel="preconnect" href="//logx.optimizely.com">
+        <link rel="preload" href="https://cdn.optimizely.com/js/5271816705409024.js" as="script">
+        <script nonce src="https://cdn.optimizely.com/js/5271816705409024.js"></script>
+    }
+
+    @if (Context.Request.Cookies["Analytics"] == "true" && HideCookieBanner)
+    {
+        <link rel="preconnect" href="https://cdn.optimizely.com" crossorigin>
+        <link rel="preconnect" href="//logx.optimizely.com">
+        <link rel="preload" href="https://cdn.optimizely.com/js/5271816705409024.js" as="script">
+        <script nonce src="https://cdn.optimizely.com/js/5271816705409024.js"></script>
+        <link rel="preconnect" href="https://api.zaius.com" crossorigin>
+    }
+
+
+    @if (Context.Request.Cookies["Marketing"] == "true" && HideCookieBanner)
+    {
+        <link rel="preconnect" href="https://api.zaius.com" crossorigin>
+    }
+
+    @if (!HideCookieBanner)
+    {
+        @await Component.InvokeAsync(typeof(TagManagerViewComponent), Model.CurrentPage)
+    }
+    else if (Context.Request.Cookies["Marketing"] == "true" && HideCookieBanner)
+    {
+        @await Component.InvokeAsync(typeof(TagManagerViewComponent), Model.CurrentPage)
+    }
+
+
+    @await Html.RenderEPiServerQuickNavigatorAsync()
+
+    @Html.RequiredClientResources(RenderingTags.Header)
+
+    @if (Model.CurrentPage is B2BSitePageData)
+    {
+        <link asp-href-include="~/static/assets/css/b2b-*.css" rel="stylesheet" />
+    }
+    @if (Model.CurrentPage is WholesaleSitePageData)
+    {
+        <link asp-href-include="~/static/assets/css/b2b-*.css" rel="stylesheet" />
+        <link asp-href-include="~/static/assets/css/wholesale-*.css" rel="stylesheet" />
+    }
+    @if (Model.CurrentPage is FinanceInvestorSitePageData)
+    {
+        <link asp-href-include="~/static/assets/css/fi-*.css" rel="stylesheet" />
+    }
+</head>
+<style>
+    .footer--mobile-accordion .b2b-navigation-item-collection-block__nav-block.is-open .b2b-navigation-item-collection-block__nav-block__link-collection li:not(.footer-accordion__title-row) > a {
+        width: 313px;
+    }
+</style>
+@{
+             string bodyClass = Model.CurrentPage is CustomerRightsPage ? "customer-rights-page" :
+                                                                                         Model.CurrentPage is UserRightsPage ? "user-rights-page" :
+                                                                                         Model.CurrentPage is TelecomItRightsPage ? "telecom-it-rights-page" :
+                                                                                         Model.CurrentPage is OurStoresPage ? "our-stores-page" :
+                                                                                         Model.CurrentPage is FaqPage ? "faq-page" :
+                                                                                         Model.CurrentPage is not B2BSitePageData ? "bg-primary-gradient" : "";
+}
+<body class="@bodyClass" data-content-link="@Model?.CurrentPage?.ContentLink?.ID"
+      data-page-type="@Model?.CurrentPage?.PageTypeName">
+
+    @await Component.InvokeAsync(typeof(NoScriptTagManagerViewComponent))
+    @Html.RequiredClientResources(ClientResourceConstants.BodyStart)
+
+
+
+    @if (Model.CurrentPage is not FinanceInvestorSitePageData &&
+        Model.CurrentPage is not B2bSupportPageData)
+    {
+        @await Component.InvokeAsync(typeof(NavigationViewComponent), Model.CurrentPage)
+        <main style="padding-top: 136px;
+                        @(
+                                                                                            Model.CurrentPage is B2BSitePageData ? "background: radial-gradient(6.48% 6.48% at 50% 3.94%, #002823 0%, #001815 100%); " :
+                                                                                            Model.CurrentPage is WholesaleSitePageData ? "background-color:rgb(0, 60, 53);" :
+                                                                              ""
+                                                                                                                                                                                                                                                            )">
+
+        @await Component.InvokeAsync(typeof(HeroViewComponent), Model.CurrentPage)
+
+        @if (Model.CurrentPage is IPageNavigatorEnabled pageNavigatorEnabledPage && pageNavigatorEnabledPage.EnablePageNavigator)
+            {
+                hasPageNavigator = true;
+                <div class="anchor-wrapper">
+                    @await Component.InvokeAsync(typeof(PageNavigatorViewComponent), pageNavigatorEnabledPage)
+                </div>
+            }
+            @if (
+                    Model.CurrentPage?.HeroArea != null &&
+                    Model.CurrentPage.HeroArea.FilteredItems.Any(x => x.LoadContent() is HeroLandingBlock)
+                    )
+            {
+                <script nonce asp-src-include="~/static/assets/js/hero-*.js" type="module"></script>
+            }
+            @RenderBody()
+
+            @await Component.InvokeAsync(typeof(SupportViewComponent), Model.CurrentPage)
+
+        </main>
+    }
+    else
+    {
+        @await Component.InvokeAsync(typeof(Salam.Cms.Web.Features.Common.Components.Header.FIHeaderViewComponent), Model.CurrentPage)
+        @RenderBody()
+    }
+
+    @await Component.InvokeAsync(typeof(B2BFooterViewComponent), Model.CurrentPage)
+
+    @if (HideCookieBanner)
+    {
+        @await Component.InvokeAsync(typeof(CookiesBannerViewComponent), Model.CurrentPage)
+        ;
+    }
+
+
+
+    @if (Model.CurrentPage is not B2bSupportPageData)
+    {
+        <script nonce asp-src-include="~/static/assets/js/bundle-*.js" type="module"></script>
+    }
+    @if (
+        Model.CurrentPage?.HeroArea != null &&
+        Model.CurrentPage.HeroArea.FilteredItems.Any() &&
+        Model.CurrentPage.HeroArea.FilteredItems.Any(x => x.GetContent() is HeroLandingBlock)
+        )
+    {
+        <script nonce asp-src-include="~/static/assets/js/hero-*.js" type="module"></script>
+    }
+
+    @if (hasPageNavigator)
+    {
+        <script nonce asp-src-include="~/static/assets/js/anchorLinks-*.js" type="module"></script>
+    }
+
+    @if (Model.CurrentPage is FinanceInvestorSitePageData)
+    {
+        <script nonce asp-src-include="~/static/assets/js/fijs-*.js" type="module"></script>
+    }
+    @if (Model.CurrentPage is B2BSitePageData)
+    {
+        <script nonce asp-src-include="~/static/assets/js/b2b_ts-*.js" type="module"></script>
+    }
+    @if (Model.CurrentPage is WholesaleSitePageData)
+    {
+        <script nonce asp-src-include="~/static/assets/js/wholesalejs-*.js" type="module"></script>
+    }
+    @Html.RequiredClientResources(RenderingTags.Footer)
+</body>
+</html>

@@ -1,0 +1,21 @@
+﻿@using Salam.Cms.Web.Features.InternetCards.ViewModels
+
+@model CarouselBlockViewModel
+
+<div class="industry-header">
+    @if (!String.IsNullOrEmpty(Model.CurrentBlock.Heading))
+    {
+        <h2>@Model.CurrentBlock.Heading</h2>
+    }
+    @if (Model.CurrentBlock.Description != null)
+    {
+        @Html.Raw(Model.CurrentBlock.Description)
+    }
+</div>
+<section id="industry-section" class="industry-section" @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle)>
+    <div id="carousel" class="industry-cards-wrapper">
+        @Html.PropertyFor(x => x.CurrentBlock.CarouselCards, new { HasContainer = false,
+                                                                   HasItemContainer = false, 
+                                                                   HasEditContainer = false })
+    </div>
+</section>

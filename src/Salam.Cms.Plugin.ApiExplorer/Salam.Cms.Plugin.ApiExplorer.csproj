@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+	<PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <RootNamespace>Salam.Cms.Plugin.ApiExplorer</RootNamespace>
+        <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<Version>0.0.1.5</Version>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<Authors>Remko Jantzen</Authors>
+		<Company>Optimizely</Company>
+		<Description>Adds a Swashbuckle based API Explorer to the Optimizely CMS</Description>
+		<Copyright>(c)2023 Remko Jantzen</Copyright>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageTags>EPiServerProtectedModulePackage Swashbuckle Optimizely EPiServer Episerver Swagger</PackageTags>
+    </PropertyGroup>
+	
+	<PropertyGroup>
+		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+	</PropertyGroup>
+	
+	<ItemGroup>
+	  <Content Remove="nuget.config" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Include="nuget.config" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+	</ItemGroup>
+
+    <ItemGroup>
+		<PackageReference Include="EPiServer.CMS.UI.Core" Version="12.31.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.27" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="README.md">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+    </ItemGroup>
+</Project>

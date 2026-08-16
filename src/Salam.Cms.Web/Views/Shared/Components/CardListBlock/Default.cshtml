@@ -1,0 +1,23 @@
+﻿@using Salam.Cms.Web.Features.Cards.Enums
+@using Salam.Cms.Web.Features.Cards.Models
+@using Salam.Cms.Web.Features.Cards.ViewModels
+@using Salam.Cms.Web.Features.Common.Extensions
+
+@model CardListBlockViewModel
+
+<div class="section-wrapper">
+<!-- START CardListBlock -->
+<div @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle) class="@Model.CssClasses">
+    @if (Model.CardBlocks != null && Model.CardBlocks.Any())
+    {
+        @foreach (var block in Model.CardBlocks)
+        {
+            <div class="card-block__wrapper">
+                @await Html.PartialAsync("~/Views/Shared/Blocks/CardBlockView.cshtml", block)
+            </div>
+        }
+
+    }
+</div>
+<!-- END CardListBlock -->
+</div>

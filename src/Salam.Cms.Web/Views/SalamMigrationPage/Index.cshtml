@@ -1,0 +1,37 @@
+﻿@using Salam.Cms.Web.Features.Landing.ViewModels
+@using Salam.Cms.Web.Features.SalamMigrationPage.ViewModels
+
+@model SalamMigrationPageViewModel
+
+@{
+    Layout = "~/Views/Shared/_Salam_Layout.cshtml";
+}
+<style>
+.section-container{
+    padding:20px;
+}
+
+    .form-header p {
+        color: unset !important;
+    }
+
+    .form-header{
+        color: unset !important;
+    }
+
+    main {
+        background: #fff !important;
+    }
+    .form-header h1{
+        color: #082033;
+        font-weight:900;
+    }
+    .form-header p{
+        font-weight:700;
+        font-size:16px;
+    }
+</style>
+@Html.PropertyFor(x => x.CurrentPage.MainContent, new { CssClass = "section-container bg-ttb" })
+@Html.Raw(Model.CurrentPage.HTMLCSS)
+@Html.Raw(Model.CurrentPage.HTMLBody)
+@Html.Raw(Model.CurrentPage.EndMainContent)

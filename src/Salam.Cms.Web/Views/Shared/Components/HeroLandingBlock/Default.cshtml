@@ -1,0 +1,246 @@
+﻿@using EPiServer
+@using EPiServer.Framework.Web.Resources
+@using EPiServer.ServiceLocation
+@using PictureRenderer
+@using PictureRenderer.Profiles
+@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.Hero.Models
+@using Salam.Cms.Web.Features.Hero.ViewModels
+
+@model HeroLandingBlockViewModel
+
+@{
+    var index = 0;
+}
+
+<div class="section-wrapper section-wrapper--px-0-mobile">
+<div class="hero-landing-block">
+    <!-- Tabs Left -->
+    <div class="hero-landing-block__vertical-tabs hero-landing-block__vertical-tabs--left">
+        @foreach (var heading in Model.HeroHeadings)
+        {
+            <button class="hero-landing-block__tab" data-tab="@index">
+                <div class="hero-landing-block__tab-wrapper">
+                    @heading
+                </div>
+            </button>
+            index++;
+        }
+    </div>
+
+    <!-- Reset index for slides -->
+    @{
+        index = 1;
+    }
+
+    <!-- Carousel -->
+    <div class="hero-landing-block__carousel">
+        <div class="splide" aria-label="Hero Slides">
+            <div class="hero-landing-block__carousel__wrapper">
+                <div class="splide__track">
+                    <ul class="splide__list">
+                        @{
+                            var fisrtBlock = Model.HeroBlocks.FirstOrDefault();
+                        }
+                        <li id="hero_0" class="splide__slide" data-tab="@index">
+                            <div class="hero-block hero-block__wrapper">
+                                <div class="banner-details">
+                                    <!-- Badge Text -->
+                                    @if (!string.IsNullOrEmpty(fisrtBlock.BadgeText))
+                                    {
+                                        <div class="chips">
+                                            <span class="chips__text">@Html.PropertyFor(m => fisrtBlock.BadgeText)</span>
+                                        </div>
+                                    }
+
+                                    <!-- Heading -->
+                                        @if (!string.IsNullOrEmpty(fisrtBlock.Heading))
+                                    {
+                                        <h1 class="banner-details__heading font-extrabold">
+                                            @Html.PropertyFor(m => fisrtBlock.Heading)
+                                        </h1>
+                                    }
+
+                                    <!-- Description -->
+                                    @if (fisrtBlock.Description != null)
+                                    {
+                                        <div class="banner-details__content">
+                                            <p class="body font-regular">
+                                                @Html.PropertyFor(m => fisrtBlock.Description)
+                                            </p>
+                                        </div>
+                                    }
+
+                                    <!-- CTA Links -->
+                                    @if (fisrtBlock.LinkItems != null && fisrtBlock.LinkItems.Any())
+                                    {
+                                        <div class="banner-details__link-container">
+                                            @foreach (var link in fisrtBlock.LinkItems)
+                                            {
+                                                <a href="@Url.ContentUrl(link.Href)" class="button button-theme--primary" target="@link.Target" rel="noopener">
+                                                    <span>@link.Text</span>
+                                                    <div class="arrow">
+                                                        <span></span>
+                                                        <span></span>
+                                                        <span></span>
+                                                        <span></span>
+                                                        <span></span>
+                                                    </div>
+                                                </a>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+
+                                <!-- Media -->
+                                @if (fisrtBlock.Media != null)
+                                {
+                                    <div class="hero-block__image">
+                                        @await Html.Picture(fisrtBlock.Media,
+                                        PictureProfiles.HeroLanding, new PictureAttributes
+                                        {
+                                            LazyLoading = LazyLoading.None,
+                                            ImgDecoding = ImageDecoding.Async,
+                                            ImgFetchPriority = FetchPriority.High
+                                        })
+                                        @* <picture>
+                                            <source srcset="
+                                                https://itcl01mstru6t0sinte.dxcloud.episerver.net/cdn-cgi/image/width=340,format=auto,fit=crop,quality=80/https://images.cmp.optimizely.com/bc0a52863bbf11f0ad4356c72d9e92b7 340w,
+                                                https://itcl01mstru6t0sinte.dxcloud.episerver.net/cdn-cgi/image/width=376,format=auto,fit=crop,quality=80/https://images.cmp.optimizely.com/bc0a52863bbf11f0ad4356c72d9e92b7 376w,
+                                                https://itcl01mstru6t0sinte.dxcloud.episerver.net/cdn-cgi/image/width=524,format=auto,fit=crop,quality=80/https://images.cmp.optimizely.com/bc0a52863bbf11f0ad4356c72d9e92b7 524w,
+                                                https://itcl01mstru6t0sinte.dxcloud.episerver.net/cdn-cgi/image/width=540,format=auto,fit=crop,quality=80/https://images.cmp.optimizely.com/bc0a52863bbf11f0ad4356c72d9e92b7 540w"
+                                                    sizes="(min-width: 1366px) 540px, (min-width: 767px) 100vw, 50vw">
+
+                                            <img alt="FRIENDS GROUP CHEERING"
+                                                 src="https://itcl01mstru6t0sinte.dxcloud.episerver.net/cdn-cgi/image/width=524,format=auto,fit=crop,quality=80/https://images.cmp.optimizely.com/bc0a52863bbf11f0ad4356c72d9e92b7"
+                                                 decoding="async"
+                                                 fetchpriority="high"
+                                                 width="524"
+                                                 height="328">
+                                        </picture> *@
+                                    </div>
+                                }
+                            </div>
+                        </li>
+                        @foreach (var block in Model.HeroBlocks.Skip(1))
+                        {
+                                <li id="hero_@index" class="splide__slide" data-tab="@index">
+                                <div class="hero-block hero-block__wrapper">
+                                    <div class="banner-details">
+                                        <!-- Badge Text -->
+                                        @if (!string.IsNullOrEmpty(block.BadgeText))
+                                        {
+                                            <div class="chips">
+                                                <span class="chips__text">@Html.PropertyFor(m => block.BadgeText)</span>
+                                            </div>
+                                        }
+
+                                        <!-- Heading -->
+                                        @if (!string.IsNullOrEmpty(block.Heading))
+                                        {
+                                            <h1 class="banner-details__heading font-extrabold">
+                                                    @Html.PropertyFor(m => block.Heading)
+                                            </h1>
+                                        }
+
+                                        <!-- Description -->
+                                        @if (block.Description != null)
+                                        {
+                                            <div class="banner-details__content">
+                                                <p class="body font-regular">
+                                                        @Html.PropertyFor(m => block.Description)
+                                                </p>
+                                            </div>
+                                        }
+
+                                        <!-- CTA Links -->
+                                        @if (block.LinkItems != null && block.LinkItems.Any())
+                                        {
+                                            <div class="banner-details__link-container">
+                                                    @foreach (var link in block.LinkItems)
+                                                {
+                                                    <a href="@Url.ContentUrl(link.Href)" class="button button-theme--primary" target="@link.Target" rel="noopener">
+                                                        <span>@link.Text</span>
+                                                        <div class="arrow">
+                                                            <span></span>
+                                                            <span></span>
+                                                            <span></span>
+                                                            <span></span>
+                                                            <span></span>
+                                                        </div>
+                                                    </a>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <!-- Media -->
+                                    @if (block.Media != null)
+                                    {
+                                        <div class="hero-block__image">
+                                            @await Html.Picture(block.Media,
+                                            PictureProfiles.HeroLanding, new PictureAttributes
+                                            {
+                                                LazyLoading = LazyLoading.Browser,
+                                                ImgDecoding = ImageDecoding.Async,
+                                                ImgFetchPriority = FetchPriority.Auto
+                                            })
+                                            @* <picture>
+                                                <source srcset="
+                                                    https://itcl01mstru6t0sinte.dxcloud.episerver.net/cdn-cgi/image/width=338,format=auto,fit=crop,quality=80/https://images.cmp.optimizely.com/3d58253a3c5011f08478163622db2d08 338w,
+                                                    https://itcl01mstru6t0sinte.dxcloud.episerver.net/cdn-cgi/image/width=741,format=auto,fit=crop,quality=80/https://images.cmp.optimizely.com/3d58253a3c5011f08478163622db2d08 741w,
+                                                    https://itcl01mstru6t0sinte.dxcloud.episerver.net/cdn-cgi/image/width=815,format=auto,fit=crop,quality=80/https://images.cmp.optimizely.com/3d58253a3c5011f08478163622db2d08 815w,
+                                                    https://itcl01mstru6t0sinte.dxcloud.episerver.net/cdn-cgi/image/width=987,format=auto,fit=crop,quality=80/https://images.cmp.optimizely.com/3d58253a3c5011f08478163622db2d08 987w"
+                                                sizes="(min-width: 1366px) 540px, (min-width: 767px) 100vw, 50vw">
+                                                <img alt="FAMILY ENJOYING ON TABLET_0909.webp"
+                                                     src="/cdn-cgi/image/width=987,format=auto,fit=crop,quality=80/https://images.cmp.optimizely.com/3d58253a3c5011f08478163622db2d08"
+                                                     loading="lazy"
+                                                     decoding="sync"
+                                                     fetchpriority="low">
+                                            </picture> *@
+                                        </div>
+                                    }
+                                </div>
+                            </li>
+                            index++;
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Controls (optional) -->
+            <div class="hero-landing-block__carousel__controls">
+                <div class="splide__arrows splide__arrows--ltr" style="display: none;">
+                    <button class="splide__arrow splide__arrow--prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="11" viewBox="0 0 7 11" fill="none">
+                            <path d="M1.5 1.5L5.5 5.55479L1.60811 9.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                    <button class="splide__arrow splide__arrow--next">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="11" viewBox="0 0 7 11" fill="none">
+                            <path d="M1.5 1.5L5.5 5.55479L1.60811 9.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="splide__pagination"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs Right -->
+    @{
+        index = 0;
+    }
+    <div class="hero-landing-block__vertical-tabs hero-landing-block__vertical-tabs--right">
+        @foreach (var heading in Model.HeroHeadings)
+        {
+            <button class="hero-landing-block__tab" data-tab="@index">
+                <div class="hero-landing-block__tab-wrapper">
+                    @heading
+                </div>
+            </button>
+            index++;
+        }
+    </div>
+</div>
+</div>

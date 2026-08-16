@@ -1,0 +1,117 @@
+﻿@using Salam.Cms.Web.Features.SolutionsSectionsBlock.ViewModels
+@model QualityIndicatorBlockViewModel
+
+<div class="qos-background">
+    <section class="qos-section">
+        <div class="qos-title-section">
+            <div class="qos-accent-line">&nbsp;</div>
+            <h2 class="qos-title">@Model.CurrentBlock?.Heading</h2>
+        </div>
+
+        <div class="qos-interactive-section">
+            <select id="qosYearSelect" class="qos-dropdown" aria-label="@Model.CurrentBlock?.YearBtnText">
+                <option value="">@Model.CurrentBlock?.YearBtnText</option>
+                @foreach (var year in Model.CurrentBlock.Reports.Select(x => x.Year).Distinct())
+                {
+                    <option value="@year">@year</option>
+                }
+            </select>
+
+            <select id="qosQuarterSelect" class="qos-dropdown" aria-label="@Model.CurrentBlock?.QuarterlyBtnText" disabled>
+                <option value="">@Model.CurrentBlock?.QuarterlyBtnText</option>
+            </select>
+
+            <button id="qosDownloadButton" type="button" class="qos-download-button disabled" disabled>
+                @Model.CurrentBlock?.DownloadBtnText
+                <svg xmlns="http://www.w3.org/2000/svg" width="82" height="30" viewBox="0 0 82 30" fill="none">
+                    <g opacity="0.3">
+                        <path opacity="0.2" d="M3 3L15 15.1644L3.32432 27" stroke="#E6FDE7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+                        <path opacity="0.4" d="M19 3L31 15.1644L19.3243 27" stroke="#E6FDE7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+                        <path opacity="0.6" d="M35 3L47 15.1644L35.3243 27" stroke="#E6FDE7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+                        <path opacity="0.8" d="M51 3L63 15.1644L51.3243 27" stroke="#E6FDE7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M67 3L79 15.1644L67.3243 27" stroke="#E6FDE7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+                    </g>
+                </svg>
+            </button>
+        </div>
+    </section>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const yearSelect = document.getElementById('qosYearSelect');
+      const quarterSelect = document.getElementById('qosQuarterSelect');
+      const downloadButton = document.getElementById('qosDownloadButton');
+      let selectedPdfUrl = null;
+
+      function disableDownload() {
+        downloadButton.disabled = true;
+        downloadButton.classList.add('disabled');
+        selectedPdfUrl = null;
+      }
+
+      function enableDownload(pdfUrl) {
+        downloadButton.disabled = false;
+        downloadButton.classList.remove('disabled');
+        selectedPdfUrl = pdfUrl;
+      }
+
+      // Initialise default state
+      yearSelect.value = "";
+      quarterSelect.disabled = true;
+      disableDownload();
+
+      yearSelect.addEventListener('change', function () {
+        const year = this.value;
+
+        // Reset quarter dropdown and disable download
+        quarterSelect.innerHTML = `<option value="">@Html.Raw(Model.CurrentBlock.QuarterlyBtnText)</option>`;
+        quarterSelect.disabled = true;
+        disableDownload();
+
+        if (!year) {
+          return;
+        }
+
+        const apiUrl = '@Url.Action("GetQuarters", "QualityIndicatorApi")'
+          + '?blockContentId=' + @Model.BlockId
+          + '&year=' + encodeURIComponent(year);
+
+        fetch(apiUrl)
+          .then(res => {
+            if (!res.ok) throw new Error('Network response was not ok');
+            return res.json();
+          })
+          .then(data => {
+            data.forEach(item => {
+              const opt = document.createElement('option');
+              opt.value = item.quarterlyTab;
+              opt.textContent = item.quarterlyTab;
+              opt.setAttribute('data-pdf', item.pdfUrl);
+              quarterSelect.appendChild(opt);
+            });
+            quarterSelect.disabled = false;
+          })
+          .catch(error => {
+            console.error('Error fetching quarters:', error);
+          });
+      });
+
+      quarterSelect.addEventListener('change', function () {
+        const opt = this.selectedOptions[0];
+        const pdf = opt ? opt.getAttribute('data-pdf') : null;
+        if (pdf) {
+          enableDownload(pdf);
+        } else {
+          disableDownload();
+        }
+      });
+
+      downloadButton.addEventListener('click', function () {
+        if (selectedPdfUrl) {
+          // Trigger download — you can adjust how you want to open it (same window / new tab)
+          window.open(selectedPdfUrl, '_blank');
+        }
+      });
+    });
+</script>

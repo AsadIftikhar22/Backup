@@ -1,0 +1,56 @@
+﻿@using Salam.Cms.Web.Features.Common.Components.Footer
+@using Salam.Cms.Web.Features.Common.Components.Images
+
+@model FooterViewModel
+
+<footer class="footer">
+    <div class="footer__block">
+        <a href="/" class="logo"><vc:image-renderer image-reference="@Model.Logo" svg-render-mode="@SvgRenderMode.Inline" /></a>
+        @if (Model.FooterSocialLinks != null && Model.FooterSocialLinks.Any())
+        {
+            <div class="social-row social-row--footer">
+                @foreach (var socialItem in Model.FooterSocialLinks)
+                {
+                    <a href="@socialItem.Link?.Href">
+                        <vc:image-renderer image-reference="@socialItem.Icon" svg-render-mode="@SvgRenderMode.Inline" />
+                    </a>
+                }
+            </div>
+        }
+        <div class="footer__legal">
+            <div class="caption-s">@Html.PropertyFor(m => m.CopyrightText)</div>
+            @if (Model.FooterLegalLinks != null && Model.FooterLegalLinks.Any())
+            {
+                <div class="footer__legal__links">
+                    @foreach (var link in Model.FooterLegalLinks)
+                    {
+                        <a href="@Url.ContentUrl(link.Href)" class="footer-link">
+                            <div class="caption-s">
+                                @link.Text
+                            </div>
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+    @Html.Raw(Model.WholesaleFooterHTML)
+    <div class="footer__legal">
+        <div class="caption-s">
+            @Html.PropertyFor(m => m.CopyrightText)
+        </div>
+        @if (Model.FooterLegalLinks != null && Model.FooterLegalLinks.Any())
+        {
+            <div class="footer__legal__links">
+                @foreach (var link in Model.FooterLegalLinks)
+                {
+                    <a href="@Url.ContentUrl(link.Href)" class="footer-link">
+                        <div class="caption-s">
+                            @link.Text
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</footer>

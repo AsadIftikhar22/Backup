@@ -1,0 +1,108 @@
+﻿@using Salam.Cms.Shared.Models
+@using Salam.Cms.Shared.Models.Catalogue.Data
+@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Catalogue.ViewModels
+@using Salam.Cms.Web.Features.Common.Extensions
+@using Salam.Cms.Web.Features.Common.Helpers
+
+@using static Salam.Cms.Shared.Models.SalamConstants
+
+@model ProductAddOnBoostViewModel
+
+<div class="section-wrapper">
+    <div @Html.PageNavigatorAnchorAttribute(Model.NavigationTitle)
+         class="product-selector product-selector__wrapper product-selector__wrapper--bg-light">
+        <div class="heading-and-description heading-and-description--secondary">
+            <div class="heading-and-description__title">
+                @Html.PropertyFor(m => m.Title)
+            </div>
+            <p class="heading-and-description__text">
+                @Html.PropertyFor(model => model.Description)
+            </p>
+        </div>
+        <nav class="tabs-navigation">
+            <div class="tabs-navigation__labels-wrapper">
+                <div class="tabs-navigation__labels">
+                    @{
+                        var tabNumber = 1;
+                        var tabCategoryDict = new Dictionary<int, string>();
+                        var productTypesFeatured = Model.VisibleFeaturesFields?
+                        .Select(item =>
+                        {
+                            var parts = ContentHelper.SplitExtensionForVisibleFields(item);
+                            return new
+                            {
+                                ProductType = parts[0],
+                                VisibleField = parts.Length > 1 ? parts[1] : string.Empty,
+                            };
+                        })
+                        .GroupBy(x => x.ProductType);
+                        var productTypeSingle = productTypesFeatured.First();
+                        var prodcutTypeFeaturedSingle = productTypesFeatured?.FirstOrDefault(x => x.Key == productTypeSingle.Key);
+
+                    }
+                    @foreach (var addOn in Model.AddOns.OrderBy(x => int.Parse(x.Validity.Split(' ')[0])).Select(x => x.Validity).Distinct())
+                    {
+                        tabCategoryDict.Add(tabNumber, addOn);
+
+                        <button class="tab-label @(tabNumber == 1 ? "active" : string.Empty)"
+                                data-tab-target="tab@(tabNumber)">
+                            @addOn
+                        </button>
+                        tabNumber++;
+                    }
+
+
+                </div>
+            </div>
+            <div class="tabs-navigation__content">
+                @{
+                    var tabContentNumber = 1;
+                }
+                @foreach (var validity in Model.AddOns
+                                .OrderBy(x => int.Parse(x.Validity.Split(' ')[0]))
+                                .Select(x => x.Validity)
+                                .Distinct())
+                {
+                    <div class="tab-content @(tabContentNumber == 1 ? "active" : "")" id="tab@(tabContentNumber)">
+                        <div class="plan-cards">
+                            @foreach (var item in Model.AddOns.Where(x => x.Validity == validity))
+                            {
+                                <div class="plan-card-wrapper">
+                                    <div class="plan-card">
+                                        <p class="plan-card__heading">
+                                            @if (!string.IsNullOrWhiteSpace(item.Data))
+                                            {
+                                                @item.Data
+                                            }
+                                            else if (!string.IsNullOrWhiteSpace(item.CallsMinutes))
+                                            {
+                                                @item.CallsMinutes
+                                            }
+                                        </p>
+                                        <div class="plan-card__header">
+                                            <h3 class="plan-card__price">@item.PriceString.Split(' ')[0]</h3>
+                                            <p class="plan-card__price-pm">@Model.Span</p>
+                                        </div>
+                                        <p class="plan-card__vat">@Model.VatText</p>
+
+                                        @if (!String.IsNullOrWhiteSpace(item.Banner))
+                                        {
+                                            <div class="chips chips--primary plan-card__chip">
+                                                <span class="chips__text">
+                                                    @item.Banner
+                                                </span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    tabContentNumber++;
+                }
+            </div>
+        </nav>
+    </div>
+</div>
+

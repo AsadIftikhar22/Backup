@@ -1,0 +1,19 @@
+﻿@using Salam.Cms.Web.Features.Navigation.ViewModels
+
+@model NavigationItemCollectionViewModel
+
+<div class="navigation-item-collection-block">
+    <div class="b2b-navigation-item-collection-block__nav-block">
+        <div class="b2b-navigation-item-collection-block__nav-block__heading">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path opacity="0.8" d="M5 2L11 8.08219L5.16216 14" stroke="#01EC0D" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            @Html.PropertyFor(m => m.CurrentBlock.Heading)
+        </div>
+
+        @if (!Model.Links.IsNullOrEmpty() && Model.Links.Count > 0)
+        {
+            @await Html.PartialAsync("~/Views/Shared/Partials/B2BFooterLinks.cshtml", Model.CurrentBlock.Links)
+        }
+    </div>
+</div>

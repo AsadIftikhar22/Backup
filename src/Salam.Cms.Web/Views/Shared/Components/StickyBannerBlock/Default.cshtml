@@ -1,0 +1,38 @@
+﻿@using PictureRenderer
+@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.Common.Components.StickyBanner.Models
+@using Salam.Cms.Web.Features.Common.Components.StickyBanner.ViewModels
+@using Salam.Cms.Web.Features.Showcase.Models
+@using Salam.Cms.Web.Features.Support.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using Salam.Cms.Web.Features.Common.Extensions
+
+@Model StickyBannerBlockViewModel
+
+<div class="banner">
+@*     @await Html.Picture(Model.CurrentBlock.bgImageSrc,
+        PictureProfiles.CarouselCards, new PictureAttributes
+        {
+            LazyLoading = LazyLoading.Browser,
+            ImgDecoding = ImageDecoding.Async,
+            ImgFetchPriority = FetchPriority.Auto
+        }) *@
+    <img class="main-bg" src="@Model.CurrentBlock.bgImageSrc" alt="Background">
+    <div class="banner__overlay">
+        <h1 class="banner__headline">@Model.CurrentBlock.headline</h1>
+        <p class="banner__subheadline">@Model.CurrentBlock.subheadline</p>
+        <p class="terms-and-condition">@Model.CurrentBlock.TermsAndCondition</p>
+        <a href="@Model.CurrentBlock.ctaURL" class="banner__cta">
+            <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g opacity="0.3">
+                    <path opacity="0.8" d="M1 1L5 5.05479L1.10811 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M7 1L11 5.05479L7.10811 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+            </svg><span>@Model.CurrentBlock.ctaText</span>
+        </a>
+        <div class="powered-by">
+            <span>@Model.CurrentBlock.poweredByText</span>
+            <vc:image-renderer image-reference="@Model.CurrentBlock.poweredByLogoSrc" svg-render-mode="@SvgRenderMode.Inline" alt="Powered by logo" />
+        </div>
+    </div><img class="banner__logo" src="@Model.CurrentBlock.logoSrc" alt="Logo">
+</div>

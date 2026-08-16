@@ -1,0 +1,144 @@
+﻿@using EPiServer
+@using EPiServer.Core
+@using EPiServer.Filters
+@using EPiServer.Web.Routing
+@using EPiServer.Globalization
+@using Salam.Cms.Shared.Models.Pages.Container
+@using Salam.Cms.Web.Features.Home.Models
+
+@inject IContentLoader ContentLoader
+@inject IContentRouteHelper ContentRouteHelper
+@inject IContentLanguageAccessor ContentLanguageAccessor
+@{
+    var currentPage = ContentRouteHelper.Content as PageData;
+
+    if (currentPage == null)
+    {
+        return;
+    }
+
+    var filter = new FilterContentForVisitor();
+    var culture = ContentLanguageAccessor.Language;
+    var breadcrumbs = new List<PageData>();
+
+    foreach (var ancestor in ContentLoader.GetAncestors(currentPage.ContentLink))
+    {
+        if (ContentLoader.TryGet<PageData>(ancestor.ContentLink, culture, out var page))
+        {
+            breadcrumbs.Add(page);
+        }
+    }
+    // breadcrumbs = breadcrumbs
+    // .Reverse<PageData>()
+    //  .SkipWhile(x => !x.ContentLink.CompareToIgnoreWorkID(ContentReference.StartPage))
+    //  .Where(x => //x.VisibleInMenu &&
+    //      x is not ContainerPage
+    // //&& !filter.ShouldFilter(x)
+    // )
+
+    var ancestors = ContentLoader.GetAncestors(currentPage.ContentLink)
+        .OfType<PageData>()
+        .Reverse()
+        .SkipWhile(x => !x.ContentLink.CompareToIgnoreWorkID(ContentReference.StartPage))
+        .Skip(1);
+
+     breadcrumbs = new List<PageData>();
+
+    foreach (var page in ancestors)
+    {
+        if (page is ContainerPage)
+        {
+            var child = ContentLoader.GetChildren<PageData>(page.ContentLink)
+                .FirstOrDefault(x => x.ContentLink.CompareToIgnoreWorkID(currentPage.ContentLink));
+
+            if (child != null)
+            {
+                breadcrumbs.Add(child);
+            }
+        }
+        else
+        {
+            breadcrumbs.Add(page);
+        }
+    }
+    var items = breadcrumbs.Count == 1
+     ? new List<PageData>()
+     : breadcrumbs;
+}
+@if (items.Any())
+{
+    <nav class="breadcrumb" aria-label="breadcrumb">
+
+        @for (int i = 0; i < items.Count-1; i++)
+        {
+            var item = items[i];
+
+            <a href="@Url.ContentUrl(item.ContentLink)"
+               class="button button-theme--transparent-secondary breadcrumb__link">
+                @item.Name
+                <div class="arrow">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </a>
+        }
+        <a class="button button-theme--transparent-secondary breadcrumb__link">
+            @currentPage.Name
+        </a>
+
+    </nav>
+}
+<style>
+    .breadcrumb {
+        padding: var(--spacing-4);
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        margin: auto;
+        max-width: 1312.67px;
+        padding-left:96px;
+    }
+
+    .breadcrumb__link {
+        color: #74C947;
+        text-decoration: none;
+        padding-left: 3px;
+    }
+
+    .button-theme--transparent-primary, .button-theme--transparent-secondary {
+        flex-direction: row;
+    }
+
+    .breadcrumb__link:hover {
+        text-decoration: underline;
+    }
+
+    .breadcrumb__separator {
+        color: #5b6b66;
+        margin: 0 8px;
+    }
+
+    .button-theme--transparent-primary .arrow, .button-theme--transparent-secondary .arrow {
+        margin: 0;
+    }
+
+    .breadcrumb__current {
+        color: #74C947;
+    }
+
+
+    .breadcrumb .button-theme--transparent-primary .arrow, .button-theme--transparent-secondary .arrow {
+        margin: 0;
+        margin-left: 10px;
+    }
+
+    @@media (max-width: 1200px) {
+        .breadcrumb__link {
+            min-height: 27px !important;
+            padding-left: 3px !important;
+        }
+    }
+</style>

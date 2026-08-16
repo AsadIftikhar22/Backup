@@ -1,0 +1,232 @@
+@using EPiServer.Core
+@using Salam.Cms.Web.Features.TelecomItRightsBlock.ViewModels
+@using Salam.Cms.Web.Features.TelecomItRightsBlock.Models
+
+@model TelecomItRightsSectionBlockViewModel
+
+@{
+    var sectionId = "ITRightsSection" + Guid.NewGuid().ToString("N");
+}
+
+<style>
+.salam-layout {
+    font-family: "Codec Pro";
+    font-size: 16px;
+    font-weight: 500;
+}
+.dxp-layout-content-area {
+    padding: 0;
+}
+.support-page-wrapper div, * {
+    box-sizing: border-box;
+}
+.vc_row {
+    margin-left: 0;
+    margin-right: 0;
+}
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+.vc_row:after, .vc_row:before {
+    content: " ";
+    display: table;
+}
+.vc_column_container {
+    padding-left: 0;
+    padding-right: 0;
+}
+.vc_column_container>.vc_column-inner {
+    box-sizing: border-box;
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+}
+.it-rights-container {
+    padding: 80px 0 194px;
+    background-color: #f1f1f1;
+}
+.it-rights-container-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    margin-bottom: 40px;
+    padding: 1rem;
+}
+.it-rights-container-wrapper h2 {
+    color: #002035;
+    text-align: left;
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 120%;
+    margin-bottom: 40px;
+}
+body {
+    line-height: 1.67;
+    text-align: left;
+    color: #222;
+}
+.it-rights-container-wrapper .rights-section h3 {
+    color: #00b140;
+    font-family: "Codec Pro" !important;
+    font-size: 24px;
+}
+.it-rights-container-wrapper .rights-section .first-introduction {
+    font-family: ModernEra;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.it-rights-container-wrapper .rights-section ol {
+    margin-left: 15px;
+    margin-top: 15px;
+    margin-bottom: 40px;
+    font-family: ModernEra;
+}
+.blog-details-text ol, .post--content ol {
+    list-style-type: decimal;
+}
+.blog-details-text ol, .blog-details-text ul, .post--content ol {
+    padding-left: 40px;
+}
+.it-rights-container-wrapper .rights-section ol li {
+    list-style-type: none;
+    font-family: ModernEra;
+}
+.it-rights-container-wrapper .accordion-container .single-accordion {
+    position: relative;
+    margin: 10px 0;
+}
+.it-rights-container-wrapper .accordion-container .single-accordion .accordion-header {
+    list-style: none;
+    font-family: ModernEra;
+    padding: 15px;
+    border-radius: 0.5rem;
+    background: #FFF;
+    box-shadow: 0px 2px 8px 0px rgba(0, 32, 53, 0.15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+summary {
+    display: list-item;
+}
+.it-rights-container-wrapper .accordion-container .single-accordion .accordion-header span {
+    color: #00B140;
+    font-family: ModernEra;
+    font-size: 1.125rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 120%;
+}
+.accordion-header .chevron-svg {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+    transition: transform 160ms ease-in-out;
+    transform-origin: 50% 50%;
+    transform: rotate(0deg);
+}
+details[open] .accordion-header .chevron-svg {
+    transform: rotate(180deg);
+}
+.it-rights-container-wrapper .accordion-container .single-accordion .accordion-body {
+    font-family: ModernEra;
+    padding: 10px 0 30px;
+}
+body .post--content p {
+    color: initial !important;
+}
+@@media (min-width: 768px) {
+    .vc_col-sm-12 {
+        width: 100%;
+    }
+}
+@@media (min-width: 768px) {
+    .vc_col-sm-1, .vc_col-sm-10, .vc_col-sm-11, .vc_col-sm-12, .vc_col-sm-2, .vc_col-sm-3, .vc_col-sm-4, .vc_col-sm-5, .vc_col-sm-6, .vc_col-sm-7, .vc_col-sm-8, .vc_col-sm-9 {
+        float: left;
+    }
+}
+
+/* ========== RTL (Arabic) ========== */
+html[dir="rtl"] body { text-align: right; }
+html[dir="rtl"] .it-rights-container-wrapper h2 { text-align: right; }
+html[dir="rtl"] .it-rights-container-wrapper .rights-section .first-introduction,
+html[dir="rtl"] .it-rights-container-wrapper .accordion-container .single-accordion .accordion-body { text-align: right; }
+html[dir="rtl"] .it-rights-container-wrapper .rights-section ol {
+    margin-left: 0;
+    margin-right: 15px;
+}
+html[dir="rtl"] .it-rights-container-wrapper .rights-section ol,
+html[dir="rtl"] .blog-details-text ol, html[dir="rtl"] .post--content ol {
+    padding-left: 0;
+    padding-right: 40px;
+}
+/* RTL accordion: heading right, icon left (use LTR on header + row-reverse) */
+html[dir="rtl"] .it-rights-container-wrapper .accordion-container .single-accordion .accordion-header {
+    direction: ltr;
+    flex-direction: row-reverse;
+}
+html[dir="rtl"] details[open] .accordion-header .chevron-svg {
+    transform: rotate(0deg) scaleX(-1);
+}
+html[dir="rtl"] .accordion-header .chevron-svg {
+    transform: rotate(180deg) scaleX(-1);
+}
+@@media (min-width: 768px) {
+    html[dir="rtl"] .vc_col-sm-1, html[dir="rtl"] .vc_col-sm-10, html[dir="rtl"] .vc_col-sm-11, html[dir="rtl"] .vc_col-sm-12, html[dir="rtl"] .vc_col-sm-2, html[dir="rtl"] .vc_col-sm-3, html[dir="rtl"] .vc_col-sm-4, html[dir="rtl"] .vc_col-sm-5, html[dir="rtl"] .vc_col-sm-6, html[dir="rtl"] .vc_col-sm-7, html[dir="rtl"] .vc_col-sm-8, html[dir="rtl"] .vc_col-sm-9 { float: right; }
+}
+html[dir="rtl"] .salam-layout { font-family: Frutigerlt, "Codec Pro", system-ui, sans-serif; }
+</style>
+
+<div id="@sectionId">
+    <div class="it-rights-container">
+        <div class="it-rights-container-wrapper">
+            @if (!string.IsNullOrEmpty(Model.CurrentBlock.Heading))
+            {
+                <h2>@Html.PropertyFor(m => m.CurrentBlock.Heading)</h2>
+            }
+            @if (!string.IsNullOrEmpty(Model.CurrentBlock.IntroductionTitle) || (Model.CurrentBlock.IntroductionContent != null && !string.IsNullOrWhiteSpace(Model.CurrentBlock.IntroductionContent.ToString())))
+            {
+                <div class="rights-section">
+                    @if (!string.IsNullOrEmpty(Model.CurrentBlock.IntroductionTitle))
+                    {
+                        <h3>@Model.CurrentBlock.IntroductionTitle</h3>
+                    }
+                    @if (Model.CurrentBlock.IntroductionContent != null && !string.IsNullOrWhiteSpace(Model.CurrentBlock.IntroductionContent.ToString()))
+                    {
+                        <div class="first-introduction">@Html.Raw(Model.CurrentBlock.IntroductionContent)</div>
+                    }
+                </div>
+            }
+            <div class="accordion-container">
+                @if (Model.CurrentBlock.AccordionItems != null)
+                {
+                    foreach (var item in Model.CurrentBlock.AccordionItems.FilteredItems)
+                    {
+                        var part = item.GetContent() as TelecomItRightsAccordionItemBlock;
+                        if (part != null)
+                        {
+                            var isOpen = part.ExpandByDefault;
+                            <details class="single-accordion" @(isOpen ? "open" : null)>
+                                <summary class="accordion-header">
+                                    <span>@(part.Title)</span>
+                                    <svg class="chevron-svg" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                        <path d="M12 8l-6 6m6-6l6 6" fill="none" stroke="#00B140" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </summary>
+                                <div class="accordion-body">
+                                    @if (part.Body != null && !string.IsNullOrWhiteSpace(part.Body.ToString()))
+                                    {
+                                        @Html.Raw(part.Body)
+                                    }
+                                </div>
+                            </details>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

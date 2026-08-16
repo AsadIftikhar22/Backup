@@ -1,0 +1,8 @@
+﻿@using Salam.Cms.Web.Features.WholesaleLanding.ViewModels
+
+@model WholesaleLandingViewModel
+
+@Html.PropertyFor(x => x.CurrentPage.MainContent, new { CssClass = "section-container bg-ltr" })
+@Html.Raw(Model.CurrentPage.HTMLCSS)
+@Html.Raw(Model.CurrentPage.HTMLBody)
+@Html.PropertyFor(x => x.CurrentPage.EndMainContent, new { CssClass = "section-container bg-ltr" })

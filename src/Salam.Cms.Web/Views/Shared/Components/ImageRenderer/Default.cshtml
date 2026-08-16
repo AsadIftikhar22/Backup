@@ -1,0 +1,17 @@
+﻿@using Salam.Cms.Web.Features.Common.Components.Images
+
+@model ImageViewModel
+
+@if (Model == default)
+{
+    return;
+}
+
+@if (Model.IsVectorImage && Model.SvgRenderMode == SvgRenderMode.Inline)
+{
+    @Html.Raw(Model.RawVectorImageContent)
+}
+else
+{
+    <img src="@Url.ContentUrl(Model.ImageReference)" alt="@Model.ImageContent.AltText" />
+}

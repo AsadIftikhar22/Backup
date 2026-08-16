@@ -1,0 +1,19 @@
+﻿@model EPiServer.SpecializedProperties.LinkItemCollection
+
+@{
+    var linkCount = Model?.Count ?? 0;
+}
+
+@if (linkCount > 0)
+{
+    <ul class="b2b-navigation-item-collection-block__nav-block__link-collection" style="display: block;">
+    @foreach (var item in Model)
+    {
+        <li>
+                <a class="b2b-button b2b-button-theme--transparent-secondary" href="@Url.ContentUrl(item.Href)">
+                <span>@item.Text</span>
+            </a>
+        </li>
+    }
+    </ul>
+}

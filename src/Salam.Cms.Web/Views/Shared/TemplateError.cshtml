@@ -1,0 +1,32 @@
+@using Salam.Cms.Web.Features.Common.Error.ViewModels
+
+@model ContentRenderingErrorModel
+
+<style>
+    .alert-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border-color: #f5c6cb;
+        padding: 15px;
+        border-radius: 5px;
+    }
+
+    .alert-error .heading {
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+
+    .alert-error .details {
+        margin-top: 10px;
+    }
+</style>
+
+<div class="section-wrapper">
+    <div class="alert alert-error">
+        <p class="heading">@string.Format(System.Globalization.CultureInfo.CurrentUICulture, LocalizationService.Current.GetString("/renderingerror/heading"), Model.ContentTypeName, Model.ContentName)</p>
+        <p class="details">
+            <strong>@Model.Exception.Message</strong><br />
+            @Model.Exception.StackTrace
+        </p>
+    </div>
+</div>

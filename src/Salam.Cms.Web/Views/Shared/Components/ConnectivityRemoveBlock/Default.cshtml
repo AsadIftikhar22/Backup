@@ -1,0 +1,103 @@
+﻿@using EPiServer.Core.Internal
+@using EPiServer.Web.Routing
+@using Salam.Cms.Core.Settings.Abstract
+@using Salam.Cms.Web.Features.Common.Models
+@using Salam.Cms.Web.Features.ConnectivityRemove.ViewModels
+@using EPiServer.Core
+@using EPiServer.Web
+@using EPiServer.Web.Mvc.Html
+@using Salam.Cms.Web.Features.EnquireProduct.Services
+@using Salam.Cms.Web.Features.InternetCards.Models
+@using Salam.Cms.Web.Features.SelectedProductEnquire.Models
+@using Salam.Cms.Web.Features.Settings.Models
+@using EPiServer.Globalization;
+
+@model ConnectivityRemoveBlockViewModel
+<style>
+    .business-label {
+        font-size: 19px;
+    }
+</style>
+<section class="business-solution-section">
+    @{
+        @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+        @inject ISessionService _sessionService;
+        @inject ISettingsManager _settingsManager;
+        @inject ContentLoader _contentLoader;
+
+        var culture = ContentLanguage.PreferredCulture;
+        var webLayoutSettings = _settingsManager.GetSettings<WebLayoutSettings>();
+        string SessionKey = HttpContextAccessor.HttpContext?.Session.Id!;
+
+        List<EnquireProductRequest> lst_EnquireProductRequest = _sessionService.GetObject<List<EnquireProductRequest>>(SessionKey) ?? new List<EnquireProductRequest>();
+        string RemoveAPIUrl = Url.ContentUrl(webLayoutSettings?.RemoveProductBtn?.Href);
+        List<EnquireProductRequest> list_EnquireProductRequest = new();
+
+
+        lst_EnquireProductRequest.ForEach(x =>
+        {
+            EnquireProductRequest obj_EnquireProductRequest = new();
+
+            var cardItems = _contentLoader.Get<InternetCardsBlock>(new ContentReference(x.blockId), culture);
+            obj_EnquireProductRequest.heading = cardItems?.Heading;
+            obj_EnquireProductRequest.description = cardItems?.Description?.ToString();
+            obj_EnquireProductRequest.labels = (string[]?)cardItems?.Labels;
+            obj_EnquireProductRequest.blockId = x.blockId;
+
+            list_EnquireProductRequest.Add(obj_EnquireProductRequest);
+        });
+
+    }
+
+    <div class="product-summary__back-btn">
+        <a href="@Url.ContentUrl(webLayoutSettings?.BackPageRedirectURL?.Href)"
+           class="button button-theme--transparent-secondary button-theme--filled"
+           id="backLink">
+            <span>@webLayoutSettings?.BackPageRedirectURL?.Title</span>
+            <div class="arrow"><span></span><span></span><span></span><span></span><span></span></div>
+        </a>
+    </div>
+
+    @if (list_EnquireProductRequest?.Count > 0)
+    {
+        <div class="business-card-grid">
+            @foreach (var item in list_EnquireProductRequest)
+            {
+                <div class="business-solution-card">
+                    <div class="business-card-inner">
+                        <div class="business-card-labels">
+                            @if (item.labels != null && item.labels.Any())
+                            {
+                                foreach (var label in item.labels)
+                                {
+                                    <span class="business-label">@label</span>
+                                }
+                            }
+                        </div>
+                        <h3>@item?.heading</h3>
+                    </div>
+
+                    <div class="business-card-actions">
+                        <button data-url="@RemoveAPIUrl"
+                                class="business-btn-outline js-remove-product"
+                                data-id="@item.blockId" aria-label="View Details" style="transition: transform 0.6s, color 0.6s; transform: translateX(0px); color: rgb(230, 253, 231);">
+                            <svg width="13" height="10" viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg" style="transition: transform 0.6s; transform: translateX(0px);">
+                                <g opacity="0.3">
+                                    <path opacity="0.8" d="M1.83496 1L5.83496 5.05479L1.94307 9" stroke="#55F25D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M7.83496 1L11.835 5.05479L7.94307 9" stroke="#55F25D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </g>
+                            </svg>
+                            @( (webLayoutSettings?.RemoveProductBtn?.Title) ?? "Remove" )
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    @if (list_EnquireProductRequest?.Count == 0 && !String.IsNullOrWhiteSpace(webLayoutSettings?.NoProductSelectedMessage))
+    {
+        <div class="business-section-header">
+            <h2>   @(webLayoutSettings?.NoProductSelectedMessage)</h2>
+        </div>
+    }
+</section>

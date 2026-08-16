@@ -1,0 +1,12 @@
+﻿@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using static Salam.Cms.Shared.Models.SalamConstants
+
+@model ProductSku
+
+
+
+@if (Model.WiFiExtender == true)
+{
+    <div class="chips chips--primary plan-card__chip"><span class="chips__text">@ContentHelper.GetDefaultFrontendLabel(Model, CatalogueAPIfields.WiFiExtender)</span></div>
+}

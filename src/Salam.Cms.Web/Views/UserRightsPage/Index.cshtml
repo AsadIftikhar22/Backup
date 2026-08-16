@@ -1,0 +1,40 @@
+@using Salam.Cms.Web.Features.UserRightsPage.ViewModels
+
+@model UserRightsPageViewModel
+
+<style>
+/* Remove green area on right and under footer for User Rights page */
+body.user-rights-page,
+html:has(body.user-rights-page) {
+    background-color: #fff !important;
+}
+body.user-rights-page main {
+    background-color: #fff !important;
+}
+body.user-rights-page .entry-content-page .wpb_wrapper > p {
+    display: none !important;
+}
+</style>
+<div class="salam-layout">
+    <div class="dxp-layout-content-area">
+        <div class="entry-content-page post--content">
+            <div class="vc_row wpb_row vc_row-fluid">
+                <div class="wpb_column vc_column_container vc_col-sm-12">
+                    <div class="vc_column-inner">
+                        <div class="wpb_wrapper">
+                            @Html.PropertyFor(x => x.CurrentPage.MainContent)
+                            @if (Model.CurrentPage.CustomCss != null && !string.IsNullOrWhiteSpace(Model.CurrentPage.CustomCss.ToString()))
+                            {
+                                <style>@Html.Raw(Model.CurrentPage.CustomCss)</style>
+                            }
+                            @if (Model.CurrentPage.CustomHtml != null && !string.IsNullOrWhiteSpace(Model.CurrentPage.CustomHtml.ToString()))
+                            {
+                                @Html.Raw(Model.CurrentPage.CustomHtml)
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,89 @@
+﻿@using EPiServer
+@using EPiServer.Core
+@using EPiServer.Core.Internal
+@using EPiServer.Web.Routing
+@using Salam.Cms.Core.Settings.Abstract
+@using Salam.Cms.Web.Features.Common.Components.Footer
+@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.Settings.Models
+
+@model FooterViewModel
+@inject ISettingsManager _settingsManager;
+@inject IContentLoader ContentLoader;
+@inject UrlResolver _urlResolver;
+@{
+
+    var webLayoutSettings = _settingsManager.GetSettings<WebLayoutSettings>();
+    var businessName = ContentLoader.Get<IContent>(webLayoutSettings.MainPageBusinessNavigation).Name;
+    var url = _urlResolver.GetUrl(webLayoutSettings.MainPageBusinessNavigation);
+}
+<footer class="footer">
+    <div class="footer__block">
+        <a href="@url" class="logo"><vc:image-renderer image-reference="@Model.Logo" svg-render-mode="@SvgRenderMode.Inline" /></a>
+        @if (Model.FooterSocialLinks != null && Model.FooterSocialLinks.Any())
+        {
+            <div class="social-row social-row--footer">
+                @foreach (var socialItem in Model.FooterSocialLinks)
+                {
+                    <a href="@socialItem.Link?.Href">
+                        <vc:image-renderer image-reference="@socialItem.Icon" svg-render-mode="@SvgRenderMode.Inline" />
+                    </a>
+                }
+            </div>
+        }
+        <div class="footer__legal">
+            <div class="caption-s">@Html.PropertyFor(m => m.CopyrightText)</div>
+            @if (Model.FooterLegalLinks != null && Model.FooterLegalLinks.Any())
+            {
+                <div class="footer__legal__links">
+                    @foreach (var link in Model.FooterLegalLinks)
+                    {
+                        <a href="@Url.ContentUrl(link.Href)" class="footer-link">
+                            <div class="caption-s">
+                                @link.Text
+                            </div>
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="footer__links">
+        <div class="footer__links__wrapper">
+            @foreach (var item in Model.NavigationItems)
+            {
+                @await Html.PartialAsync("Components/B2BNavigationItemCollectionBlock/Default", item)
+            }
+        </div>
+        @if (Model.FooterSocialLinks != null && Model.FooterSocialLinks.Any())
+        {
+            <div class="social-row social-row--footer">
+                @foreach (var socialLink in Model.FooterSocialLinks)
+                {
+                    <a href="@Url.ContentUrl(@socialLink.Link?.Href)" title="@socialLink.Link?.Title" target="@socialLink.Link?.Target">
+                        <vc:image-renderer image-reference="@socialLink.Icon" svg-render-mode="@SvgRenderMode.Inline" />
+                    </a>
+                }
+            </div>
+        }
+    </div>
+    <div class="footer__legal">
+        <div class="caption-s">
+            @Html.PropertyFor(m => m.CopyrightText)
+        </div>
+        @if (Model.FooterLegalLinks != null && Model.FooterLegalLinks.Any())
+        {
+            <div class="footer__legal__links">
+                @foreach (var link in Model.FooterLegalLinks)
+                {
+                    <a href="@Url.ContentUrl(link.Href)" class="footer-link">
+                        <div class="caption-s">
+                            @link.Text
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</footer>

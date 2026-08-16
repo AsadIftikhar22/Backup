@@ -1,0 +1,51 @@
+﻿@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using EPiServer.Forms.UI.SelectionFactory
+@using System.Globalization;
+@using Salam.Cms.Web.Features.Forms.B2BNumberElementBlock
+@model B2BPhoneNumberRegexElementBlock
+
+@{
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var cssClasses = Model.GetValidationCssClasses();
+    var autoComplete = AutoCompleteSelectionFactory.GetStringValue(Model.AutoComplete);
+    var culture = CultureInfo.DefaultThreadCurrentCulture?.TwoLetterISOLanguageName ?? CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+}
+
+@* @using (Html.BeginElement(Model, new { @class = "FormTextbox FormTextbox--Number" + cssClasses, @data_f_type = "textbox", data_f_modifier = "number" }))
+{
+    <div class="form-field">
+        <div lang=@culture>
+            <label for="@formElement.Guid" class="Form__Element__Caption">@labelText</label>
+            <input name="@formElement.ElementName" id="@formElement.Guid" type="number" step="any"
+                   placeholder="@Html.FilterHtml(Model.PlaceHolder)"
+                   class="form-input  FormTextbox__Input" @Html.Raw(Model.AttributesString) data-f-datainput
+                   value="@Model.GetDefaultValue()" aria-describedby="@Util.GetDefaultValue()"
+                   autocomplete="@autoComplete" />
+        </div>
+        <span id="@formElement.Guid-error" class="error-message">@Html.ValidationMessageFor(Model)</span>
+
+        
+        @Model.RenderDataList()
+    </div>
+} *@
+
+
+@using (Html.BeginElement(Model, new { @class = "FormTextbox" + cssClasses, data_f_type = "textbox" }))
+{
+    <div class="form-field">
+        <label for="@formElement.Guid" class="Form__Element__Caption">@labelText</label>
+        <input name="@formElement.ElementName" id="@formElement.Guid" type="text" class="@Model.FieldMapping form-input FormTextbox__Input"
+             
+               aria-describedby="@Util.GetAriaDescribedByElementName(formElement.ElementName)"
+               placeholder="@Html.FilterHtml(Model.PlaceHolder ?? "")"
+               value="@Model.GetDefaultValue()" @Html.Raw(Model.AttributesString) data-f-datainput
+               autocomplete="@autoComplete" />
+        <span id="@formElement.Guid-error" class="error-message">
+            @Html.ValidationMessageFor(Model)
+        </span>
+        @Model.RenderDataList()
+
+    </div>
+}

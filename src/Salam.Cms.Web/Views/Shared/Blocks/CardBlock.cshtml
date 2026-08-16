@@ -1,0 +1,89 @@
+﻿@using EPiServer.Cms.WelcomeIntegration.UI.Helpers;
+@using Salam.Cms.Shared.Models.Common.Enums
+@using Salam.Cms.Web.Features.Cards.Enums
+@using Salam.Cms.Web.Features.Cards.Models
+@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.InformationItem.Enums
+@using PictureRenderer
+@using PictureRenderer.Profiles
+
+@model CardBlock
+@{
+    var theme = "card-block" + Model.Theme.GetCssClass();
+
+    var styleNumbers = Model.Style?
+        .Split(",")
+        .Select(num => int.TryParse(num, out int n) ? (CardStyleOption?)n : null)
+        .Where(n => n.HasValue)
+        .Select(n => n.Value.GetCssClass());
+
+    var styleClasses = string.Join(" ", styleNumbers ?? Enumerable.Empty<string>());
+    var layout = "card-block" + Model.Layout.GetCssClass();
+}
+
+<!-- START CardBlock -->
+<div class="card-block @theme @styleClasses @layout">
+    <div className="card-block__featured-image-wrapper">
+        <!-- Card Block - Default -->
+        @if (Model.Media != null)
+        {
+            @await Html.Picture(Model.Media,
+            PictureProfiles.CardDefault, new PictureAttributes
+            {
+                LazyLoading = LazyLoading.Browser,
+                ImgDecoding = ImageDecoding.Sync,
+                ImgFetchPriority = FetchPriority.Low
+            })
+                }
+    </div>
+
+    <div class="quick-link-card">
+        <div class="quick-link-card__content">
+            @if (!Model.Icon.IsNullOrEmpty())
+            {
+                @* Card Icon *@
+                <div class="quick-link-card__icon">
+                    <vc:image-renderer image-reference="@Model.Icon" svg-render-mode="@SvgRenderMode.Inline" />
+                </div>
+            }
+
+            @* Badge *@
+            @if (!string.IsNullOrEmpty(Model.BadgeText))
+            {
+                <div class="chips">
+                    <span class="chips__text">@Html.PropertyFor(m => m.BadgeText)</span>
+                </div>
+            }
+
+            <div class="quick-link-card__text">
+                @* Heading *@
+                <div class="quick-link-card__heading">
+                    @Html.PropertyFor(m => m.Heading)
+                    <div class="quick-link-card__sub-heading">
+                        <!-- TODO: Add a cusomt heading render extension that can split text over two lines with on page editing intact -->
+                        @* @Html.PropertyFor(m => m.HeadingLineTwo) *@
+                    </div>
+                </div>
+
+                @* Main Body *@
+                <div class="quick-link-card__subtext">
+                    <div class="rte-wrapper">
+                        @Html.RenderRichTextContent(m => m.MainBody)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (!Model.LinkItems.IsNullOrEmpty())
+        {
+            if (Model.ButtonStyle == StyleOption.Simple)
+            {
+                @await Html.PartialAsync("~/Views/Shared/Partials/SimpleButton.cshtml", Model.LinkItems)
+            }
+            else
+            {
+                @await Html.PartialAsync("~/Views/Shared/Partials/ButtonRow.cshtml", Model.LinkItems)
+            }
+        }
+    </div>
+</div>

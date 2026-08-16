@@ -1,0 +1,20 @@
+﻿@using Salam.Cms.Web.Features.Landing.ViewModels
+@using Salam.Cms.Web.Features.SalamIFrameMigrationPage.ViewModels
+@using Salam.Cms.Web.Features.SalamMigrationPage.ViewModels
+
+@model SalamIFrameMigrationPageViewModel
+@{
+    Layout = "~/Views/Shared/_Iframe_Layout.cshtml";
+}
+
+<style>
+    .section-container{
+        padding:20px;
+    }
+
+
+</style>
+@Html.PropertyFor(x => x.CurrentPage.MainContent, new { CssClass = "section-container bg-ttb" })
+@Html.Raw(Model.CurrentPage.HTMLCSS)
+@Html.Raw(Model.CurrentPage.HTMLBody)
+@Html.Raw(Model.CurrentPage.EndMainContent)

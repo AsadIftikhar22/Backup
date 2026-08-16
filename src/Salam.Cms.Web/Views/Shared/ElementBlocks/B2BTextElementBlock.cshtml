@@ -1,0 +1,117 @@
+﻿@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using EPiServer.Forms.UI.SelectionFactory
+@model B2BTextElementBlock
+
+@{
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var cssClasses = Model.GetValidationCssClasses();
+    var autoComplete = AutoCompleteSelectionFactory.GetStringValue(Model.AutoComplete);
+    string HintTextFontColor = Model.HintFontColor ?? " #666";
+    string HintTextFontSize = Model.HintFontSize ?? "12px";
+}
+<style>
+    .form-hint {
+        font-size: @HintTextFontSize;
+        color: @HintTextFontColor;
+    }
+
+    .note-icon{
+        cursor:pointer;
+        margin-left: 6px;
+        display: inline-block;
+        position: relative;
+        top: -46px;
+        left: 525px;
+    }
+
+    .note-icon.trackTabModal{
+            left: 428px;
+    }
+    [dir="rtl"] .note-icon {
+        right: 525px;
+    }
+    @@media (max-width: 768px) {
+        .note-icon
+        {
+            top: -26px;
+            left: 196px;
+        }
+
+        .note-icon.trackTabModal {
+             left: 102px;
+        }
+        [dir="rtl"] .note-icon {
+            top: -26px;
+            right: 196px;
+        }
+
+            [dir="rtl"] .note-icon.trackTabModal {
+            top: -26px;
+                right: 102px;
+        }
+    }
+</style>
+
+@using (Html.BeginElement(Model, new { @class = "FormTextbox" + cssClasses, data_f_type = "textbox" }))
+{
+    <div class="form-field">
+        <label for="@formElement.Guid" class="Form__Element__Caption">
+            @labelText
+        </label>
+            @if (Model?.ComplaintModelElementBlock?.ModalID != "0")
+            {
+            <img class="note-icon @Model?.ComplaintModelElementBlock?.ModalID" id="@Model?.ComplaintModelElementBlock?.ModalID+openNoteModal"
+                     src="https://staging-mobile.salammobile.sa/wp-content/uploads/2022/06/Group-11.png.webp"
+                     data-src-img="https://staging-mobile.salammobile.sa/wp-content/uploads/2022/06/Group-11.png"
+                     data-src-webp="https://staging-mobile.salammobile.sa/wp-content/uploads/2022/06/Group-11.png.webp"
+                     alt="icon">
+            }
+     
+
+        <div id="@Model?.ComplaintModelElementBlock?.ModalID" class="modal-overlay hide">
+            <div class="modal-content">
+                <span id="@Model?.ComplaintModelElementBlock?.ModalID+modal-close" class="modal-close">&times;</span>
+                <div class="modal-body">
+                    <h3>@Model?.ComplaintModelElementBlock?.ModalTitle</h3>
+                    <p>@Model?.ComplaintModelElementBlock?.ModalDescription</p>
+                </div>
+            </div>
+        </div>
+
+        <input name="@formElement.ElementName" id="@formElement.Guid" type="text" class="form-input FormTextbox__Input"
+               aria-describedby="@Util.GetAriaDescribedByElementName(formElement.ElementName)"
+               placeholder="@Html.FilterHtml(Model?.PlaceHolder ?? "")"
+               value="@Model.GetDefaultValue()" @Html.Raw(Model.AttributesString) data-f-datainput
+               autocomplete="@autoComplete" />
+        <span id="@formElement.Guid-error" class="error-message">
+            @Html.ValidationMessageFor(Model)
+        </span>
+        @Model.RenderDataList()
+
+    </div>
+
+    @if (!String.IsNullOrEmpty(Model.HintMessage))
+    {
+        <small class="form-hint">@Model.HintMessage</small>
+    }
+}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var openNoteModalBtn = document.getElementById("@Model?.ComplaintModelElementBlock?.ModalID+openNoteModal");
+        var noteModal = document.getElementById("@Model?.ComplaintModelElementBlock?.ModalID");
+        var closeModalBtn = document.getElementById("@Model?.ComplaintModelElementBlock?.ModalID+modal-close");
+        openNoteModalBtn.addEventListener("click", function () {
+            noteModal.classList.remove("hide");
+        });
+        closeModalBtn.addEventListener("click", function () {
+            noteModal.classList.add("hide");
+        });
+        noteModal.addEventListener("click", function (e) {
+            if (e.target === noteModal) {
+                noteModal.classList.add("hide");
+            }
+        });
+    });
+</script>

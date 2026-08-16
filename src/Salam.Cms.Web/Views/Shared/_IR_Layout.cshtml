@@ -1,0 +1,2239 @@
+﻿@using EPiServer.Framework.Web
+@using EPiServer.Framework.Web.Mvc.Html
+@using Salam.Cms.Core.Settings.Abstract
+@using Salam.Cms.Web.Features.ClientResources.Common
+@using Salam.Cms.Web.Features.Common.Components.Footer
+@using Salam.Cms.Web.Features.Common.Components.Navigation
+@using Salam.Cms.Web.Features.Common.Components.PageNavigator.Components
+@using Salam.Cms.Web.Features.Common.Interfaces
+@using Salam.Cms.Web.Features.Common.Components.MetaData
+@using Salam.Cms.Web.Features.Common.Components.TagManager
+@using Salam.Cms.Web.Features.Common.Models
+@using Salam.Cms.Web.Features.Hero.Components
+@using EPiServer.Core
+@using EPiServer.Web
+@using EPiServer.Web.Mvc.Html
+@using Salam.Cms.Web.Features.Hero.Models
+@using Salam.Cms.Web.Features.Landing.Models
+@using Salam.Cms.Web.Features.Settings.Models
+@using Salam.Cms.Web.Features.Support.Components
+@using Salam.Cms.Web.Features.WholesaleLanding.Models
+
+@model ISitePageViewModel<SitePageData>
+
+<!DOCTYPE html>
+<html lang="@(Model.CurrentPage?.Language)" dir="@(Model.CurrentPage?.Language.TextInfo.IsRightToLeft == true ? "rtl" : "ltr")">
+<head>
+    @await Component.InvokeAsync(typeof(MetaDataViewComponent),   new
+        {
+        currentPage = Model.CurrentPage,
+        showSiteTitle = true
+        })
+    @await Component.InvokeAsync(typeof(SocialMetaDataViewComponent), Model.CurrentPage)
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/static/assets/css/owl.theme.default.min.css" rel="stylesheet" />
+    <link href="~/static/assets/css/ir_style.css" rel="stylesheet" />
+    <link href="~/static/assets/css/owl.carousel.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    @await Html.RenderEPiServerQuickNavigatorAsync()
+    @Html.RequiredClientResources(RenderingTags.Header)
+</head>
+<style>
+    /* Regular */
+    @@font-face {
+        font-family: "Codec Pro";
+        src: url("/fonts/ir/CodecPro-Regular.woff2") format("woff2"), url("/fonts/ir/CodecPro-Regular.woff") format("woff");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    /* Medium / Bold */
+    @@font-face {
+        font-family: "Codec Pro";
+        src: url("/fonts/ir/CodecPro-Bold.woff2") format("woff2"), url("/fonts/ir/CodecPro-Bold.woff") format("woff");
+        font-weight: 500;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    /* Extra Bold */
+    @@font-face {
+        font-family: "Codec Pro";
+        src: url("/fonts/ir/CodecPro-ExtraBold.woff2") format("woff2"), url("/fonts/ir/CodecPro-ExtraBold.woff") format("woff");
+        font-weight: 600;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    /* Heavy */
+    @@font-face {
+        font-family: "Codec Pro";
+        src: url("/fonts/ir/CodecPro-Heavy.woff2") format("woff2"), url("/fonts/ir/CodecPro-Heavy.woff") format("woff");
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    /* Ultra */
+    @@font-face {
+        font-family: "Codec Pro";
+        src: url("/fonts/ir/CodecPro-Ultra.woff2") format("woff2"), url("/fonts/ir/CodecPro-Ultra.woff") format("woff");
+        font-weight: 900;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    /* Reset & Body */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Codec Pro", sans-serif;
+        font-weight: 400;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    p {
+        margin: 0;
+    }
+
+    .salam-layout {
+        background: linear-gradient(to bottom, rgba(243, 255, 249, 1), #ffffff);
+        margin: 0;
+        padding: 0;
+    }
+
+        .salam-layout .container {
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Top Header Bar Styles */
+        .salam-layout .top-header {
+            background-color: #001f1b;
+            color: white;
+        }
+
+            .salam-layout .top-header .wrap {
+                height: 52px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+            }
+
+                .salam-layout .top-header .wrap .nav-menu {
+                    margin: 0;
+                    padding: 0 !important;
+                    padding-inline-start: 40px !important;
+                }
+
+        .salam-layout .nav-menu {
+            display: flex;
+            list-style: none;
+            height: 100%;
+        }
+
+            .salam-layout .nav-menu li {
+                position: relative;
+                margin-inline-end: 25px;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                transition: all 0.25s ease;
+            }
+
+                .salam-layout .nav-menu li::before {
+                    position: absolute;
+                    bottom: 0;
+                    background-color: #00f249;
+                    height: 2px;
+                    width: 0;
+                    transition: all ease 0.7s;
+                    transform-origin: left;
+                    content: "";
+                }
+
+                .salam-layout .nav-menu li:hover:before {
+                    width: 100%;
+                }
+
+                .salam-layout .nav-menu li a {
+                    text-decoration: none;
+                    color: white;
+                    display: block;
+                    padding: 0 5px;
+                    font-weight: 300;
+                }
+
+                .salam-layout .nav-menu li.active a,
+                .salam-layout .nav-menu li:hover a {
+                    color: #00f249;
+                }
+
+                .salam-layout .nav-menu li.active::before,
+                .salam-layout .nav-menu li:hover::before {
+                    opacity: 1;
+                }
+
+        .salam-layout .right-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .salam-layout .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: #002823;
+            border-radius: 8px;
+            height: 40px;
+            width: 287px;
+            position: relative;
+        }
+
+            .salam-layout .search-bar .icon {
+                left: 12px;
+                position: absolute;
+            }
+
+            .salam-layout .search-bar input {
+                background: transparent;
+                border: none;
+                color: white;
+                outline: none;
+                width: 100%;
+                padding-inline-start: 36px;
+            }
+
+                .salam-layout .search-bar input::placeholder {
+                    color: #8aa3a0;
+                }
+
+        .salam-layout .coverage-btn {
+            background-color: transparent;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: solid 1px #003831;
+        }
+
+        .salam-layout .coverage-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .salam-layout .language-switcher {
+            position: relative;
+        }
+
+        .salam-layout .language-btn {
+            background-color: transparent;
+            border: solid 1px #003831;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+        }
+
+        .salam-layout .language-dropdown {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: #002823;
+            border-radius: 4px;
+            padding: 10px 0;
+            min-width: 120px;
+            display: none;
+            z-index: 100;
+        }
+
+            .salam-layout .language-dropdown a {
+                color: white;
+                text-decoration: none;
+                display: block;
+                padding: 5px 15px;
+                font-size: 14px;
+            }
+
+                .salam-layout .language-dropdown a:hover {
+                    background-color: #003d36;
+                }
+
+        .salam-layout .language-switcher:hover .language-dropdown {
+            display: block;
+        }
+
+        .salam-layout .language-dropdown-icon {
+            width: 12px;
+            height: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .salam-layout .language-switcher:hover .language-dropdown-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Main Menu Styles */
+        .salam-layout .main-menu-container {
+            /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+            height: 80px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 66px;
+            position: relative;
+            z-index: 99;
+        }
+
+            .salam-layout .main-menu-container .container {
+                justify-content: flex-start !important;
+            }
+
+        .salam-layout .logo {
+            height: 40px;
+            margin-right: 30px;
+        }
+
+        .salam-layout .main-menu {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+            margin: 0;
+            padding: 0;
+        }
+
+            .salam-layout .main-menu li {
+                position: relative;
+                padding: 38px 0;
+                cursor: pointer;
+                color: #ffffff;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                gap: 7px;
+            }
+
+                .salam-layout .main-menu li:hover {
+                    color: #00f249;
+                }
+
+        /* Dropdown styles */
+        .salam-layout .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 80px;
+            left: 0;
+            background-color: #003831;
+            min-width: 250px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 0;
+        }
+
+            .salam-layout .dropdown-content a {
+                color: #ffffff;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+                font-weight: 400;
+                transition: all 0.3s ease;
+                opacity: 0.8;
+            }
+
+                .salam-layout .dropdown-content a:hover {
+                    background-color: #002823;
+                    color: #00f249;
+                    opacity: 1;
+                }
+
+        .salam-layout .main-menu li:hover .dropdown-content {
+            display: block;
+        }
+
+        .salam-layout .main-menu-right {
+            display: flex;
+            align-items: center;
+            /* gap: 15px; */
+        }
+
+        .salam-layout .menu-btn {
+            background-color: #ffff;
+            color: #003831;
+            border: none;
+            padding: 16px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+            .salam-layout .menu-btn:hover {
+                background-color: #e6fde7;
+            }
+
+        .salam-layout .dropdown-icon {
+            width: 12px;
+            height: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .salam-layout .main-menu li:hover .dropdown-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Footer Styles */
+        .salam-layout .footer {
+            background-color: #003831;
+            color: white;
+            padding: 40px 0;
+            border-radius: 20px 20px 0 0;
+        }
+
+    .footer-links {
+        font-size: 12px;
+    }
+
+        .footer-links a {
+            color: #01ec0d;
+            text-decoration: none;
+        }
+
+    .salam-layout .footer-container {
+        display: flex;
+        justify-content: space-between;
+        max-width: 1330px;
+        margin: 0 auto;
+        padding: 0 40px;
+    }
+
+    .salam-layout .footer-column {
+        flex: 1;
+        padding: 0 20px;
+    }
+
+        .salam-layout .footer-column:first-child {
+            flex: 1.5;
+        }
+
+    .salam-layout .footer-logo {
+        height: 36px;
+    }
+
+    .salam-layout .social-icons {
+        display: flex;
+        gap: 15px;
+    }
+
+    .salam-layout .social-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+
+    .salam-layout .social-icon-img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .salam-layout .social-icon:hover {
+        background-color: #00f249;
+    }
+
+    .salam-layout .privacy-text {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+    }
+
+    .salam-layout .footer-menu-title {
+        color: #00f249;
+        font-size: 18px;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .salam-layout .footer-menu {
+        list-style: none;
+        padding: 0;
+    }
+
+        .salam-layout .footer-menu li {
+            margin-bottom: 10px;
+        }
+
+        .salam-layout .footer-menu a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+    .salam-layout .footer-arrow {
+        width: 12px;
+        height: 12px;
+        transition: transform 0.3s ease;
+    }
+
+    .salam-layout .footer-menu a:hover {
+        color: #00f249;
+    }
+
+        .salam-layout .footer-menu a:hover .footer-arrow {
+            transform: translateX(3px);
+        }
+
+    /* Mobile Menu Toggle */
+
+    .salam-layout .hidden {
+        display: none !important;
+    }
+
+    .salam-layout .visible {
+        display: block !important;
+    }
+
+    .dxp-mobile-menu-wrapper {
+        display: none;
+    }
+
+    .salam-layout .footer-column.mobile-only {
+        display: none;
+    }
+
+    .salam-layout .drop-section {
+        /* background-color: #fff; */
+        position: relative;
+        background: linear-gradient(to bottom, rgba(243, 255, 249, 1), #ffffff);
+    }
+
+        .salam-layout .drop-section .drop-section-bg {
+            position: absolute;
+            z-index: 0;
+            width: 580px;
+            height: 580px;
+            /* right: 15%; */
+            top: -60px;
+            inset-inline-end: 15%;
+        }
+
+    .salam-layout .hero-section {
+        padding: 115px 0px 115px 70px;
+        gap: 24px;
+        display: flex;
+        flex-direction: column;
+        z-index: 1;
+    }
+
+    .salam-layout .drop-section .stats .tab-content .title,
+    .salam-layout .reports .title,
+    .salam-layout .strategy .title,
+    .salam-layout .faqs .faqs-title,
+    .salam-layout .sustainability .sustainability-title,
+    .salam-layout .corporate-governance .corporate-governance-title {
+        margin-left: 70px;
+    }
+
+    .salam-layout .hero-section .hero-title {
+        color: #000000;
+        font-weight: 600;
+        font-size: 40px;
+        line-height: 44px;
+        padding-left: 32px;
+        border-left: 5px solid #00f249;
+        z-index: 1;
+    }
+
+    .salam-layout .hero-section .hero-description {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+        color: #33605a;
+        padding-left: 32px;
+        z-index: 1;
+    }
+
+    .salam-layout .drop-section .stats .nav-tabs {
+        background-color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        list-style: none;
+        cursor: pointer;
+        border: none !important;
+        padding: 2px;
+        border-radius: 8px;
+        z-index: 1;
+    }
+
+        .salam-layout .drop-section .stats .nav-tabs .nav-link {
+            color: #000;
+            background-color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 15px 56px;
+            margin: 0 5px;
+            font-size: 16px;
+            cursor: pointer;
+            line-height: 24px;
+            font-weight: 500;
+            margin: 0;
+            z-index: 1;
+        }
+
+            .salam-layout .drop-section .stats .nav-tabs .nav-link.active {
+                background-color: #e6fde7;
+                color: #01a809;
+                border: none;
+                z-index: 1;
+            }
+
+            .salam-layout .drop-section .stats .nav-tabs .nav-link:hover {
+                background-color: #e6fde7;
+                color: #01a809;
+                z-index: 1;
+            }
+
+    .salam-layout .drop-section .stats .tab-content {
+        width: 100%;
+        z-index: 1;
+    }
+
+        .salam-layout .drop-section .stats .tab-content .tab-pane {
+            padding: 64px 0px;
+            /* display: flex; */
+            flex-direction: row;
+            gap: 46px;
+            width: 100% !important;
+        }
+
+            .salam-layout .drop-section .stats .tab-content .tab-pane .row {
+                width: 100% !important;
+            }
+
+    @@media screen and (min-width: 1300px) {
+        .salam-layout .drop-section .stats .tab-content .tab-pane .row .row:last-of-type .card-section
+
+    {
+        border-bottom: 1px solid #00f249;
+    }
+
+    }
+
+    .salam-layout .drop-section .stats .tab-content .title {
+        color: #000;
+        font-weight: 600;
+        font-size: 40px;
+        line-height: 44px;
+        max-width: 284px;
+        padding-left: 32px;
+        border-left: 5px solid #00f249;
+        font-family: "Codec Pro";
+        font-weight: 700;
+    }
+
+    .salam-layout .stats .tab-card .card-title {
+        border: 1px solid #00f249;
+        border-right: none;
+        border-left: none;
+        padding: 8px 24px;
+        color: #33605a;
+        background-color: #e6fde7;
+    }
+
+    .salam-layout .stats .tab-card .card-section {
+        padding: 24px;
+    }
+
+        .salam-layout .stats .tab-card .card-section > h1 {
+            color: #141c24;
+            font-weight: 400;
+            font-size: 56px;
+            line-height: 56px;
+        }
+
+        .salam-layout .stats .tab-card .card-section > p {
+            color: #475467;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 24px;
+        }
+
+    /* reports */
+    .salam-layout .reports {
+        padding: 64px 0px;
+        display: flex;
+        flex-direction: row;
+        gap: 46px;
+        width: 100% !important;
+        background: url("salam-report-bg.png") no-repeat;
+        background-size: cover;
+    }
+
+        .salam-layout .reports .reports-row {
+            width: 100%;
+        }
+
+    .cards-slider .swiper-slide {
+        height: auto !important;
+    }
+
+    .cards-slider {
+        height: 240px;
+        width: 85%;
+        margin: auto;
+        position: relative;
+    }
+
+        .cards-slider .slide-wrap {
+            position: absolute;
+            top: 0;
+            width: 100%;
+        }
+
+        .cards-slider .slide-wrap {
+            transition: all 0.3s ease;
+            z-index: 1;
+            transform: scale(1);
+            cursor: pointer;
+        }
+
+            .cards-slider .slide-wrap.active {
+                z-index: 9;
+                transform: scale(1.05);
+                /* position: relative; */
+                /* box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); */
+            }
+
+    .strategy-wrapper {
+        margin-bottom: 150px;
+    }
+
+    .sustainability-wrapper {
+        margin-bottom: 300px;
+    }
+
+    .salam-layout .reports .title {
+        color: #000;
+        font-weight: 600;
+        font-size: 40px;
+        line-height: 44px;
+        max-width: 284px;
+        padding-left: 32px;
+        border-left: 5px solid #00f249;
+    }
+
+    .salam-layout .reports .report-card {
+        background-color: #ffffff;
+        padding: 24px 24px 16px 24px;
+        border-top: 2px solid #00f249;
+        border-radius: 8px;
+        gap: 24px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 24px 24px -12px #0e3f7e0a,
+        /* First shadow */ 0 12px 12px -6px #0e3f7e0a;
+    }
+
+        .salam-layout .reports .report-card h4 {
+            color: #141c24;
+            font-weight: 500;
+            font-size: 18px;
+            line-height: 20px;
+        }
+
+    .salam-layout .strategy {
+        padding: 64px 0px;
+        gap: 46px;
+        width: 100% !important;
+    }
+
+    .salam-layout .info {
+        margin-bottom: 64px;
+    }
+
+    .salam-layout .strategy .title {
+        color: #000;
+        font-weight: 600;
+        font-size: 40px;
+        line-height: 44px;
+        padding-left: 32px;
+        border-left: 5px solid #00f249;
+    }
+
+    .salam-layout .strategy .description {
+        color: #33605a;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    .salam-layout .custom-controller-cards {
+        max-width: 95%;
+        width: 95%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        position: relative;
+        margin: 0 auto;
+    }
+
+    .salam-layout .custom-controller-card {
+        border: 1px solid #00f249;
+        background-color: #ffffff;
+        border-radius: 16px;
+        padding: 4px;
+        gap: 8px;
+        max-width: 95%;
+        display: flex;
+    }
+
+        .salam-layout .custom-controller-card > img {
+            width: 265px;
+            height: 232px;
+            border-radius: 14px;
+            margin-right: 8px;
+            z-index: 2;
+        }
+
+        .salam-layout .custom-controller-card .custom-controller-card-details {
+            padding: 32px 64px 24px 64px;
+            gap: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .salam-layout .custom-controller-card .custom-controller-card-title {
+            color: #141c24;
+            font-weight: 600;
+            font-size: 21px;
+        }
+
+        .salam-layout .custom-controller-card .custom-controller-card-description {
+            color: #33605a;
+            font-size: 16px;
+            line-height: 24px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+            .salam-layout
+            .custom-controller-card
+            .custom-controller-card-description.expanded {
+                display: block;
+                -webkit-line-clamp: unset;
+                overflow: visible;
+            }
+
+        .salam-layout .custom-controller-card .custom-controller-card-readmore {
+            color: #003831;
+            font-weight: 500;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+    .salam-layout .corporate-governance {
+        padding: 64px 0px;
+        gap: 46px;
+        width: 100% !important;
+    }
+
+        .salam-layout .corporate-governance .corporate-governance-title {
+            color: #000;
+            font-weight: 600;
+            font-size: 40px;
+            line-height: 44px;
+            padding-left: 32px;
+            border-left: 5px solid #00f249;
+        }
+
+        .salam-layout .corporate-governance .corporate-governance-description {
+            color: #33605a;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 24px;
+        }
+
+        .salam-layout .corporate-governance .nav-tabs {
+            border: none !important;
+            display: flex;
+            width: 100%;
+        }
+
+        .salam-layout .corporate-governance .nav-tabs {
+            background-color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            list-style: none;
+            cursor: pointer;
+            border: none;
+            z-index: 1;
+            gap: 8px;
+        }
+
+            .salam-layout .corporate-governance .nav-tabs .nav-item {
+                flex: 1;
+                text-align: center;
+            }
+
+            .salam-layout .corporate-governance .nav-tabs .nav-link {
+                color: #000;
+                background-color: #fff;
+                border: none;
+                border-radius: 8px;
+                padding: 15px 56px;
+                margin: 0 5px;
+                font-size: 16px;
+                cursor: pointer;
+                line-height: 24px;
+                font-weight: 500;
+                z-index: 1;
+                width: 100%; /* Full width of nav-item */
+            }
+
+                .salam-layout .corporate-governance .nav-tabs .nav-link.active {
+                    background-color: #e6fde7;
+                    color: #01a809;
+                    border: none;
+                    z-index: 1;
+                }
+
+                .salam-layout .corporate-governance .nav-tabs .nav-link:hover {
+                    background-color: #e6fde7;
+                    color: #01a809;
+                    z-index: 1;
+                }
+
+    .salam-layout .tab-content {
+        width: 100%;
+        z-index: 1;
+    }
+
+        .salam-layout .tab-content .tab-pane {
+            padding: 64px 0px;
+            /* display: flex; */
+            flex-direction: row;
+            gap: 46px;
+            width: 100% !important;
+        }
+
+            .salam-layout .tab-content .tab-pane .row {
+                width: 100% !important;
+            }
+
+        .salam-layout .tab-content .title {
+            color: #000;
+            font-weight: 600;
+            font-size: 40px;
+            line-height: 44px;
+            max-width: 284px;
+            padding-left: 32px;
+            border-left: 5px solid #00f249;
+        }
+
+    .salam-layout .corporate-governance-owl {
+        margin-top: 40px;
+    }
+
+    .corporate-governance-owl .owl-nav {
+        margin-top: 16px;
+    }
+
+        .corporate-governance-owl .owl-nav .owl-next {
+            margin-inline-start: 8px;
+        }
+    /* .salam-layout .corporate-governance-owl .owl-carousel .owl-prev {
+      height: 100px !important;
+    } */
+
+    .salam-layout .corporate-governance-slide {
+        height: 400px;
+        background-color: #08070d;
+        border-radius: 8px;
+        box-shadow: 0px 4px 24px 0px rgba(5, 27, 59, 0.05);
+        padding: 4px;
+        cursor: pointer;
+    }
+
+    .salam-layout .corporate-governance-slide-content {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 30px 0px;
+    }
+
+    .salam-layout .corporate-governance-slide-title {
+        color: #ffffff;
+        font-weight: 500;
+        font-size: 18px;
+        margin-bottom: 4px;
+    }
+
+    .salam-layout .corporate-governance-slide-description {
+        color: #01a809;
+        font-weight: 500;
+        font-size: 18px;
+        margin-bottom: 4px;
+    }
+
+    .salam-layout .sustainability-wrapper {
+        padding: 0px 0px 64px 0px;
+        gap: 46px;
+        width: 100% !important;
+        background: url("./sustain-bg.png") no-repeat;
+        background-size: cover;
+        /* background: linear-gradient(to top, rgba(243, 255, 249, 1), #ffffff); */
+    }
+
+    .salam-layout .faqs-wrapper {
+        /* background: linear-gradient(to bottom, rgba(243, 255, 249, 1), #ffffff); */
+        padding: 64px 0px;
+        background: url("./faq.png") no-repeat;
+        background-size: cover;
+    }
+
+    .salam-layout .faqs {
+        gap: 46px;
+        width: 100% !important;
+        background-color: transparent;
+    }
+
+        .salam-layout .faqs .faqs-title {
+            color: #000;
+            font-weight: 600;
+            font-size: 40px;
+            line-height: 44px;
+            max-width: 284px;
+            padding-left: 32px;
+            border-left: 5px solid #00f249;
+        }
+
+        .salam-layout .faqs .faqs-header {
+            position: relative;
+        }
+
+            .salam-layout .faqs .faqs-header .faq-gradient {
+                position: absolute;
+                left: 0;
+                height: 500px;
+            }
+
+        .salam-layout .faqs .faq-header {
+            border: 1px solid #e6ebea;
+            padding: 24px 24px 16px 24px;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            cursor: pointer;
+            background-color: #fff;
+        }
+
+        .salam-layout .faqs .faq-content {
+            background-color: #fff;
+            padding: 8px;
+            border-radius: 16px;
+        }
+
+    .salam-layout .faq-item {
+        border: none;
+        overflow: hidden;
+        background-color: transparent;
+        margin-bottom: 4px;
+    }
+
+        .salam-layout .faq-item .faq-item-title {
+            color: #141c24;
+            font-weight: 500;
+            font-size: 18px;
+        }
+
+    .salam-layout .sustainability .sustainability-title {
+        color: #000;
+        font-weight: 600;
+        font-size: 40px;
+        line-height: 44px;
+        max-width: 284px;
+        padding-left: 32px;
+        border-left: 5px solid #00f249;
+    }
+
+    .salam-layout .sustainability .sustainability-description {
+        color: #33605a;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    .salam-layout .call-wrapper .call-no {
+        width: 100%;
+    }
+
+    .salam-layout .call-wrapper .call-no-item {
+        border-radius: 8px;
+        border-top: 2px solid #00f249;
+        background-color: #fff;
+        padding: 24px 24px 32px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        box-shadow: 0px 24px 24px -12px rgba(14, 63, 126, 0.04), 0px 12px 12px -6px rgba(14, 63, 126, 0.04), 0px 6px 6px -3px rgba(42, 51, 70, 0.04), 0px 3px 3px -1.5px rgba(42, 51, 70, 0.04), 0px 1px 1px -0.5px rgba(42, 51, 69, 0.04), 0px 0px 0px 1px rgba(14, 63, 126, 0.04);
+    }
+
+    .salam-layout .call-no-item .call-no-item-title {
+        font-weight: 600;
+        font-size: 21px;
+        color: #141c24;
+    }
+
+    .salam-layout .call-no-item .call-no-item-value {
+        font-weight: 400;
+        font-size: 18px;
+        color: #003831;
+    }
+
+    /* Responsive Styles */
+    @@media screen and (max-width: 1400px) {
+        .salam-layout .hero-section
+
+    {
+        padding: 80px 0px 80px 0px;
+    }
+
+    .salam-layout .container {
+        width: 100%;
+        padding: 0 20px;
+    }
+
+    .salam-layout .drop-section .stats .nav-tabs .nav-link {
+        padding: 15px 24px;
+        margin: 0 5px;
+        font-size: 14px;
+    }
+
+    .salam-layout .drop-section .stats .tab-content .title,
+    .salam-layout .hero-section .hero-title,
+    .salam-layout .stats .tab-card .card-section > h1,
+    .salam-layout .reports .title,
+    .salam-layout .strategy .title,
+    .salam-layout .faqs .faqs-title,
+    .salam-layout .sustainability .sustainability-title,
+    .salam-layout .corporate-governance .corporate-governance-title {
+        font-size: 28px;
+        line-height: 36px;
+        margin: 0;
+    }
+
+    }
+
+    @@media screen and (max-width: 1200px) {
+        .salam-layout .main-menu
+
+    {
+        gap: 15px;
+    }
+
+    .salam-layout .main-menu li {
+        font-size: 14px;
+    }
+
+    .salam-layout .menu-btn {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+
+    }
+
+    @@media screen and (max-width: 992px) {
+        .salam-layout .search-bar input
+
+    {
+        padding-inline-start: 16px;
+    }
+
+    .footer .footer-wrap {
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+
+    .footer-links {
+        margin: 16px 0;
+    }
+
+    .salam-layout .drop-section .stats .nav-tabs .nav-link {
+        padding: 12px;
+        margin: 0 5px;
+        font-size: 12px;
+    }
+
+    .salam-layout .top-header .container {
+        padding-inline-start: 20px;
+    }
+
+    .salam-layout .top-header {
+        display: none;
+    }
+
+    .salam-layout .main-menu-container .logo {
+        display: none;
+    }
+
+    .salam-layout .main-menu-right {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .salam-layout .menu-btn {
+        width: 100%;
+        padding: 15px;
+    }
+
+        .salam-layout .menu-btn:hover {
+            background-color: rgb(18, 139, 24);
+            color: white;
+        }
+
+    .salam-layout .main-menu-container {
+        display: none;
+    }
+
+    .salam-layout .open.main-menu-container {
+        display: block;
+    }
+
+    .salam-layout .main-menu-container {
+        padding: 20px 20px;
+        height: auto;
+        background-color: #00f249;
+    }
+
+    .salam-layout .menu-toggle {
+        display: block;
+    }
+
+    .salam-layout .main-menu.active {
+        display: flex;
+    }
+
+    .salam-layout .main-menu li {
+        padding: 15px 0;
+    }
+
+    .salam-layout .dropdown-content {
+        position: static;
+        box-shadow: none;
+        display: none;
+    }
+
+    .salam-layout .main-menu li:hover .dropdown-content {
+        display: block;
+        min-width: 100%;
+        width: calc(100% + 32px);
+        position: relative;
+        left: -32px;
+        top: 0;
+        background: none;
+    }
+
+    .salam-layout .dropdown-content a {
+        color: #001f1b;
+    }
+
+        .salam-layout .dropdown-content a:hover {
+            background-color: transparent;
+            color: #000;
+        }
+
+    .salam-layout .search-bar {
+        width: 100%;
+        margin: 0 0 20px;
+        height: 56px;
+        border-radius: 8px;
+        padding: 10px;
+        background-color: #001f1b;
+    }
+
+    .salam-layout .coverage-btn,
+    .salam-layout .language-switcher {
+        display: none;
+    }
+
+    .salam-layout .footer-container {
+        flex-wrap: wrap;
+        padding: 0;
+    }
+
+    .salam-layout .footer-column {
+        flex: 1 1 50%;
+        margin-bottom: 15px;
+    }
+
+    .dxp-mobile-menu-wrapper {
+        display: block;
+        z-index: 999;
+        position: relative;
+    }
+
+    .top-toggle-menu-dxp {
+        padding: 25px 20px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+        .top-toggle-menu-dxp .logo {
+            margin: 0 auto;
+        }
+
+        .top-toggle-menu-dxp button {
+            background-color: #01ec0d;
+            background-color: #01ec0d;
+            border-radius: 8px;
+            border: none;
+            width: 40px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+            .top-toggle-menu-dxp button:hover {
+                opacity: 0.5;
+            }
+
+    .hidden-m-menu-wrapper {
+        padding: 0 20px;
+        display: none;
+        box-shadow: none;
+    }
+
+        .hidden-m-menu-wrapper.open {
+            display: block;
+        }
+
+        .hidden-m-menu-wrapper .main-menu-container {
+            display: block;
+            box-shadow: none;
+            padding: 0;
+        }
+
+            .hidden-m-menu-wrapper .main-menu-container .container {
+                padding: 0;
+            }
+
+                .hidden-m-menu-wrapper
+                .main-menu-container
+                .container > .main-menu-container-wrapper {
+                    flex-direction: column;
+                    padding: 20px;
+                    background-color: white;
+                    border-radius: 13px;
+                    width: 100%;
+                    align-items: flex-start !important;
+                }
+
+    .salam-layout .main-menu li {
+        color: #003831;
+        position: relative;
+        padding: 5px 0;
+        margin: 0 0 25px;
+        padding-inline-start: 32px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+        .salam-layout .main-menu li::before {
+            position: absolute;
+            top: 6px;
+            left: 0;
+            width: 22px;
+            height: 22px;
+            content: "";
+            background-image: url("https://staging-mobile.salammobile.sa/wp-content/uploads/2025/05/menuIcon.png");
+        }
+
+    .salam-layout .main-menu {
+        gap: 0;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .salam-layout .dropdown-icon {
+        width: 22px;
+        height: 22px;
+        position: absolute;
+        right: 0;
+        top: 5px;
+    }
+
+    .top-mobile-menu-dxp .footer-logo {
+    }
+
+    .salam-layout .footer-column:first-child {
+        padding-bottom: 15x;
+        border-bottom: 1px solid #215731;
+    }
+
+    .salam-layout .footer {
+        padding: 30px 0;
+    }
+
+    .salam-layout .footer-logo {
+        margin-bottom: 0;
+        height: 30px;
+    }
+
+    .salam-layout .footer-container {
+        flex-direction: column;
+    }
+
+    .salam-layout .footer-column.mobile-only {
+        display: block;
+        margin-bottom: 0;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #215731;
+    }
+
+        .salam-layout .footer-column.mobile-only .social-icons,
+        .salam-layout .footer-column.mobile-only .privacy-text {
+            display: flex;
+            font-size: 12px;
+        }
+
+    .salam-layout .footer-menu a {
+        font-size: 13px;
+    }
+
+    }
+
+    @@media screen and (max-width: 768px) {
+        .sustainability-wrapper
+
+    {
+        margin-bottom: 450px;
+    }
+
+    .salam-layout .custom-controller-card {
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .salam-layout .custom-controller-card .custom-controller-card-details {
+            gap: 10px;
+        }
+
+        .salam-layout .custom-controller-card > img {
+            height: auto;
+            width: 150px;
+            margin: 0;
+        }
+
+        .salam-layout .custom-controller-card .custom-controller-card-details {
+            padding: 20px;
+        }
+
+    .salam-layout .call-wrapper .row > div {
+        width: 100%;
+    }
+
+    .salam-layout .call-wrapper .call-no-item {
+        margin-bottom: 24px;
+        padding: 20px;
+    }
+
+    .salam-layout .reports .report-card {
+        padding: 12px;
+    }
+
+    .salam-layout .reports .report-card {
+        gap: 12px;
+    }
+
+        .salam-layout .reports .report-card img {
+            width: 36px;
+        }
+
+        .salam-layout .reports .report-card h4 {
+            font-size: 14px;
+        }
+
+    .salam-layout .reports .row.mt-3 {
+        margin-top: 0 !important;
+    }
+
+    .salam-layout .reports .row > div {
+        margin-bottom: 16px;
+    }
+
+    .salam-layout .hero-section .hero-title {
+        font-size: 32px;
+        line-height: 36px;
+        margin: 0 !important;
+    }
+
+    .salam-layout .right-section {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .salam-layout .coverage-btn,
+    .salam-layout .language-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .salam-layout .footer-column {
+        flex: 1 1 100%;
+    }
+
+    .salam-layout .drop-section .stats .tab-content .tab-pane,
+    .salam-layout .reports {
+        padding: 36px 0px;
+    }
+
+    }
+
+    @@media screen and (max-width: 576px) {
+        .salam-layout .drop-section .drop-section-bg
+
+    {
+        display: none;
+    }
+
+    .cards-slider {
+        width: 100%;
+    }
+
+    .strategy-wrapper.has-cards {
+        margin-bottom: 375px;
+    }
+
+    .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+        .footer-links a {
+            margin: 0 !important;
+            text-align: center;
+        }
+
+    .salam-layout .drop-section .stats .tab-content .title,
+    .salam-layout .hero-section .hero-title,
+    .salam-layout .stats .tab-card .card-section > h1,
+    .salam-layout .reports .title,
+    .salam-layout .strategy .title,
+    .salam-layout .faqs .faqs-title,
+    .salam-layout .sustainability .sustainability-title,
+    .salam-layout .corporate-governance .corporate-governance-title {
+        margin-bottom: 24px;
+    }
+
+    .salam-layout .drop-section .stats .tab-content .tab-card {
+        padding: 0;
+    }
+
+    .salam-layout .drop-section .stats .tab-content .tab-pane .row .row {
+        margin: 0;
+    }
+
+    .salam-layout .drop-section .stats .nav-tabs {
+        flex-direction: column;
+        width: 100%;
+        background: transparent;
+    }
+
+        .salam-layout .drop-section .stats .nav-tabs .nav-item {
+            width: 100%;
+        }
+
+        .salam-layout .drop-section .stats .nav-tabs .nav-link {
+            margin: 0 0 8px 0;
+            width: 100%;
+            padding: 8px 16px;
+        }
+
+    .salam-layout .nav-menu {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+        .salam-layout .nav-menu li {
+            margin-bottom: 10px;
+        }
+
+    .salam-layout .language-dropdown {
+        position: static;
+        width: 100%;
+    }
+
+    .salam-layout .coverage-btn,
+    .salam-layout .language-btn {
+        padding: 10px;
+    }
+
+    }
+
+    .container-full {
+        padding: 0 66px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* ─── Bilingual (EN / AR) Support ─────────────────────────────────────────── */
+
+    /* Arabic font */
+    html[lang="ar"] body {
+        font-family: "IBM Plex Sans Arabic", "Codec Pro", sans-serif;
+    }
+
+    /* Show/hide language variants */
+    .ar {
+        display: none;
+    }
+
+    .en {
+        display: inline;
+    }
+
+    html[lang="ar"] .ar {
+        display: inline;
+    }
+
+    html[lang="ar"] .en {
+        display: none;
+    }
+
+    /* For block-level bilingual wrappers */
+    p .ar,
+    div.ar,
+    h1.ar,
+    h2.ar,
+    h3.ar,
+    h4.ar {
+        display: none;
+    }
+
+    p .en,
+    div.en,
+    h1.en,
+    h2.en,
+    h3.en,
+    h4.en {
+        display: inline;
+    }
+
+    html[lang="ar"] p .ar,
+    html[lang="ar"] div.ar,
+    html[lang="ar"] h1.ar,
+    html[lang="ar"] h2.ar,
+    html[lang="ar"] h3.ar,
+    html[lang="ar"] h4.ar {
+        display: inline;
+    }
+
+    html[lang="ar"] p .en,
+    html[lang="ar"] div.en,
+    html[lang="ar"] h1.en,
+    html[lang="ar"] h2.en,
+    html[lang="ar"] h3.en,
+    html[lang="ar"] h4.en {
+        display: none;
+    }
+
+    /* RTL layout adjustments */
+    html[dir="rtl"] .salam-layout .hero-section .hero-title {
+        padding-left: 0;
+        padding-right: 32px;
+        border-left: none;
+        border-right: 5px solid #00f249;
+        text-align: right;
+    }
+
+    html[dir="rtl"] .salam-layout .hero-section .hero-description {
+        padding-left: 0;
+        padding-right: 32px;
+        text-align: right;
+    }
+
+    html[dir="rtl"] .salam-layout .drop-section .stats .tab-content .title,
+    html[dir="rtl"] .salam-layout .reports .title,
+    html[dir="rtl"] .salam-layout .strategy .title,
+    html[dir="rtl"] .salam-layout .faqs .faqs-title,
+    html[dir="rtl"] .salam-layout .sustainability .sustainability-title,
+    html[dir="rtl"] .salam-layout .corporate-governance .corporate-governance-title,
+    html[dir="rtl"] .vision-mission-wrapper .title {
+        padding-left: 0;
+        padding-right: 32px;
+        border-left: none;
+        border-right: 5px solid #00f249;
+        text-align: right;
+    }
+
+    html[dir="rtl"] .salam-layout .drop-section .stats .tab-content .title,
+    html[dir="rtl"] .salam-layout .reports .title,
+    html[dir="rtl"] .salam-layout .strategy .title,
+    html[dir="rtl"] .salam-layout .faqs .faqs-title,
+    html[dir="rtl"] .salam-layout .sustainability .sustainability-title,
+    html[dir="rtl"]
+    .salam-layout
+    .corporate-governance
+    .corporate-governance-title {
+        margin-left: 0;
+        margin-right: 70px;
+    }
+
+    html[dir="rtl"] .salam-layout .top-header .wrap .nav-menu {
+        padding-inline-start: 0 !important;
+        padding-inline-end: 40px !important;
+    }
+
+    html[dir="rtl"] .salam-layout .language-dropdown {
+        right: auto;
+        left: 0;
+    }
+
+    html[dir="rtl"] .salam-layout .logo {
+        margin-right: 0;
+        margin-left: 30px;
+    }
+
+    html[dir="rtl"] .salam-layout .corporate-governance-slide-content {
+        text-align: center;
+    }
+
+    html[dir="rtl"] .salam-layout .custom-controller-card > img {
+        margin-right: 0;
+        margin-left: 8px;
+    }
+
+    html[dir="rtl"] .salam-layout .custom-controller-card-readmore {
+        flex-direction: row-reverse;
+    }
+
+    html[dir="rtl"] .salam-layout .strategy .description,
+    html[dir="rtl"]
+    .salam-layout
+    .corporate-governance
+    .corporate-governance-description,
+    html[dir="rtl"] .salam-layout .sustainability .sustainability-description,
+    html[dir="rtl"] .vision-mission-wrapper .description {
+        text-align: right;
+    }
+
+    html[dir="rtl"] .vision-mission-wrapper .title {
+        padding-left: 0;
+        padding-right: 32px;
+        border-left: none;
+        border-right: 5px solid #00f249;
+        text-align: right;
+    }
+
+    html[dir="rtl"] .salam-layout .reports .report-card {
+        text-align: right;
+    }
+
+    html[dir="rtl"] .salam-layout .faq-header {
+        flex-direction: row-reverse;
+    }
+
+    html[dir="rtl"] .salam-layout .faq-item-title {
+        text-align: right;
+    }
+
+    html[dir="rtl"] .accordion-body {
+        text-align: right;
+    }
+
+    html[dir="rtl"] .salam-layout .call-no-item-title,
+    html[dir="rtl"] .salam-layout .call-no-item-value {
+        text-align: right;
+    }
+
+    html[dir="rtl"] .salam-layout .stats .tab-card .card-section {
+        text-align: right;
+    }
+
+    html[dir="rtl"] .salam-layout .stats .tab-card .card-title {
+        text-align: right;
+    }
+
+    html[dir="rtl"] .d-flex.footer-wrap {
+        flex-direction: row-reverse;
+    }
+
+    html[dir="rtl"] .footer-links {
+        flex-direction: row-reverse;
+    }
+
+        html[dir="rtl"] .footer-links p,
+        html[dir="rtl"] .footer-links a {
+            text-align: right;
+        }
+
+    html[dir="rtl"]
+    .salam-layout
+    .custom-controller-card
+    .custom-controller-card-details {
+        text-align: right;
+    }
+
+    /* Profile image sizing in corporate governance slides */
+    .corporate-governance-slide img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        object-position: top center;
+        border-radius: 8px 8px 0 0;
+    }
+
+    /* Additional role subtitle in BoD/Leadership slides */
+    .salam-layout .corporate-governance-slide-role {
+        color: #8aa3a0;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 18px;
+        margin-top: 4px;
+        padding: 0 8px;
+    }
+
+    /* Governance framework cards — equal height per row */
+    .salam-layout .corporate-governance .row.mb-5 {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+    }
+
+        .salam-layout .corporate-governance .row.mb-5 > [class*="col-"] {
+            display: flex;
+        }
+
+        .salam-layout .corporate-governance .row.mb-5 .ir-card {
+            width: 100%;
+        }
+
+    /* Reusable info card — works anywhere (not scoped to .reports) */
+    .salam-layout .ir-card {
+        background-color: #ffffff;
+        border-top: 2px solid #00f249;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        height: 100%;
+        box-shadow: 0 24px 24px -12px rgba(14, 63, 126, 0.04), 0 12px 12px -6px rgba(14, 63, 126, 0.04);
+    }
+
+        .salam-layout .ir-card.pad-lg {
+            padding: 32px;
+        }
+
+        .salam-layout .ir-card.pad-md {
+            padding: 24px;
+        }
+
+    /* Governance nav-tabs used as plain toggle buttons */
+    .salam-layout .gov-tab-btn {
+        background-color: #fff;
+        color: #000;
+        border: none;
+        border-radius: 8px;
+        padding: 15px 56px;
+        font-size: 16px;
+        cursor: pointer;
+        line-height: 24px;
+        font-weight: 500;
+        width: 100%;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+        .salam-layout .gov-tab-btn.active {
+            background-color: #e6fde7;
+            color: #01a809;
+        }
+
+        .salam-layout .gov-tab-btn:hover {
+            background-color: #e6fde7;
+            color: #01a809;
+        }
+
+    /* 4-card strategy wrapper needs more bottom room for stacked card overflow */
+    .strategy-wrapper.has-cards {
+        margin-bottom: 250px !important;
+    }
+
+    /* Vision/Mission section — compact spacing */
+    .vision-mission-wrapper {
+        padding: 48px 0 48px 0;
+        margin-bottom: 0;
+    }
+
+    /* ─── Mobile Responsive Fixes ──────────────────────────────────────────────── */
+
+    /* Reduce container-full horizontal padding on tablet and below */
+    @@media screen and (max-width: 992px) {
+        .container-full
+
+    {
+        padding: 0 20px;
+    }
+
+    }
+
+    /* Governance / stats tab buttons: reduce padding and font on small screens */
+    @@media screen and (max-width: 768px) {
+        .salam-layout .gov-tab-btn
+
+    {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+
+    .salam-layout .info {
+        margin-bottom: 32px;
+    }
+
+    /* Owl carousel: prevent slide images from overflowing on mobile */
+    .salam-layout .corporate-governance-owl {
+        overflow: hidden;
+    }
+
+    /* Vision/Mission and governance cards: full width on mobile */
+    .salam-layout .ir-card.pad-lg {
+        padding: 20px;
+    }
+
+    .salam-layout .ir-card.pad-md {
+        padding: 16px;
+    }
+
+    /* Strategy/sustainability section padding reduction on mobile */
+    .salam-layout .strategy,
+    .salam-layout .corporate-governance {
+        padding: 32px 0;
+    }
+
+    .salam-layout .corporate-governance-slide {
+        height: auto;
+    }
+
+    .corporate-governance-slide img {
+        height: 300px;
+    }
+
+    }
+
+    @@media screen and (max-width: 576px) {
+        /* Governance tab buttons should stack/shrink gracefully */
+        .salam-layout .gov-tab-btn
+
+    {
+        padding: 10px 8px;
+        font-size: 13px;
+    }
+
+    /* Container-full down to minimum padding on very small screens */
+    .container-full {
+        padding: 0 12px;
+    }
+
+    /* Reduce section spacing */
+    .salam-layout .info {
+        margin-bottom: 24px;
+    }
+
+    .salam-layout .strategy,
+    .salam-layout .corporate-governance {
+        padding: 24px 0;
+    }
+
+    /* Prevent owl items overflowing on tiny screens */
+    .corporate-governance-owl .owl-item {
+        min-width: 0;
+    }
+
+    /* Stats tab-card full width on mobile */
+    .salam-layout .drop-section .stats .tab-content .tab-pane .col-md-6 {
+        width: 100%;
+    }
+
+    }
+</style>
+<body data-content-link="@Model?.CurrentPage?.ContentLink?.ID">
+    @await Component.InvokeAsync(typeof(NoScriptTagManagerViewComponent))
+    @Html.RequiredClientResources(ClientResourceConstants.BodyStart)
+    <main>
+        @RenderBody()
+    </main>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="~/static/assets/js/owl.carousel.min.js"></script>
+    @Html.RequiredClientResources(RenderingTags.Footer)
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // ─── OWL Carousel helpers (defined here so setLanguage can call them) ────
+
+        // Build OWL options that respect the current page direction
+        function buildOwlOptions() {
+          var isRTL = document.documentElement.getAttribute("dir") === "rtl";
+          return {
+            loop: true,
+            margin: 10,
+            rtl: isRTL,
+            responsiveClass: true,
+            responsive: {
+              0: { items: 1, nav: false },
+              600: { items: 3, nav: false },
+              1000: {
+                items: 5,
+                nav: true,
+                loop: true,
+                navText: isRTL ? [
+                  '<i class="fa fa-angle-right" aria-hidden="true"><img src="https://images2.cmp.optimizely.com/Zz1mMWFiNzgzNjExNWYxMWYxOWJiYzhhZWJlNjU1MWU4ZA==" /></i>',
+                  '<i class="fa fa-angle-left" aria-hidden="true"><img src="https://images3.cmp.optimizely.com/Zz1mMjFkNzU0ZTExNWYxMWYxOTk5YzFlNzUyZTdmMTk0YQ==" /></i>',
+                ] : [
+                  '<i class="fa fa-angle-left" aria-hidden="true"><img src="https://images3.cmp.optimizely.com/Zz1mMjFkNzU0ZTExNWYxMWYxOTk5YzFlNzUyZTdmMTk0YQ==" /></i>',
+                  '<i class="fa fa-angle-right" aria-hidden="true"><img src="https://images2.cmp.optimizely.com/Zz1mMWFiNzgzNjExNWYxMWYxOWJiYzhhZWJlNjU1MWU4ZA==" /></i>',
+                ],
+              },
+            },
+          };
+        }
+
+        // Destroy and re-init an already-loaded carousel (safe to call any time)
+        function reinitOwlIfLoaded(selector) {
+          var $el = $(selector);
+          if ($el.length && $el.hasClass("owl-loaded")) {
+            $el
+              .trigger("destroy.owl.carousel")
+              .removeClass("owl-loaded owl-drag");
+            $el.owlCarousel(buildOwlOptions());
+          }
+        }
+
+        // ─── Language Switcher ───────────────────────────────────────────────────
+        function closeMobileLangDropdown() {
+          var d = document.getElementById("mobile-lang-dropdown");
+          if (d) d.style.display = "none";
+        }
+
+        function setLanguage(lang) {
+          var html = document.documentElement;
+          var label = lang === "ar" ? "AR" : "EN";
+          if (lang === "ar") {
+            html.setAttribute("lang", "ar");
+            html.setAttribute("dir", "rtl");
+          } else {
+            html.setAttribute("lang", "en");
+            html.setAttribute("dir", "ltr");
+          }
+          var desktopLabel = document.getElementById("lang-btn-label");
+          if (desktopLabel) desktopLabel.textContent = label;
+          var mobileLabel = document.getElementById("mobile-lang-label");
+          if (mobileLabel) mobileLabel.textContent = label;
+          localStorage.setItem("salam-ir-lang", lang);
+          // Reinit carousels only if document.ready has already run
+          // (owlInitialized flag is set after first init in document.ready)
+          if (window.owlInitialized) {
+            reinitOwlIfLoaded(".owl-bod");
+            reinitOwlIfLoaded(".owl-leadership");
+          }
+        }
+
+        // Restore saved language on load (runs before document.ready —
+        // owlInitialized is false here so no carousel reinit is attempted)
+        window.owlInitialized = false;
+        (function () {
+          var saved = localStorage.getItem("salam-ir-lang");
+          if (saved === "ar") setLanguage("ar");
+        })();
+
+        // ─── Mobile Menu ─────────────────────────────────────────────────────────
+        var toggleBtn = document.getElementById("menu-toggle-DXP");
+        var mobilePanel = document.getElementById("mobile-nav-panel");
+        if (toggleBtn) {
+          toggleBtn.addEventListener("click", function () {
+            mobilePanel.classList.toggle("open");
+          });
+        }
+
+        var mobileLangBtn = document.getElementById("mobile-lang-toggle-btn");
+        var mobileLangDropdown = document.getElementById("mobile-lang-dropdown");
+        if (mobileLangBtn) {
+          mobileLangBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            var isOpen = mobileLangDropdown.style.display === "block";
+            mobileLangDropdown.style.display = isOpen ? "none" : "block";
+          });
+        }
+        document.addEventListener("click", function () {
+          closeMobileLangDropdown();
+        });
+
+        // ─── Cards Slider + Owl Carousel ─────────────────────────────────────────
+        $(document).ready(function () {
+          // Set staggered margin-top for stacked card sliders
+          $(".sustainability-wrapper .cards-slider .slide-wrap").each(
+            function (index) {
+              if (index > 0) $(this).css("margin-top", index * 70 + "px");
+            },
+          );
+          $(".strategy-wrapper .cards-slider .slide-wrap").each(function (index) {
+            if (index > 0) $(this).css("margin-top", index * 70 + "px");
+          });
+
+          // Click to bring card to front
+          $(".cards-slider .slide-wrap").on("click", function () {
+            var slides = $(this).closest(".cards-slider").find(".slide-wrap");
+            var clickedIndex = slides.index(this);
+            slides.each(function (i) {
+              var z = slides.length - Math.abs(clickedIndex - i);
+              $(this).css("z-index", z);
+              if (i === clickedIndex) $(this).addClass("active");
+              else $(this).removeClass("active");
+            });
+          });
+
+          // Init BOD carousel — buildOwlOptions() reads dir already set by IIFE
+          // so RTL is correct on first load even when Arabic is restored from storage
+          $(".owl-bod").owlCarousel(buildOwlOptions());
+          window.owlInitialized = true;
+
+          // Governance toggle buttons
+          $("#bod-tab").on("click", function () {
+            $(this).addClass("active");
+            $("#leadership-tab").removeClass("active");
+            $("#bod-carousel-wrapper").show();
+            $("#leadership-carousel-wrapper").hide();
+          });
+
+          $("#leadership-tab").on("click", function () {
+            $(this).addClass("active");
+            $("#bod-tab").removeClass("active");
+            $("#bod-carousel-wrapper").hide();
+            $("#leadership-carousel-wrapper").show();
+            // Init leadership carousel only on first reveal
+            if (!$(".owl-leadership").hasClass("owl-loaded")) {
+              $(".owl-leadership").owlCarousel(buildOwlOptions());
+            }
+          });
+
+          // ─── Tab scroll navigation ────────────────────────────────────────────
+          window.scrollToSection = function (sectionId, btn) {
+            var target = document.getElementById(sectionId);
+            if (!target) return;
+            var offset = 80; // clearance for sticky header
+            var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+            window.scrollTo({ top: top, behavior: "smooth" });
+            // update active state immediately on click
+            document.querySelectorAll("#myTab .nav-link").forEach(function (b) {
+              b.classList.remove("active");
+              b.setAttribute("aria-selected", "false");
+            });
+            btn.classList.add("active");
+            btn.setAttribute("aria-selected", "true");
+          };
+
+          // Keep tabs in sync as the user scrolls
+          var tabSections = [
+            { id: "section-glance", tabId: "salam-tab" },
+            { id: "section-strategy", tabId: "strategy-tab" },
+            { id: "section-vision", tabId: "vision-tab" },
+            { id: "section-corporate", tabId: "corporate-tab" },
+          ];
+          window.addEventListener("scroll", function () {
+            var scrollY = window.pageYOffset + 120;
+            var current = tabSections[0].tabId;
+            tabSections.forEach(function (s) {
+              var el = document.getElementById(s.id);
+              if (el && el.offsetTop <= scrollY) current = s.tabId;
+            });
+            document.querySelectorAll("#myTab .nav-link").forEach(function (b) {
+              var isActive = b.id === current;
+              b.classList.toggle("active", isActive);
+              b.setAttribute("aria-selected", isActive ? "true" : "false");
+            });
+          });
+
+          // Read More / Read Less functionality for custom controller cards
+          $(".custom-controller-card-readmore").each(function () {
+            const $btn = $(this);
+            const $spans = $btn.find("span");
+            // Store original text
+            $btn.data("original-en", $spans.filter(".en").text());
+            $btn.data("original-ar", $spans.filter(".ar").text());
+          });
+
+          $(".custom-controller-card-readmore").on("click", function (e) {
+            e.preventDefault();
+            const $readMoreBtn = $(this);
+            const $description = $readMoreBtn.siblings(
+              ".custom-controller-card-description",
+            );
+            const isExpanded = $description.hasClass("expanded");
+
+            // Toggle expanded state
+            $description.toggleClass("expanded");
+
+            // Update read more button text
+            const $spans = $readMoreBtn.find("span");
+            const originalEn = $readMoreBtn.data("original-en");
+            const originalAr = $readMoreBtn.data("original-ar");
+
+            if (isExpanded) {
+              // Collapse mode - show "Read More" text
+              $spans.filter(".en").text(originalEn);
+              $spans.filter(".ar").text(originalAr);
+            } else {
+              // Expand mode - show "Read Less" text
+              $spans.filter(".en").text("Read Less");
+              $spans.filter(".ar").text("اقرأ أقل");
+            }
+          });
+        });
+    </script>
+</body>
+</html>

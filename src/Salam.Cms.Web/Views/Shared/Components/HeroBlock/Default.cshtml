@@ -1,0 +1,82 @@
+﻿@using Salam.Cms.Web.Features.Hero.ViewModels
+@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.Common.Extensions
+@using PictureRenderer
+@using PictureRenderer.Profiles
+
+@model HeroBlockViewModel
+
+@if (Model.CurrentBlock.Media == null)
+{
+    <style>
+        .banner-details {
+            width: 100% !important;
+        }
+    </style>
+
+}
+<!-- START HeroBlock -->
+<div class="hero-block hero-block__wrapper">
+    <div class="banner-details">
+        <!-- Badge Text -->
+        @if (!string.IsNullOrEmpty(Model.CurrentBlock.BadgeText))
+        {
+            <div class="chips">
+                <span class="chips__text">@Html.PropertyFor(m => m.CurrentBlock.BadgeText)</span>
+            </div>
+        }
+
+        <!-- Heading -->
+        @if (!string.IsNullOrEmpty(Model.CurrentBlock.Heading))
+        {
+            <h1 class="banner-details__heading font-extrabold">
+                @Html.PropertyFor(m => m.CurrentBlock.Heading)
+            </h1>
+        }
+
+        <!-- Description -->
+        @if (Model.CurrentBlock.Description != null)
+        {
+            <div class="banner-details__content">
+                <p class="body font-regular">
+                    @Html.PropertyFor(m => m.CurrentBlock.Description)
+                </p>
+            </div>
+        }
+
+        <!-- CTA Links -->
+        @if (Model.CurrentBlock.LinkItems != null && Model.CurrentBlock.LinkItems.Any())
+        {
+            <div class="banner-details__link-container">
+                @foreach (var link in Model.CurrentBlock.LinkItems)
+                {
+                    <a href="@Url.ContentUrl(link.Href)" class="button button-theme--primary" target="@link.Target" rel="noopener">
+                        <span>@link.Text</span>
+                        <div class="arrow">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+
+    <!-- Media -->
+    @if (Model.CurrentBlock.Media != null)
+    {
+        <div class="hero-block__image">
+            @await Html.Picture(Model.CurrentBlock.Media,
+            PictureProfiles.HeroBlock, new PictureAttributes
+            {
+                LazyLoading = LazyLoading.Browser,
+                ImgDecoding = ImageDecoding.Sync,
+                ImgFetchPriority = FetchPriority.High
+            })
+    </div>
+        }
+</div>
+<!-- END HeroBlock -->

@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Catalogue\Sync\**" />
+	  <Compile Remove="Catalogue\Validation\**" />
+	  <Compile Remove="Common\Components\OdpManager\**" />
+	  <Content Remove="Catalogue\Sync\**" />
+	  <Content Remove="Catalogue\Validation\**" />
+	  <Content Remove="Common\Components\OdpManager\**" />
+	  <EmbeddedResource Remove="Catalogue\Sync\**" />
+	  <EmbeddedResource Remove="Catalogue\Validation\**" />
+	  <EmbeddedResource Remove="Common\Components\OdpManager\**" />
+	  <None Remove="Catalogue\Sync\**" />
+	  <None Remove="Catalogue\Validation\**" />
+	  <None Remove="Common\Components\OdpManager\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="ClientResources\js\editors\firstHeaderHalfCell.js">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="EPiServer.CMS.AspNetCore.HtmlHelpers" Version="12.22.5" />
+		<PackageReference Include="EPiServer.CMS.AspNetCore.TagHelpers" Version="12.22.5" />
+		<PackageReference Include="EPiServer.CMS.AspNetCore.Templating" Version="12.22.5" />
+		<PackageReference Include="EPiServer.CMS.AspNetCore.Routing" Version="12.22.5" />
+		<PackageReference Include="EPiServer.CMS.Core" Version="12.22.5" />
+		<PackageReference Include="EPiServer.CMS.UI.Core" Version="12.32.5" />
+		<!-- Would be nice to use "EPiServer.Cms.WelcomeIntegration.Core" here, but "IDAMAssetMetadataService" is in the UI package, so... -->
+		<PackageReference Include="EPiServer.Cms.WelcomeIntegration.UI" Version="2.1.4" />
+		<PackageReference Include="EPiServer.Find.Cms" Version="16.5.0" />
+		<PackageReference Include="Geta.Optimizely.Categories" Version="1.1.2" />
+		<PackageReference Include="Geta.Optimizely.ContentTypeIcons" Version="2.0.2" />
+		<PackageReference Include="Google.Apis.RecaptchaEnterprise.v1" Version="1.72.0.3931" />
+		<PackageReference Include="Google.Cloud.RecaptchaEnterprise.V1" Version="2.18.0" />
+		<PackageReference Include="Grpc.Auth" Version="2.66.0" />
+		<PackageReference Include="PictureRenderer.Optimizely" Version="3.2.0" />
+		<PackageReference Include="RestSharp" Version="113.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Salam.Cms.Core.Services\Salam.Cms.Core.Services.csproj" />
+		<ProjectReference Include="..\Salam.Cms.Core.Settings\Salam.Cms.Core.Settings.csproj" />
+		<ProjectReference Include="..\Salam.Cms.Shared.Models\Salam.Cms.Shared.Models.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="CallToAction\Enums\" />
+	  <Folder Include="Common\Components\PageNavigator\Components\" />
+	</ItemGroup>
+
+</Project>

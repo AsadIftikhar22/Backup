@@ -1,0 +1,32 @@
+﻿@using EPiServer.Core
+@model Salam.Cms.Web.Features.Common.Components.MetaData.SocialMetaDataViewModel
+
+<!-- twitter meta tags -->
+@if (!ContentReference.IsNullOrEmpty(Model.ImageReference))
+{
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="@Url.AbsoluteUrl(Model.ImageReference)" />
+    <meta name="twitter:image:alt" content="@Model.ImageAltText" />
+}
+else
+{
+    <meta name="twitter:card" content="summary">
+}
+@if (!string.IsNullOrWhiteSpace(Model.Creator))
+{
+    <meta name="twitter:creator" content="@Model.Creator" />
+}
+<meta name="twitter:title" content="@Model.Title" />
+<meta name="twitter:site" content="@Model.SiteName" />
+<meta name="twitter:description" content="@Model.Description" />
+
+<!-- open graph meta tags -->
+<meta property="og:site_name" content="@Model.SiteName" />
+<meta property="og:url" content="@Url.AbsoluteUrl(Model.PageReference)" />
+<meta property="og:title" content="@Model.Title" />
+<meta property="og:description" content="@Model.Description" />
+<meta property="og:type" content="@Model.TypeName" />
+@if (!ContentReference.IsNullOrEmpty(Model.ImageReference))
+{
+    <meta property="og:image" content="@Url.AbsoluteUrl(Model.ImageReference)" />
+}

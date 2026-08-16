@@ -1,0 +1,62 @@
+﻿@*
+    ====================================
+    Version: 5.10.0.0. Modified: 20240909
+    ====================================
+*@
+
+@using EPiServer.Forms.Implementation.Elements
+@using EPiServer.Forms.Helpers.Internal
+@using Microsoft.AspNetCore.Mvc
+@using EPiServer.Framework.Localization;
+@using EPiServer.ServiceLocation;
+@using Salam.Cms.Web.Features.Forms.B2BRangeElementBlock
+
+@model B2BRangeElementBlock
+@{
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var cssClasses = Model.GetValidationCssClasses();
+    var localizationService = ServiceLocator.Current.GetInstance<LocalizationService>();
+
+    var increment = localizationService.GetString("/episerver/forms/rangeelementblock/increment");
+    var decrement = localizationService.GetString("/episerver/forms/rangeelementblock/decrement");
+}
+
+@using (Html.BeginElement(Model, new { @class = "FormRange" + cssClasses, @data_f_type = "range" }))
+{
+    <label for="@formElement.Guid" class="Form__Element__Caption">@labelText</label>
+    <span class="FormRange__Wrapper">
+        <span class="FormRange__Slider__Wrapper">
+            @if (Model.GetRangeValue() > Model.Min)
+            {
+                <button class="FormRange__Slider__Button" type="button" aria-label="@decrement" title="@decrement" data-action="decrement">&lt;</button>
+            }
+            else
+            {
+                <button class="FormRange__Slider__Button FormRange__Slider__Button__Disable" type="button" aria-label="@decrement" title="@decrement" data-action="decrement">&lt;</button>
+            }
+            <span class="FormRange__Min">@Model.Min</span>
+            <input name="@formElement.ElementName" id="@formElement.Guid" type="range" class="FormRange__Input"
+                   value="@Model.GetRangeValue()" data-f-datainput
+                   min="@Model.Min" max="@Model.Max" step="@Model.Step" @Html.Raw(Model.AttributesString) aria-describedby="@Util.GetAriaDescribedByElementName(formElement.ElementName)"
+                   aria-valuepredefined="@Model.GetRangeValue()"
+                   aria-valuemin="@Model.Min"
+                   aria-valuemax="@Model.Max"
+                   aria-valuenow="@Model.GetRangeValue()"
+                   aria-valuetext="@Model.GetRangeValue()" />
+            <span class="FormRange__Max">@Model.Max</span>
+            @if (Model.GetRangeValue() < Model.Max)
+            {
+                <button class="FormRange__Slider__Button" type="button" aria-label="@increment" title="@increment" data-action="increment">&gt;</button>
+            }
+            else
+            {
+                <button class="FormRange__Slider__Button FormRange__Slider__Button__Disable" type="button" aria-label="@increment" title="@increment" data-action="increment">&gt;</button>
+            }
+        </span>
+        <span class="FormRange__Output__Wrapper">
+            <output for="@formElement.Guid" class="FormRange__Output">@Model.GetRangeValue()</output>
+        </span>
+    </span>
+    <span id="@Util.GetAriaDescribedByElementName(formElement.ElementName)" role="alert" data-f-linked-name="@formElement.ElementName" data-f-validationerror class="Form__Element__ValidationError hidden">*</span>
+}

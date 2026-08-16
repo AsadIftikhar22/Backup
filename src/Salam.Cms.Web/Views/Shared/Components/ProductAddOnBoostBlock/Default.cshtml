@@ -1,0 +1,20 @@
+﻿@using Castle.Core.Internal
+@using Salam.Cms.Shared.Models
+@using Salam.Cms.Shared.Models.Catalogue.Data
+@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Catalogue.ViewModels
+@using Salam.Cms.Web.Features.Common.Extensions
+@using Salam.Cms.Web.Features.Common.Helpers
+
+@using static Salam.Cms.Shared.Models.SalamConstants
+
+@model ProductAddOnBoostViewModel
+
+@if (Model.AddBannerNavigation)
+{
+    @await Html.PartialAsync("~/Views/Shared/Partials/ProductAddsOnBoost/_banner_categorize_productaddsonboostblock.cshtml", Model)
+}
+else
+{
+    @await Html.PartialAsync("~/Views/Shared/Partials/ProductAddsOnBoost/_product_addson_boostblock.cshtml", Model)
+}

@@ -1,0 +1,7 @@
+﻿@using Salam.Cms.Web.Features.Common.Extensions
+@using Salam.Cms.Web.Features.XHtmlBlock.ViewModels
+
+@model XHtmlBlockViewModel
+
+@Html.Raw(Model.CurrentBlock.CSSBody)
+@Html.Raw(Model.CurrentBlock.HTMLBody)

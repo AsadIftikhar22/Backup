@@ -1,0 +1,203 @@
+@using Salam.Cms.Web.Features.OurStoresBlock.ViewModels
+
+@model OurStoresSectionBlockViewModel
+
+@{
+    var sectionId = "voiphone-section" + Guid.NewGuid().ToString("N");
+}
+
+<style>
+/************ 1) BASE / RESET (scoped to page area) ************/
+.dxp-layout-content-area .post--content * {
+    box-sizing: border-box;
+}
+.dxp-layout-content-area .post--content {
+    font-family: ModernEra, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    line-height: 1.67;
+    color: #002035;
+    background: transparent;
+}
+
+/************ 2) CONTAINER ************/
+.dxp-layout-content-area .post--content .container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+@@media (min-width: 576px) {
+    .dxp-layout-content-area .post--content .container { max-width: 540px; }
+}
+@@media (min-width: 768px) {
+    .dxp-layout-content-area .post--content .container { max-width: 720px; }
+}
+@@media (min-width: 992px) {
+    .dxp-layout-content-area .post--content .container { max-width: 960px; }
+}
+@@media (min-width: 1200px) {
+    .dxp-layout-content-area .post--content .container { max-width: 1140px; }
+}
+
+/************ 3) GRID: rows & columns (no negative margins to avoid horizontal scroll) ************/
+.dxp-layout-content-area .post--content .vc_row {
+    margin-left: 0;
+    margin-right: 0;
+    clear: both;
+}
+.dxp-layout-content-area .post--content .vc_row::before,
+.dxp-layout-content-area .post--content .vc_row::after {
+    content: " ";
+    display: table;
+}
+.dxp-layout-content-area .post--content .vc_row::after {
+    clear: both;
+}
+.dxp-layout-content-area .post--content .vc_column_container > .vc_column-inner {
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 100%;
+}
+@@media (min-width: 768px) {
+    .dxp-layout-content-area .post--content .vc_col-sm-6 {
+        float: left;
+        width: 50%;
+    }
+    .dxp-layout-content-area .post--content .vc_col-sm-12 {
+        float: left;
+        width: 100%;
+    }
+}
+
+/************ 4) SECTION PADDING ************/
+.voiphone--section.pt-100.pb-100 {
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+.voiphone--section.pt-100 { padding-top: 60px; }
+.voiphone--section.pb-100 { padding-bottom: 60px; }
+
+/************ 5) TYPOGRAPHY ************/
+.dxp-layout-content-area .post--content .section-title h2 {
+    font-family: "Codec Pro", inherit;
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1.2;
+    color: #002035;
+    margin: 0 0 40px;
+    text-align: center;
+}
+.dxp-layout-content-area .post--content .about-content .about-text h3 {
+    font-family: "Codec Pro", inherit;
+    font-size: 24px;
+    font-weight: 900;
+    line-height: 1.2;
+    color: #002035;
+    margin: 24px 0 16px;
+}
+.dxp-layout-content-area .post--content .about-content .about-text h4 {
+    font-family: "Codec Pro", inherit;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.35;
+    color: #002035;
+    margin: 12px 0 6px;
+}
+.dxp-layout-content-area .post--content .about-content .about-text p {
+    margin: 0 0 12px;
+    color: #002035 !important;
+}
+.dxp-layout-content-area .post--content .about-content .about-text p:empty { display: none; }
+
+/************ 6) LINKS ************/
+.dxp-layout-content-area .post--content .about-content .about-text a {
+    color: #00B140;
+    text-decoration: none;
+    word-break: break-word;
+}
+.dxp-layout-content-area .post--content .about-content .about-text a:hover,
+.dxp-layout-content-area .post--content .about-content .about-text a:focus {
+    text-decoration: underline;
+}
+.dxp-layout-content-area .post--content .about-content .about-text a:focus-visible {
+    outline: 2px solid #00B140;
+    outline-offset: 2px;
+}
+
+/************ 7) SPACING ************/
+.dxp-layout-content-area .post--content .about-content .about-text h4 + p + p {
+    margin-bottom: 20px;
+}
+
+/************ 8) MOBILE ************/
+@@media (max-width: 767.98px) {
+    .dxp-layout-content-area .post--content .section-title h2 {
+        font-size: 28px;
+        margin-bottom: 24px;
+    }
+    .dxp-layout-content-area .post--content .about-content .about-text h4 {
+        font-size: 18px;
+    }
+}
+
+/************ 9) SAFETY: readable content ************/
+.dxp-layout-content-area .post--content,
+.dxp-layout-content-area .post--content p,
+.dxp-layout-content-area .post--content a,
+.dxp-layout-content-area .post--content h2,
+.dxp-layout-content-area .post--content h3,
+.dxp-layout-content-area .post--content h4 {
+    color: inherit;
+}
+
+/************ 10) RTL (Arabic) ************/
+html[dir="rtl"] .dxp-layout-content-area .post--content { font-family: Frutigerlt, ModernEra, system-ui, sans-serif; text-align: right; }
+html[dir="rtl"] .dxp-layout-content-area .post--content .about-content .about-text,
+html[dir="rtl"] .dxp-layout-content-area .post--content .about-content .about-text p,
+html[dir="rtl"] .dxp-layout-content-area .post--content .about-content .about-text h3,
+html[dir="rtl"] .dxp-layout-content-area .post--content .about-content .about-text h4 { text-align: right; }
+@@media (min-width: 768px) {
+    html[dir="rtl"] .dxp-layout-content-area .post--content .vc_col-sm-6 { float: right; }
+}
+</style>
+
+<div id="@sectionId" class="voiphone--section pt-100 pb-100">
+    <div class="container">
+        <div class="section-title text-center">
+            @if (!string.IsNullOrEmpty(Model.CurrentBlock.Heading))
+            {
+                <h2>@Model.CurrentBlock.Heading</h2>
+            }
+        </div>
+        <div class="vc_row wpb_row vc_inner vc_row-fluid">
+            <div class="wpb_column vc_column_container vc_col-sm-6">
+                <div class="vc_column-inner">
+                    <div class="wpb_wrapper">
+                        <div class="about-content">
+                            <div class="about-text">
+                                @if (Model.CurrentBlock.LeftColumnContent != null && !string.IsNullOrWhiteSpace(Model.CurrentBlock.LeftColumnContent.ToString()))
+                                {
+                                    @Html.Raw(Model.CurrentBlock.LeftColumnContent)
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wpb_column vc_column_container vc_col-sm-6">
+                <div class="vc_column-inner">
+                    <div class="wpb_wrapper">
+                        <div class="about-content">
+                            <div class="about-text">
+                                @if (Model.CurrentBlock.RightColumnContent != null && !string.IsNullOrWhiteSpace(Model.CurrentBlock.RightColumnContent.ToString()))
+                                {
+                                    @Html.Raw(Model.CurrentBlock.RightColumnContent)
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

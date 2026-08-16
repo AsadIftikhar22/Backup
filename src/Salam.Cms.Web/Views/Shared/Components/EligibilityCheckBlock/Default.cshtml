@@ -1,0 +1,559 @@
+﻿@using EPiServer
+@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+@using Salam.Cms.Web.Features.Eligibility.Models
+@using Salam.Cms.Web.Features.EligibilityCheckBlock.ViewModels
+
+@model EligibilityCheckBlockViewModel
+<style>
+   .bg-primary-gradient{
+        background:unset;
+   }
+
+    body:has(.section-container.bg-ttb)::before {
+        background: transparent !important;
+        background-image: none !important;
+    }
+
+    body::before {
+        background: transparent !important;
+        background-image: none !important;
+    }
+</style>
+
+<div class="eligibility-container">
+    @if (!string.IsNullOrWhiteSpace(Model.CurrentBlock.Title))
+    {
+        <h1 class="eligibility-title">
+            @Model.CurrentBlock.Title
+        </h1>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.CurrentBlock.Description))
+    {
+        <p class="eligibility-intro">
+            @Model.CurrentBlock.Description
+        </p>
+    }
+    @if (Model.CurrentBlock.Requirements != null &&
+        Model.CurrentBlock.Requirements.FilteredItems.Any())
+    {
+        <div class="eligibility-requirements">
+
+            @foreach (var item in Model.CurrentBlock.Requirements.FilteredItems)
+            {
+                var requirement =
+                item.LoadContent() as EligibilityRequirementBlock;
+
+                if (requirement == null)
+                {
+                    continue;
+                }
+                var requirementId = item.ContentLink.ID;
+                var informationModalId =
+                $"eligibility-information-modal-{requirementId}";
+                var registrationModalId =
+                $"eligibility-registration-modal-{requirementId}";
+                <div class="eligibility-requirement-wrapper">
+                    <div class="eligibility-requirement-card">
+                        <div class="eligibility-icon">
+                            @if (requirement.Icon != null &&
+                                                !ContentReference.IsNullOrEmpty(requirement.Icon))
+                            {
+                                <img src="@Url.ContentUrl(requirement.Icon)"
+                                     alt=""
+                                     aria-hidden="true" />
+                            }
+                        </div>
+                        <div class="eligibility-content">
+                            @if (!string.IsNullOrWhiteSpace(requirement.Title))
+                            {
+                                <h2>
+                                    @requirement.Title
+                                </h2>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(requirement.Description))
+                            {
+                                <span>
+                                    @requirement.Description
+                                </span>
+                            }
+                        </div>
+                        @if (requirement.ShowInformationIcon && requirement.IIcon != null &&
+                                        !ContentReference.IsNullOrEmpty(requirement.IIcon))
+                        {
+                            <button type="button"
+                                    class="eligibility-info-button"
+                                    aria-label="Information"
+                                    aria-controls="@informationModalId"
+                                    aria-expanded="false"
+                                    data-modal-target="@informationModalId">
+
+                                <img src="@Url.ContentUrl(requirement.IIcon)"
+                                     alt=""
+                                     aria-hidden="true" />
+
+                            </button>
+                        }
+                    </div>
+                    @if (requirement.ShowRegistrationBar)
+                    {
+                        <div class="eligibility-register-bar">
+                            @if (!string.IsNullOrWhiteSpace(requirement.RegistrationText))
+                            {
+                                <span>
+                                    @requirement.RegistrationText
+                                </span>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(requirement.RegistrationLinkText))
+                            {
+                                <a href="#"
+                                   class="eligibility-register-link"
+                                   aria-haspopup="dialog"
+                                   aria-controls="@registrationModalId"
+                                   aria-expanded="false"
+                                   data-registration-modal-target="@registrationModalId">
+
+                                    @requirement.RegistrationLinkText
+                                </a>
+                            }
+                        </div>
+                    }
+                </div>
+
+                @if (requirement.InformationIcon != null &&
+                        !ContentReference.IsNullOrEmpty(requirement.InformationIcon))
+                {
+                    <div id="@informationModalId"
+                         class="eligibility-modal eligibility-information-modal"
+                         aria-hidden="true">
+                        <div class="eligibility-modal-overlay"
+                             data-modal-close>
+                        </div>
+                        <div class="eligibility-modal-dialog"
+                             role="dialog"
+                             aria-modal="true"
+                             aria-labelledby="@($"{informationModalId}-title")">
+                            <button type="button"
+                                    class="eligibility-modal-close"
+                                    aria-label="Close"
+                                    data-modal-close>
+
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M14.2505 3.75L3.75049 14.25M3.75049 3.75L14.2505 14.25" stroke="#005147" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+
+
+                            </button>
+                            <div class="eligibility-modal-icon">
+
+                                <img src="@Url.ContentUrl(requirement.InformationIcon)"
+                                     alt=""
+                                     aria-hidden="true" />
+
+                            </div>
+                            <div class="eligibility-modal-content">
+
+                                @if (!string.IsNullOrWhiteSpace(requirement.InformationModalTitle))
+                                {
+                                    <h2 id="@($"{informationModalId}-title")">
+
+                                        @requirement.InformationModalTitle
+
+                                    </h2>
+                                }
+
+
+                                @if (requirement.InformationModalDescription != null)
+                                {
+                                    <div class="eligibility-modal-description">
+                                        @Html.PropertyFor(x => requirement.InformationModalDescription)
+                                        </div>
+                               }
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+                @if (requirement.ShowRegistrationBar &&
+                        !string.IsNullOrWhiteSpace(requirement.RegistrationModalTitle))
+                {
+                    <div id="@registrationModalId"
+                         class="eligibility-modal eligibility-registration-modal"
+                         aria-hidden="true">
+                        <div class="eligibility-modal-overlay"
+                             data-registration-modal-close>
+                        </div>
+                        <div class="eligibility-modal-dialog"
+                             role="dialog"
+                             aria-modal="true"
+                             aria-labelledby="@($"{registrationModalId}-title")">
+                            <button type="button"
+                                    class="eligibility-modal-close"
+                                    aria-label="Close"
+                                    data-registration-modal-close>
+
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M14.2505 3.75L3.75049 14.25M3.75049 3.75L14.2505 14.25" stroke="#005147" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+
+                            </button>
+
+
+                            @* Registration Modal Image *@
+
+                            @if (requirement.RegistrationModalImage != null &&
+                                            !ContentReference.IsNullOrEmpty(
+                                            requirement.RegistrationModalImage))
+                            {
+                                <div class="eligibility-modal-icon">
+
+                                   <img src="@Url.ContentUrl(requirement.RegistrationModalImage)" alt="" aria-hidden="true" />
+                                </div>
+                            }
+                            <div class="eligibility-modal-content">
+                                <h2 id="@($"{registrationModalId}-title")">
+
+                                    @requirement.RegistrationModalTitle
+
+                                </h2>
+                                @if (requirement.RegistrationModalDescription != null)
+                                {
+                                    <div class="eligibility-modal-description">
+
+                                        @Html.PropertyFor(x => requirement.RegistrationModalDescription)
+
+                    </div>
+                                        }
+
+
+                                @* Registration Modal Button *@
+
+                                @if (!string.IsNullOrWhiteSpace(
+                                                    requirement.RegistrationModalButtonText) &&
+                                                    requirement.RegistrationModalLink != null)
+                                {
+                                    <a class="eligibility-modal-action"
+                                       href="@requirement.RegistrationModalLink">
+
+                                        @requirement.RegistrationModalButtonText
+
+                                    </a>
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            }
+
+        </div>
+    }
+
+
+    @* =========================================================
+       GET STARTED
+       ========================================================= *@
+
+    @if (!string.IsNullOrWhiteSpace(Model.CurrentBlock.ButtonText))
+    {
+        if (Model.CurrentBlock.ButtonLink != null)
+        {
+            <a class="eligibility-get-started"
+               href="@Model.CurrentBlock.ButtonLink">
+
+                @Model.CurrentBlock.ButtonText
+
+            </a>
+        }
+        else
+        {
+            <button type="button"
+                    class="eligibility-get-started">
+
+                @Model.CurrentBlock.ButtonText
+
+            </button>
+        }
+    }
+
+</div>
+
+
+@* =============================================================
+   JAVASCRIPT
+   ============================================================= *@
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+
+        /* =====================================================
+           INFORMATION MODAL TRIGGERS
+           ===================================================== */
+
+        const informationTriggers =
+            document.querySelectorAll(
+                ".eligibility-info-button[data-modal-target]"
+            );
+
+
+        informationTriggers.forEach(function (trigger) {
+
+            trigger.addEventListener("click", function () {
+
+                const modalId =
+                    trigger.getAttribute("data-modal-target");
+
+                const modal =
+                    document.getElementById(modalId);
+
+                if (!modal) {
+                    return;
+                }
+
+                openModal(modal, trigger);
+
+            });
+
+        });
+
+
+        /* =====================================================
+           REGISTRATION MODAL TRIGGERS
+           ===================================================== */
+
+        const registrationTriggers =
+            document.querySelectorAll(
+                ".eligibility-register-link[data-registration-modal-target]"
+            );
+
+
+        registrationTriggers.forEach(function (trigger) {
+
+            trigger.addEventListener("click", function (event) {
+
+                event.preventDefault();
+
+                const modalId =
+                    trigger.getAttribute(
+                        "data-registration-modal-target"
+                    );
+
+                const modal =
+                    document.getElementById(modalId);
+
+                if (!modal) {
+                    return;
+                }
+
+                openModal(modal, trigger);
+
+            });
+
+        });
+
+
+        /* =====================================================
+           CLOSE INFORMATION MODAL
+           ===================================================== */
+
+        document
+            .querySelectorAll("[data-modal-close]")
+            .forEach(function (element) {
+
+                element.addEventListener("click", function () {
+
+                    const modal =
+                        element.closest(".eligibility-modal");
+
+                    if (modal) {
+                        closeModal(modal);
+                    }
+
+                });
+
+            });
+
+
+        /* =====================================================
+           CLOSE REGISTRATION MODAL
+           ===================================================== */
+
+        document
+            .querySelectorAll("[data-registration-modal-close]")
+            .forEach(function (element) {
+
+                element.addEventListener("click", function () {
+
+                    const modal =
+                        element.closest(".eligibility-modal");
+
+                    if (modal) {
+                        closeModal(modal);
+                    }
+
+                });
+
+            });
+
+
+        /* =====================================================
+           ESC KEY
+           ===================================================== */
+
+        document.addEventListener("keydown", function (event) {
+
+            if (event.key !== "Escape") {
+                return;
+            }
+
+
+            const openModal =
+                document.querySelector(
+                    ".eligibility-modal.is-open"
+                );
+
+
+            if (openModal) {
+                closeModal(openModal);
+            }
+
+        });
+
+
+        /* =====================================================
+           OPEN MODAL
+           ===================================================== */
+
+        function openModal(modal, trigger) {
+
+
+            /*
+             * Close any other open modal first.
+             */
+
+            const currentlyOpenModal =
+                document.querySelector(
+                    ".eligibility-modal.is-open"
+                );
+
+
+            if (currentlyOpenModal &&
+                currentlyOpenModal !== modal) {
+
+                closeModal(currentlyOpenModal);
+
+            }
+
+
+            modal.classList.add("is-open");
+
+
+            modal.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+
+            if (trigger) {
+
+                trigger.setAttribute(
+                    "aria-expanded",
+                    "true"
+                );
+
+            }
+
+
+            document.body.classList.add(
+                "eligibility-modal-open"
+            );
+
+        }
+
+
+        /* =====================================================
+           CLOSE MODAL
+           ===================================================== */
+
+        function closeModal(modal) {
+
+
+            modal.classList.remove("is-open");
+
+
+            modal.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+
+            /*
+             * Find Information trigger.
+             */
+
+            const informationTrigger =
+                document.querySelector(
+                    '[data-modal-target="' +
+                    modal.id +
+                    '"]'
+                );
+
+
+            /*
+             * Find Registration trigger.
+             */
+
+            const registrationTrigger =
+                document.querySelector(
+                    '[data-registration-modal-target="' +
+                    modal.id +
+                    '"]'
+                );
+
+
+            const trigger =
+                informationTrigger ||
+                registrationTrigger;
+
+
+            if (trigger) {
+
+                trigger.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+            }
+
+
+            /*
+             * Remove body scroll lock only when
+             * there are no other open modals.
+             */
+
+            const anotherOpenModal =
+                document.querySelector(
+                    ".eligibility-modal.is-open"
+                );
+
+
+            if (!anotherOpenModal) {
+
+                document.body.classList.remove(
+                    "eligibility-modal-open"
+                );
+
+            }
+
+        }
+
+    });
+
+</script>

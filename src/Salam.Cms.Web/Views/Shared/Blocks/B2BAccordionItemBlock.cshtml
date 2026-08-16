@@ -1,0 +1,14 @@
+﻿﻿@using Salam.Cms.Web.Features.Accordion.Models
+
+@model B2BAccordionItemBlock
+
+<div class="accordion-item__text-wrapper rte-wrapper">
+    <div class="accordion-item__title">@Html.PropertyFor(m => m.Heading)</div>
+    <div class="accordion-item__text">
+        @Html.Raw(Model.Description)
+    </div>
+    @if (!Model.Links.IsNullOrEmpty())
+    {
+        @await Html.PartialAsync("~/Views/Shared/Partials/ButtonRow.cshtml", Model.Links)
+    }
+</div>

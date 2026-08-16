@@ -1,0 +1,523 @@
+﻿@using EPiServer
+@using EPiServer.Framework.Web
+@using EPiServer.Framework.Web.Mvc.Html
+@using EPiServer.ServiceLocation
+@using Salam.Cms.Shared.Models.Pages
+@using Salam.Cms.Web.Features.ClientResources.Common
+@using Salam.Cms.Web.Features.Common.Components.Footer
+@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.Common.Components.Navigation
+@using Salam.Cms.Web.Features.Common.Models
+@using Salam.Cms.Web.Features.Hero.Components
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Core
+@using Salam.Cms.Web.Features.Landing.Models
+@using System.Globalization
+
+@{
+    var logoLink = $"/{CultureInfo.CurrentCulture.TwoLetterISOLanguageName}";
+}
+
+@model NavigationViewModel
+
+<header class="navigation bg-secondary-500-opacity">
+    <div class="navigation__top">
+        <ul class="top-navigation-link-row">
+            @foreach (SitePageData link in Model.TopLinks)
+            {
+                <li class="top-navigation-link @(link == Model.TopLinks.First() ? " top-navigation-link--is-active" : null)">
+                    <a href="@Url.ContentUrl(link.ContentLink)" title="@link.Name" target="@link.TargetFrameName">@link.Name</a>
+                </li>
+            }
+        </ul>
+        <div class="navigation__top__right">
+            @if (LinkItemExtensions.IsValid(Model.CoverageButtonLink))
+            {
+                <a href="@Url.ContentUrl(Model.CoverageButtonLink?.Href)" target="@Model.CoverageButtonLink?.Target" title="@Model.CoverageButtonLink?.Title" class="dropdown__button dropdown__button__coverage">
+                    <span class="dropdown__button__text">@Model.CoverageButtonLink?.Text</span><span class="dropdown__button__icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M5.99967 12L1.33301 14.6667V4.00004L5.99967 1.33337M5.99967 12L10.6663 14.6667M5.99967 12V1.33337M10.6663 14.6667L14.6663 12V1.33337L10.6663 4.00004M10.6663 14.6667V4.00004M10.6663 4.00004L5.99967 1.33337" stroke="#33605A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </span>
+                </a>
+            }
+            <div class="language-switcher">
+                @using (Html.BeginForm("Set", "Language", new { contentLink = Model.CurrentPage?.ContentLink }))
+                {
+                    <div class="dropdown">
+                        <select class="dropdown__select" value="@Model.CurrentLanguage"></select>
+                        <button class="dropdown__button" type="button">
+                            <span class="dropdown__button__text">@Model.CurrentLanguage</span><span class="dropdown__button__icon">
+                                <svg class="arrow-top" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                <svg class="arrow-middle" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                <svg class="arrow-bottom" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="dropdown__content">
+                            @foreach (var language in Model.Languages)
+                            {
+                                <div class="dropdown__content__item selected"
+                                     @(language.Value == Model.CurrentLanguage ? "selected" : "")
+                                     data-value="@language.Value">
+                                    <input type="hidden" name="Language" value="en">@language.DisplayName
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="navigation__bottom">
+        <div class="navigation__menu-top">
+            @if (LinkItemExtensions.IsValid(Model.MySalamLink))
+            {
+                <button name="My Salam" class="icon-button icon-button--secondary icon-button__salam-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="16" viewBox="0 0 15 16" fill="none"><path d="M13.8174 14.75C13.8174 13.7033 13.8174 13.18 13.6882 12.7541C13.3974 11.7953 12.647 11.045 11.6882 10.7542C11.2624 10.625 10.7391 10.625 9.69238 10.625H5.94239C4.89571 10.625 4.37237 10.625 3.94653 10.7542C2.98772 11.045 2.23741 11.7953 1.94656 12.7541C1.81738 13.18 1.81738 13.7033 1.81738 14.75M11.1924 4.625C11.1924 6.48896 9.68134 8 7.81738 8C5.95342 8 4.44238 6.48896 4.44238 4.625C4.44238 2.76104 5.95342 1.25 7.81738 1.25C9.68134 1.25 11.1924 2.76104 11.1924 4.625Z" stroke="#003831" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </button>
+            }
+            <a href="@logoLink" class="logo"><vc:image-renderer image-reference="@Model.Logo" svg-render-mode="@SvgRenderMode.Inline" /></a>
+            <a href="@logoLink" class="logo-small"><vc:image-renderer image-reference="@Model.LogoSmall" svg-render-mode="@SvgRenderMode.Inline" /></a>
+            <div class="account-type-switcher">
+                @if (Model.TopLinks != null && Model.TopLinks.Count > 0)
+                {
+                    <button class="button button-theme--cta">
+                        <span>@Model.TopLinks[0]?.Name</span>
+                        <div class="arrows"><span></span><span></span></div>
+                    </button>
+                    <div class="account-type-switcher__list">
+                        <a href="@logoLink" class="logo"><vc:image-renderer image-reference="@Model.Logo" svg-render-mode="@SvgRenderMode.Inline" /></a>
+                        <div class="account-type-switcher__list__btns">
+                            @foreach (var link in Model.TopLinks)
+                            {
+                                <a href="@Url.ContentUrl(link.ContentLink)"
+                                   title="@link.Name"
+                                   target="@link.TargetFrameName"
+                                   class="button button-theme--cta @(link == Model.TopLinks.First() ? " active-type" : null)">
+                                    <span>@link.Name</span>
+                                </a>
+                            }
+                        </div>
+                        <div class="close-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                <path d="M11.25 0.749878L0.75 11.2499M0.75 0.749878L11.25 11.2499" stroke="#00F249" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </div>
+                    </div>
+                }
+            </div>
+            <button class="icon-button icon-button--secondary icon-button__menu-toggle">
+                <div class="burger-menu-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="10" viewBox="0 0 15 10" fill="none">
+                        <path d="M1.81738 5H13.8174M1.81738 1H13.8174M1.81738 9H13.8174" stroke="#003831" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </div>
+                <div class="close-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M11.25 0.749878L0.75 11.2499M0.75 0.749878L11.25 11.2499" stroke="#00F249" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </div>
+            </button>
+        </div>
+        <div class="navigation__menu">
+            <div>
+                @{
+                    int pageIndex = 0;
+                }
+
+                @if (Model.Pages != null)
+                {
+                    @foreach (var pageObj in Model.Pages)
+                    {
+                        <button class="navigation-flyout-card__back-button"
+                                data-key="back-button-@pageIndex"
+                                style="display: none;">
+                            <div class="navigation-flyout-item__arrows"><span></span><span></span></div>
+                            <div class="navigation-flyout-card__text uppercase">
+                                @pageObj.Name
+                            </div>
+                        </button>
+                        pageIndex++;
+                    }
+                }
+                <nav>
+                    <ul class="header-navigation-link-row">
+                        @{
+                            var pageIndex1stLevel = 0;
+                        }
+                        @if (Model.Pages != null)
+                        {
+                            @foreach (var pageObj in Model.Pages)
+                            {
+                                int indexPage2ndLevel = 0;
+
+                                var childPages2ndLevel = Model.ChildPages2ndLevel
+                                .Where(x => x.Key == pageObj.ContentLink)
+                                .SelectMany(x => x.Value)
+                                .ToList();
+
+                                var pageIcon = (pageObj as INavigationItem)
+                                .Icon;
+
+                                var pageData = (pageObj as PageData);
+
+                                @if (childPages2ndLevel.Count == 0)
+                                {
+                                    <li class="header-navigation-link-wrapper header-navigation-link-wrapper--no-flyout" data-flyout-cleanable="true">
+                                        <a href="@Url.ContentUrl(pageData.LinkURL)" title="@pageObj.Name" target="@pageData.TargetFrameName" class="header-navigation-link" data-key="header-navigation-link-2">
+                                            <span class="header-navigation-link__text">
+                                                @pageObj.Name
+                                            </span>
+                                            <span class="header-navigation-link__arrows">
+                                                <svg class="arrow-top" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                                <svg class="arrow-middle" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                                <svg class="arrow-bottom" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                            </span>
+                                        </a>
+                                        <ul class="navigation-flyout-card"
+                                            data-key="navigation-flyout-@pageIndex1stLevel"
+                                            style="display: none;">
+                                            <li class="navigation-flyout-card__wrapper">
+                                                <ul class="navigation-flyout-card__item-card"
+                                                    data-key="item-card-@pageIndex1stLevel"
+                                                    style="display: flex;">
+                                                    <li class="navigation-flyout-item navigation-flyout-item__icon">
+                                                        <a href="@Url.ContentUrl(pageData.LinkURL)" title="@pageObj.Name" target="@pageData.TargetFrameName">
+                                                            <div class="navigation-flyout-item__text-wrapper">
+                                                                <vc:image-renderer image-reference="@pageIcon" svg-render-mode="@SvgRenderMode.Inline" />
+                                                                <div class="navigation-flyout-item__text">
+                                                                    @pageObj.Name
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="header-navigation-link-wrapper @(childPages2ndLevel.Any() ? string.Empty : "header-navigation-link-wrapper--no-flyout")">
+                                        <a class="header-navigation-link"
+                                           data-key="header-navigation-link-@pageIndex1stLevel">
+                                            <span class="header-navigation-link__text">
+                                                @pageObj.Name
+                                            </span>
+                                            <span class="header-navigation-link__arrows">
+                                                <svg class="arrow-top" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                                <svg class="arrow-middle" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                                <svg class="arrow-bottom" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                            </span>
+                                        </a>
+                                        <ul class="navigation-flyout-card"
+                                            data-key="navigation-flyout-@pageIndex1stLevel"
+                                            style="display: none;">
+                                            <li class="navigation-flyout-card__wrapper">
+                                                <ul class="navigation-flyout-card__item-card"
+                                                    data-key="item-card-@pageIndex1stLevel"
+                                                    style="display: flex;">
+                                                    <li class="navigation-flyout-item navigation-flyout-item__icon">
+                                                        <div class="navigation-flyout-item__text-wrapper">
+                                                            <vc:image-renderer image-reference="@pageIcon" svg-render-mode="@SvgRenderMode.Inline" />
+                                                            <div class="navigation-flyout-item__text">
+                                                                @pageObj.Name
+                                                            </div>
+                                                        </div>
+                                                        <div class="navigation-flyout-item__arrows"><span></span><span></span></div>
+                                                    </li>
+                                                    @{
+                                                        indexPage2ndLevel = 0;
+                                                    }
+                                                    @foreach (var secondLevelPage in childPages2ndLevel)
+                                                    {
+                                                        <li class="navigation-flyout-item"
+                                                            data-key="item-@pageIndex1stLevel-@indexPage2ndLevel"
+                                                            style="display: flex;">
+                                                            <a href="@Url.ContentUrl(secondLevelPage.ContentLink)">
+                                                                <div class="navigation-flyout-item__text-wrapper">
+                                                                    <div class="navigation-flyout-item__text">
+                                                                        <div title="@secondLevelPage.Name">
+                                                                            @secondLevelPage.Name
+                                                                            @if (!String.IsNullOrWhiteSpace(secondLevelPage.NewPageTitle))
+                                                                            {
+                                                                                <span class="chips chips--primary plan-card__chip" style="margin-inline: 10px; display:inline-flex;">
+                                                                                    <span class="chips__text">@secondLevelPage.NewPageTitle</span>
+                                                                                </span>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="navigation-flyout-item__arrows"><span></span><span></span></div>
+                                                            </a>
+                                                        </li>
+                                                        indexPage2ndLevel++;
+                                                    }
+                                                </ul>
+                                                @{
+                                                    indexPage2ndLevel = 0;
+                                                }
+                                                @foreach (var secondLevelPage in childPages2ndLevel)
+                                                {
+                                                    int indexPage3rdLevel = 0;
+
+                                                    var childPages3rdLevel = Model?.ChildPages3rdLevel?
+                                                    .Where(x => x.Key == secondLevelPage.ContentLink)
+                                                    .SelectMany(x => x.Value)
+                                                    .ToList();
+
+                                                    <ul class="navigation-flyout-card__flyout-card"
+                                                        data-key="flyout-card-@pageIndex1stLevel-@indexPage2ndLevel"
+                                                        style="display: none;">
+                                                        <div class="navigation-flyout-item navigation-flyout-item__icon">
+                                                            <div class="navigation-flyout-item__text-wrapper">
+                                                                <div class="navigation-flyout-item__text uppercase">
+                                                                    @secondLevelPage.Name
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <li class="navigation-flyout-item__main-link"
+                                                            data-key="flyout-item-@pageIndex1stLevel-@indexPage2ndLevel-@indexPage3rdLevel">
+                                                            <a href="@Url.ContentUrl(secondLevelPage.ContentLink)">
+                                                                <div class="navigation-flyout-item__text-wrapper">
+                                                                    <div class="navigation-flyout-item__text">
+                                                                        <div title="@secondLevelPage.Name">
+                                                                            @(string.IsNullOrWhiteSpace(secondLevelPage.MobileName) ? secondLevelPage.Name : secondLevelPage.MobileName)
+                                                                            @if (!String.IsNullOrWhiteSpace(secondLevelPage.NewPageTitle))
+                                                                            {
+                                                                                <span class="chips chips--primary plan-card__chip" style="margin-inline: 10px; display:inline-flex;">
+                                                                                    <span class="chips__text">@secondLevelPage.NewPageTitle</span>
+                                                                                </span>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                        @foreach (var thirdLevelPage in childPages3rdLevel)
+                                                        {
+                                                            <li class="navigation-flyout-item"
+                                                                data-key="flyout-item-@pageIndex1stLevel-@indexPage2ndLevel-@indexPage3rdLevel">
+                                                                <a href="@Url.ContentUrl(thirdLevelPage.ContentLink)">
+                                                                    <div class="navigation-flyout-item__text-wrapper">
+                                                                        <div class="navigation-flyout-item__text">
+                                                                            <div title="@thirdLevelPage.Name">
+                                                                                @thirdLevelPage.Name
+                                                                                @if (!String.IsNullOrWhiteSpace(thirdLevelPage.NewPageTitle))
+                                                                                {
+                                                                                    <span class="chips chips--primary plan-card__chip" style="margin-inline: 10px; display:inline-flex;">
+                                                                                        <span class="chips__text">@thirdLevelPage.NewPageTitle</span>
+                                                                                    </span>
+                                                                                }
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </a>
+                                                            </li>
+                                                            indexPage3rdLevel++;
+                                                        }
+                                                    </ul>
+                                                    indexPage2ndLevel++;
+                                                }
+                                            </li>
+                                        </ul>
+                                    </li>
+                                }
+                                pageIndex1stLevel++;
+                            }
+                        }
+
+                    </ul>
+                </nav>
+            </div>
+            <div class="additional-mobile-links">
+
+                <div class="additional-mobile-links__items">
+                    <div class="navigation-flyout-item">
+                        <div class="navigation-flyout-item__text-wrapper">
+                            <div class="navigation-flyout-item__text">@Model.LanguagesNavItemText</div>
+                        </div>
+                        <div class="navigation-flyout-item__arrows">
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="navigation-flyout-item mysalam-flyout-item" id="MySalamFlyoutItem">
+                        <div class="navigation-flyout-item__text-wrapper ">
+                            <div class="navigation-flyout-item__text">@Model.SalamNavItemText</div>
+                        </div>
+                        <div class="navigation-flyout-item__arrows">
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <a href="@Url.ContentUrl(Model.CoverageButtonLink?.Href)" target="@Model.CoverageButtonLink?.Target" title="@Model.CoverageButtonLink?.Title" class="navigation-flyout-item">
+                        <div class="navigation-flyout-item__text-wrapper">
+                            <div class="navigation-flyout-item__text">@Model.CoverageButtonLink?.Text</div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="language-dropdown">
+                    <button class="navigation-flyout-card__back-button">
+                        <div class="navigation-flyout-item__arrows">
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <div class="navigation-flyout-card__text uppercase">
+                            @Model.LanguagesNavItemText
+                        </div>
+                    </button>
+                    <div class="language-dropdown__items">
+                        <ul>
+                            <div class="language-dropdown__item language-dropdown__item__text uppercase">
+                                @Model.LanguagesNavItemText
+                            </div>
+                            @using (Html.BeginForm("Set", "Language", new { contentLink = Model.CurrentPage.ContentLink }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @foreach (var language in Model.Languages)
+                                {
+                                    <li key="@language.Value">
+                                        <div class="language-dropdown__item language-dropdown__list-item" data-value="@language.Value">
+                                            <input type="hidden" name="Language" value="" />
+                                            @language.Value.ToUpperInvariant()
+                                        </div>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+                @if (!String.IsNullOrEmpty(Model.SalamNavItemText))
+                {
+                    <div class="mysalam-dropdown">
+                        <button class="navigation-flyout-card__back-button">
+                            <div class="navigation-flyout-item__arrows">
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <div class="navigation-flyout-card__text uppercase">
+                                @Model.SalamNavItemText
+                            </div>
+                        </button>
+                        <div class="mysalam-dropdown__items">
+                            <ul>
+                                <div class="language-dropdown__item language-dropdown__item__text uppercase">
+                                    @Model.SalamNavItemText
+                                </div>
+                                @foreach (var language in Model.SalamNavItems)
+                                {
+                                    <li key="@language.Title">
+                                        <a href="@language.Href"
+                                           class="dropdown__content__item"
+                                           style="display: block; cursor: pointer; text-decoration: none;color:inherit">
+                                            <input type="hidden" name="Language" value="@language.Text" />
+                                            @language.Text.ToUpperInvariant()
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                }
+
+
+                <div class="additional-mobile-links__footer">
+                    <div class="additional-mobile-links__footer__text additional-mobile-links__footer__legal-links">
+
+                        @if (Model.FooterLegalLinks != null)
+                        {
+                            @foreach (var link in Model.FooterLegalLinks)
+                            {
+                                <a href="@Url.ContentUrl(link.Href)">
+                                    @link.Text
+                                </a>
+                            }
+                        }
+                    </div>
+                    @if (Model.FooterSocialLinks != null && Model.FooterSocialLinks.Any())
+                    {
+                        <div class="social-row social-row--footer">
+                            @foreach (var socialItem in Model.FooterSocialLinks)
+                            {
+                                <a href="@socialItem.Link?.Href" title="@socialItem.Link?.Title">
+                                    <vc:image-renderer image-reference="@socialItem.Icon" svg-render-mode="@SvgRenderMode.Inline" />
+                                </a>
+                            }
+                        </div>
+                    }
+                    <div class="additional-mobile-links__footer__text">
+                        @Html.PropertyFor(m => m.CopyrightText)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="button-row">
+            @if (!LinkItemCollectionExtensions.IsNullOrEmpty(Model.TopNavigationMenu))
+            {
+                @foreach (var button in Model.TopNavigationMenu)
+                {
+                    <a href="@Url.ContentUrl(button.Href)" title="@button.Title" target="@button.Target" class="button button-theme--cta">
+                        <span>@button.Text</span>
+                        <div class="arrow"><span></span><span></span><span></span><span></span><span></span></div>
+                    </a>
+                }
+            }
+            @*  @if (LinkItemExtensions.IsValid(Model.MySalamLink))
+            {
+                <a href="@Url.ContentUrl(Model.MySalamLink.Href)" title="Model.MySalamLink.Title" target="@Model.MySalamLink.Target" class="quick-link">
+                    <div class="quick-link__text">@Model.MySalamLink.Text</div>
+                    <div class="quick-link__icon">
+                        <vc:image-renderer image-reference="@Model.MySalamIcon" svg-render-mode="@SvgRenderMode.Inline" />
+                    </div>
+                </a>
+            } *@
+
+            @if (!String.IsNullOrEmpty(Model.SalamNavItemText))
+            {
+                <div class="mysalam-switcher">
+                    <form action="/MySalam/Set" method="post">
+                        <input type="hidden" name="__RequestVerificationToken" value="">
+                        <input type="hidden" name="contentLink" value="">
+                        <div class="dropdown quick-link">
+                            <select class="dropdown__select"></select>
+                            <button class="dropdown__button" style="border:none;" type="button"><span class="dropdown__button__text quick-link__text" data-default-text="@Model.SalamNavItemText">@Model.SalamNavItemText</span><span class="dropdown__button__icon"><svg class="arrow-top" width="10" height="6" viewBox="0 0 10 6" fill="none"><path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><svg class="arrow-middle" width="10" height="6" viewBox="0 0 10 6" fill="none"><path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><svg class="arrow-bottom" width="10" height="6" viewBox="0 0 10 6" fill="none"><path opacity="0.6" d="M9 1L4.94521 5L1 1.10811" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button>
+                            <div class="dropdown__content">
+                                @foreach (var language in Model.SalamNavItems)
+                                {
+                                    <li key="@language.Title">
+                                        <a href="@language.Href"
+                                           class="dropdown__content__item"
+                                           style="display: block; cursor: pointer; text-decoration: none;">
+                                            <input type="hidden" name="Language" value="@language.Text" />
+                                            @language.Text.ToUpperInvariant()
+                                        </a>
+                                    </li>
+                                }
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            }
+        </div>
+</header>

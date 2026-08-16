@@ -1,0 +1,55 @@
+﻿@using Salam.Cms.Web.Features.CallToAction.ViewModels
+@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.Common.Extensions
+@using PictureRenderer
+@using PictureRenderer.Profiles
+
+@model CallToActionBlockViewModel
+
+<div class="section-wrapper">
+<div @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle) class="cta-block cta-block--large">
+    <div class="cta-block__content">
+        <div class="cta-block__content__details">
+            @if (!string.IsNullOrEmpty(Model.CurrentBlock.BadgeText))
+            {
+                <div class="chips">
+                    <span class="chips__text">
+                        @Html.PropertyFor(m => m.CurrentBlock.BadgeText)
+                    </span>
+                </div>
+            }            
+            <h3>
+                @Html.PropertyFor(m => m.CurrentBlock.HeadingLineOne) 
+                <span>@Html.PropertyFor(m => m.CurrentBlock.HeadingLineTwo)</span>
+            </h3>
+            @Html.PropertyFor(m => m.CurrentBlock.MainBody)
+        </div>
+        @await Html.PartialAsync("~/Views/Shared/Components/CallToActionBlock/LinkItems.cshtml", Model.CurrentBlock.LinkItems)
+    </div>
+    @if (Model.CurrentBlock.Media != null)
+    {
+        <div class="cta-block__image">
+            @await Html.Picture(Model.CurrentBlock.Media,
+            PictureProfiles.CTA, new PictureAttributes
+            {
+                LazyLoading = LazyLoading.Browser,
+                ImgDecoding = ImageDecoding.Sync,
+                ImgFetchPriority = FetchPriority.Low
+            })
+            @*  <picture>
+                 <source 
+                     srcset="
+                     https://itcl01mstru6t0sinte.dxcloud.episerver.net/cdn-cgi/image/width=340,format=auto,fit=crop,quality=80/https://images.cmp.optimizely.com/3d58253a3c5011f08478163622db2d08 340w,
+                     https://itcl01mstru6t0sinte.dxcloud.episerver.net/cdn-cgi/image/width=376,format=auto,fit=crop,quality=80/https://images.cmp.optimizely.com/3d58253a3c5011f08478163622db2d08 376w,
+                     https://itcl01mstru6t0sinte.dxcloud.episerver.net/cdn-cgi/image/width=752,format=auto,fit=crop,quality=80/https://images.cmp.optimizely.com/3d58253a3c5011f08478163622db2d08 752w,
+                     https://itcl01mstru6t0sinte.dxcloud.episerver.net/cdn-cgi/image/width=741,format=auto,fit=crop,quality=80/https://images.cmp.optimizely.com/3d58253a3c5011f08478163622db2d08 741w,
+                     https://itcl01mstru6t0sinte.dxcloud.episerver.net/cdn-cgi/image/width=984,format=auto,fit=crop,quality=80/https://images.cmp.optimizely.com/3d58253a3c5011f08478163622db2d08 984w"
+                        sizes="(max-width: 767px) 100vw,(min-width:768px) 50vw, 741px">
+                 <img alt="FAMILY ENJOYING ON TABLET_0909.webp" src=" https://itcl01mstru6t0sinte.dxcloud.episerver.net/cdn-cgi/image/width=984,format=auto,fit=crop,quality=80/https://images.cmp.optimizely.com/3d58253a3c5011f08478163622db2d08" loading="lazy" decoding="async" fetchpriority="low">
+             </picture> *@
+                @* sizes="(min-width: 1440px) 815px, (min-width: 1365px) 741px, (min-width: 1023px) 987px, 100vw" *@
+        </div>
+    }
+</div>
+</div>
+

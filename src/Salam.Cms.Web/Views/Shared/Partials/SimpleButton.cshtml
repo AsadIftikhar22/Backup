@@ -1,0 +1,40 @@
+﻿@model EPiServer.SpecializedProperties.LinkItemCollection
+
+@{
+    var simpleButtonClass = "button button-theme--simple-primary";
+    var transparentButtonClass = "button button-theme--transparent-primary";
+    var linkCount = Model?.Count ?? 0;
+
+    void RenderLink(EPiServer.SpecializedProperties.LinkItem link, string buttonClass)
+    {
+        <a href="@Url.ContentUrl(link.Href)" target="@link.Target" title="@link.Title" class="@buttonClass">
+            <span>@link.Text</span>
+            <div class="arrow">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </a>
+    }
+}
+
+@if (linkCount > 0)
+{
+    if (linkCount == 1)
+    {
+        RenderLink(Model[0], simpleButtonClass);
+    }
+    else
+    {
+        <div class="button-row">
+            @for (int i = 0; i < linkCount; i++)
+            {
+                var link = Model[i];
+                var buttonClass = i == 0 ? simpleButtonClass : transparentButtonClass;
+                RenderLink(link, buttonClass);
+            }
+        </div>
+    }
+}

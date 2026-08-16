@@ -1,0 +1,143 @@
+﻿@using System.Text.RegularExpressions
+@model B2bSearchPageViewModel
+@{
+    Layout = "~/Views/Shared/_Layout_Component.cshtml";
+    ViewData["Title"] = "Search Results";
+}
+<style>
+    .search-flex {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .search-field {
+        flex: 0 0 70%; /* takes 70% of container */
+        height: 76px;
+        padding: 0 12px;
+        font-size: 18px;
+        border-radius: 8px;
+        width: 100%;
+    }
+
+    .search-btn {
+        flex: 0 0 30%; /* remaining 30% */
+        height: 76px;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    .search-list {
+        margin: 38px;
+        color: rgb(255, 255, 255);
+    }
+
+    .search-list-item {
+        color: rgb(255, 255, 255);
+        list-style: none;
+    }
+
+    p.content {
+        margin-top: 12px;
+        font-size: 15px;
+    }
+
+    .search-count {
+        margin-top: 5px;
+        margin-bottom: 20px;
+    }
+
+    .search-list-item > a {
+        color: rgb(1, 236, 13);
+    }
+
+    @@media (max-width: 1050px) and (min-width: 300px) {
+        .search-flex {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+</style>
+
+<div class="search-page" style="max-width: 1312.67px;
+    margin: 70px auto 70px;">
+
+
+
+    <form method="get" asp-controller="Search" asp-action="Index">
+        <div class="search-flex">
+            <input type="text"
+                   name="q"
+                   value="@Context.Request.Query["q"]"
+                   placeholder="@Model.CurrentPage?.SearchInputPlaceholdertxt"
+                   class="search-input search-field" />
+
+            <button class="download-button search-btn" type="submit">@Model.CurrentPage?.SearchBtnTxt</button>
+        </div>
+    </form>
+
+    <div style="color:rgb(255, 255, 255);">
+
+        @if (Model == null || Model?.SearchResults?.Results?.Count == 0 && !String.IsNullOrWhiteSpace(Model?.CurrentPage?.NoResultFoundTxt))
+        {
+            <p class="search-count">@Model.CurrentPage?.NoResultFoundTxt</p>
+        }
+        else
+        {
+            <p class="search-count">
+                @if (!String.IsNullOrWhiteSpace(Model?.CurrentPage?.ResultFoundTxt) && Model?.SearchResults?.Results != null)
+                {
+                    @Model.CurrentPage?.ResultFoundTxt.Replace("_", Model?.SearchResults?.Results.Count.ToString())
+                }
+                @if (Model?.SearchResults?.Results != null)
+                {
+                    <em>@Model?.SearchResults?.Results.Count.ToString()</em>
+                }
+            </p>
+
+            @if (Model?.SearchResults?.Results != null)
+            {
+                <ul class="search-list">
+                    @foreach (var item in Model?.SearchResults?.Results)
+                    {
+                        var cleanedContent = item.Content ?? "";
+
+                        // remove proper comments
+                        cleanedContent = Regex.Replace(
+                        cleanedContent,
+                        @"<!--[\s\S]*?-->",
+                        "",
+                        RegexOptions.Singleline
+                        );
+
+                        // remove broken comment starts without proper ending
+                        cleanedContent = Regex.Replace(
+                        cleanedContent,
+                        @"<!--.*$",
+                        "",
+                        RegexOptions.Singleline
+                        );
+
+                        // remove orphan leftover text ending in -->
+                        cleanedContent = Regex.Replace(
+                        cleanedContent,
+                        @".*?-->",
+                        "",
+                        RegexOptions.Singleline
+                        );
+
+                        <li class="search-list-item">
+                            <a href="@item?.Url">@item.Title</a>
+                            @* <p class="content">@cleanedContent</p> *@
+                            <p class="content">@Html.Raw(cleanedContent)</p>
+                        </li>
+                    }
+                </ul>
+            }
+        }
+    </div>
+</div>
+@Html.PropertyFor(x => x.CurrentPage.MainContent)
+@Html.Raw(Model?.CurrentPage?.HTMLCSS)
+@Html.Raw(Model?.CurrentPage?.HTMLBody)

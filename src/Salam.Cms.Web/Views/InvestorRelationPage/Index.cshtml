@@ -1,0 +1,11 @@
+﻿@using Salam.Cms.Web.Features.Home.ViewModels
+
+@model InvestorRelationPageViewModel
+
+@{
+    Layout = "~/Views/Shared/_IR_Layout.cshtml";
+}
+
+@Html.Raw(Model.CurrentPage.HTMLCSS)
+@Html.Raw(Model.CurrentPage.HTMLBody)
+@Html.PropertyFor(x => x.CurrentPage.MainContent, new { CssClass = "section-container bg-ltr" })

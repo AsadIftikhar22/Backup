@@ -1,0 +1,37 @@
+﻿@using Salam.Cms.Core.Settings.Abstract
+@using Salam.Cms.Web.Features.Settings.Models
+@{
+    Layout = "_Layout";
+}
+
+ <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('a[href]').forEach(link => {
+            const href = link.getAttribute('href');
+
+            if (
+                href &&
+                href.startsWith('/') &&
+                (
+                    href.includes('/en/consumer/') ||
+                    href.includes('/ar/consumer/') ||
+                    href === '/en/consumer' ||
+                    href === '/ar/consumer' ||
+                    href.includes('/en/business2/') ||
+                    href.includes('/ar/business2/') ||
+                    href === '/en/business2' ||
+                    href === '/ar/business2'||
+                    href.includes('/en/business/') ||
+                    href.includes('/ar/business/') ||
+                    href === '/en/business' ||
+                    href === '/ar/business'
+                ) &&
+                !href.startsWith('/dxp/')
+            ) {
+                link.setAttribute('href', '/dxp' + href);
+            }
+        });
+    });
+</script>
+
+

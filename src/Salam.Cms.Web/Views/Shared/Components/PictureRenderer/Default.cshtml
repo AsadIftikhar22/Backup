@@ -1,0 +1,43 @@
+﻿@using PictureRenderer
+@using Salam.Cms.Web.Features.Common.Components.Images
+@using PictureRenderer.Profiles
+@using Salam.Cms.Shared.Models.Extensions;
+
+@model ImageViewModel
+
+@if (Model == null || Model.ImageReference == null || Model.ImageReference.ID == 0)
+{
+    return;
+}
+
+@if (Model.IsVectorImage && Model.SvgRenderMode == SvgRenderMode.Inline && Model.RawVectorImageContent != null)
+{
+    @Html.Raw(Model.RawVectorImageContent)
+}
+else
+{
+    var attributes = new PictureAttributes {
+        ImgAlt = Model.AltText,
+        LazyLoading = Model.LazyLoading,
+        ImgFetchPriority = Model.ImgFetchPriority,
+        ImgDecoding = Model.ImgDecoding == ImageDecoding.Auto ? ImageDecoding.Async : Model.ImgDecoding,
+        ImgAdditionalAttributes = Model.ImgAdditionalAttributes,
+        RenderImgWidthHeight = true
+    };
+
+    var imagePath = Model.DamImageUrl;
+
+    if (string.IsNullOrEmpty(imagePath) && Model.ImageContent != null && Model.ImageReference != null)
+    {
+        imagePath = Url.ContentUrl(Model.ImageReference);
+    }
+
+    if (!string.IsNullOrEmpty(imagePath))
+    {
+        @Html.Raw(Picture.Render(imagePath, Model.PictureProfile ?? PictureProfiles.CardDefault, attributes))
+    }
+    else
+    {
+        // Optionally render a placeholder or log a warning
+    }
+}

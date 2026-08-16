@@ -1,0 +1,27 @@
+﻿@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+@using Salam.Cms.Web.Features.Cards.Models
+@using Salam.Cms.Web.Features.InformationItem.ViewModels
+@using Salam.Cms.Web.Features.Showcase.ViewModels
+@using Salam.Cms.Web.Features.Common.Extensions
+
+@model ShowcaseBlockViewModel
+@if (Model.CurrentBlock.IsB2bLayOut)
+{
+    <style>
+        .usp-card {
+            width: 410.67px;
+            height: 256px;
+        }
+    </style>
+}
+<div class="section-wrapper">
+    <div @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle)>
+        <div class="showcase-block">
+            <div class="showcase-block__inner">
+                @Html.PropertyFor(m => m.CurrentBlock.Items, new { CssClass = "showcase-block__track", ChildrenCssClass = "usp-card usp-card--read" })
+            </div>
+        </div>
+    </div>
+</div>
+

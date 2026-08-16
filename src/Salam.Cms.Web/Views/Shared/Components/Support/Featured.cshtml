@@ -1,0 +1,27 @@
+﻿@using Salam.Cms.Web.Features.Support.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using Salam.Cms.Web.Features.Common.Extensions
+
+@model SupportBlock
+
+<!-- START SupportBlock -->
+<div @Html.PageNavigatorAnchorAttribute(Model.NavigationTitle) class="support-block">
+    <div class="support-block__wrapper">
+        @if (!string.IsNullOrEmpty(Model.HeadingLineOne))
+        {
+            <div class="section-heading-wrapper">
+                <h2 class="section-heading"
+                    data-line1="@Model.HeadingLineOne"
+                    data-line2="@Model.HeadingLineTwo">
+                     @Model.HeadingLineOne <br /> @Model.HeadingLineTwo
+                </h2>
+            </div>
+        }        
+        <div class="support-block-elements__wrapper">
+            @Html.PropertyFor(m => m.Items, new { CssClass = "support-block__quick-links", ChildrenCssClass = "icon-link-item-block" })
+            <div class="support-block__content-block">
+                @Html.PropertyFor(m => m.FeaturedItem)
+            </div>
+        </div>
+    </div>
+    <!-- END SupportBlock -->

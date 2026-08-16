@@ -1,0 +1,51 @@
+﻿@using Salam.Cms.Web.Features.Common.Components.Images
+@using Salam.Cms.Web.Features.InformationItem.Models
+@using Salam.Cms.Web.Features.Support.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using Salam.Cms.Web.Features.Common.Extensions
+
+@model InformationItemBlock
+@{
+    var guid = Guid.NewGuid().ToString();
+}
+<div class="plan-info-card plan-info-card--with-stroke plan-info-card-theme--secondary">
+    <div class="plan-info-card__icon" role="img" aria-label="Calling icon">
+        <vc:image-renderer image-reference="@Model.Icon" svg-render-mode="@SvgRenderMode.Inline" />
+    </div>
+    <div class="plan-info-card__header">
+        <div class="plan-info-card__header__title" role="heading" aria-level="4">@Html.PropertyFor(x => x.Heading)</div>
+        <p class="plan-info-card__header__details">@Html.PropertyFor(x => x.Description)</p>
+        @if (Model.ExploreLink != null)
+        {
+            <a href="@Url.ContentUrl(@Model.ExploreLink.Href)"
+               target="@Model.ExploreLink.Target" title="@Model.ExploreLink.Title"
+               class="button button-theme--transparent-secondary uniqueid-@guid">
+                <span>@Model.ExploreLink.Text</span>
+                <div class="arrow">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </a>
+            <style>
+                .button-theme--transparent-primary, .button-theme--transparent-secondary .uniqueid-@guid {
+                    flex-direction: row-reverse;
+                }
+
+                .plan-info-card--featured .plan-info-card__header, .plan-info-card--no-stroke .plan-info-card__header, .plan-info-card--with-stroke .plan-info-card__header{
+                    flex: 1;
+                }
+
+                .button-theme--transparent-primary, .button-theme--transparent-secondary{
+                    margin-top: auto;
+                }
+
+            </style>
+        }
+    </div>
+    
+</div>
+
+

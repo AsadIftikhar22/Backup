@@ -1,0 +1,51 @@
+﻿@using Salam.Cms.Web.Features.Common.Extensions
+@using Salam.Cms.Web.Features.IconLinks.ViewModels
+
+@model IconLinkItemListBlockViewModel
+
+@{
+    var itemCount = Model.CurrentBlock.Items?.Count ?? 0;
+    var layoutClass = itemCount == 3
+        ? "icon-link-item-list-block__quick-links--layout-three"
+        : itemCount == 4
+            ? "icon-link-item-list-block__quick-links--layout-four"
+            : string.Empty;
+
+    var hasHeadingOrDescription = !string.IsNullOrEmpty(Model.CurrentBlock.Heading) || !Model.CurrentBlock.Description.IsNullOrEmpty();
+}
+
+
+<div class="section-wrapper">
+<div @Html.PageNavigatorAnchorAttribute(Model.CurrentBlock.NavigationTitle) class="icon-link-item-list-block__wrapper">
+    @if (hasHeadingOrDescription)
+        {
+            <div class="icon-link-item-list-block__content-block">
+                <div class="heading-and-description heading-and-description--primary heading-theme--primary">
+                    <h2 class="heading-and-description__title">
+                        @Html.PropertyFor(m => m.CurrentBlock.Heading)
+                    </h2>
+                    <div class="heading-and-description__text rte-wrapper">
+                        @Html.PropertyFor(m => m.CurrentBlock.Description)
+                    </div>
+                    @* @Url.ContentUrl(Model.CurrentBlock.TODO) *@
+                    <a href="#" class="button button-theme--transparent-secondary">
+                        <span>Plan details</span>
+                        <div class="arrow">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+          }
+    <div class="icon-link-item-list-block__quick-links @layoutClass">
+        @Html.PropertyFor(m => m.CurrentBlock.Items, new
+        {
+            CssClass = "icon-link-item-list-block__quick-links-grid",
+        })
+    </div>
+</div>
+</div>

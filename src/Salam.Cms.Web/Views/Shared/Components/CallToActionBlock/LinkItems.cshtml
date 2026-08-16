@@ -1,0 +1,23 @@
+﻿@using EPiServer.SpecializedProperties
+
+@model LinkItemCollection
+
+@if (Model.Any())
+{
+    <div class="cta-block__content__button">
+        @foreach(var item in Model)
+        {
+            <a  class="button button-theme--secondary" 
+                href="@Url.ContentUrl(item.Href)">
+                <span>@item.Text</span>
+                <div class="arrow">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </a>
+        }
+    </div>
+}

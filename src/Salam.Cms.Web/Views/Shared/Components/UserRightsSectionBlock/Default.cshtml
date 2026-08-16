@@ -1,0 +1,185 @@
+@using Salam.Cms.Web.Features.UserRightsBlock.ViewModels
+@using Salam.Cms.Web.Features.UserRightsBlock.Models
+
+@model UserRightsSectionBlockViewModel
+
+@{
+    var sectionId = "UserRightsSection" + Guid.NewGuid().ToString("N");
+}
+
+<style>
+.salam-layout {
+    font-family: "Codec Pro";
+    font-size: 16px;
+    font-weight: 500;
+}
+.dxp-layout-content-area {
+    padding: 50px 0 0;
+}
+.support-page-wrapper div, * {
+    box-sizing: border-box;
+}
+.vc_row {
+    margin-left: -15px;
+    margin-right: -15px;
+}
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+.vc_row:after, .vc_row:before {
+    content: " ";
+    display: table;
+}
+.vc_column_container {
+    padding-left: 0;
+    padding-right: 0;
+}
+.vc_col-lg-1, .vc_col-lg-10, .vc_col-lg-11, .vc_col-lg-12, .vc_col-lg-2, .vc_col-lg-3, .vc_col-lg-4, .vc_col-lg-5, .vc_col-lg-6, .vc_col-lg-7, .vc_col-lg-8, .vc_col-lg-9, .vc_col-md-1, .vc_col-md-10, .vc_col-md-11, .vc_col-md-12, .vc_col-md-2, .vc_col-md-3, .vc_col-md-4, .vc_col-md-5, .vc_col-md-6, .vc_col-md-7, .vc_col-md-8, .vc_col-md-9, .vc_col-sm-1, .vc_col-sm-10, .vc_col-sm-11, .vc_col-sm-12, .vc_col-sm-2, .vc_col-sm-3, .vc_col-sm-4, .vc_col-sm-5, .vc_col-sm-6, .vc_col-sm-7, .vc_col-sm-8, .vc_col-sm-9, .vc_col-xs-1, .vc_col-xs-10, .vc_col-xs-11, .vc_col-xs-12, .vc_col-xs-2, .vc_col-xs-3, .vc_col-xs-4, .vc_col-xs-5, .vc_col-xs-6, .vc_col-xs-7, .vc_col-xs-8, .vc_col-xs-9 {
+    position: relative;
+    min-height: 1px;
+    box-sizing: border-box;
+}
+.vc_column_container>.vc_column-inner {
+    box-sizing: border-box;
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 100%;
+}
+.user-rights-container-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    margin-bottom: 40px;
+    padding: 1rem;
+}
+html[dir="ltr"] .user-rights-container-wrapper h2 {
+    text-align: left;
+}
+/* Main heading - match static: Codec Pro, heavy bold, dark */
+.user-rights-container-wrapper h2 {
+    color: #002035 !important;
+    font-family: "Codec Pro", Arial, sans-serif !important;
+    font-size: 36px !important;
+    font-weight: 900 !important;
+    line-height: 120% !important;
+    margin-bottom: 40px !important;
+}
+h1, h2, h3, h4, h5, h6 {
+    word-wrap: break-word;
+}
+/* Section sub-headings - Codec Pro, green */
+.user-rights-container-wrapper h3,
+.user-rights-container-wrapper .rights-section h3 {
+    color: #00b140 !important;
+    font-family: "Codec Pro", Arial, sans-serif !important;
+    font-size: 24px !important;
+    font-weight: 700 !important;
+}
+.user-rights-container-wrapper .rights-section ul {
+    margin-left: 15px;
+    margin-top: 15px;
+    margin-bottom: 40px;
+}
+.blog-details-text ul, .post--content ul {
+    list-style-type: disc;
+}
+ol, ul {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/* List items and body text - ModernEra, regular weight, match static */
+.user-rights-container-wrapper .rights-section ul li,
+.user-rights-container-wrapper .rights-section p,
+.user-rights-container-wrapper .rights-section {
+    font-family: "ModernEra", Arial, sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    line-height: 1.67 !important;
+}
+.user-rights-container-wrapper .rights-section ul li {
+    list-style-type: disc;
+    color: #547A75 !important;
+}
+.vc_column-inner::after {
+    clear: both;
+}
+.vc_column-inner::after, .vc_column-inner::before {
+    content: " ";
+    display: table;
+}
+.vc_row:after {
+    clear: both;
+}
+.vc_row:after, .vc_row:before {
+    content: " ";
+    display: table;
+}
+.alignleft:after, .alignright:after, .blog-details-text:after, .clearfix:after, .page-links:before, .post--content:after {
+    display: table;
+    content: "";
+    clear: both;
+    table-layout: fixed;
+}
+@@media (min-width: 768px) {
+    .vc_col-sm-12 {
+        width: 100%;
+    }
+}
+@@media (min-width: 768px) {
+    .vc_col-sm-1, .vc_col-sm-10, .vc_col-sm-11, .vc_col-sm-12, .vc_col-sm-2, .vc_col-sm-3, .vc_col-sm-4, .vc_col-sm-5, .vc_col-sm-6, .vc_col-sm-7, .vc_col-sm-8, .vc_col-sm-9 {
+        float: left;
+    }
+}
+
+/* ========== RTL (Arabic) ========== */
+html[dir="rtl"] .user-rights-container-wrapper h2 { text-align: right !important; }
+html[dir="rtl"] .user-rights-container-wrapper .rights-section h3,
+html[dir="rtl"] .user-rights-container-wrapper .rights-section p { text-align: right; }
+html[dir="rtl"] .user-rights-container-wrapper .rights-section ul {
+    margin-left: 0;
+    margin-right: 15px;
+}
+@@media (min-width: 768px) {
+    html[dir="rtl"] .vc_col-sm-1, html[dir="rtl"] .vc_col-sm-10, html[dir="rtl"] .vc_col-sm-11, html[dir="rtl"] .vc_col-sm-12, html[dir="rtl"] .vc_col-sm-2, html[dir="rtl"] .vc_col-sm-3, html[dir="rtl"] .vc_col-sm-4, html[dir="rtl"] .vc_col-sm-5, html[dir="rtl"] .vc_col-sm-6, html[dir="rtl"] .vc_col-sm-7, html[dir="rtl"] .vc_col-sm-8, html[dir="rtl"] .vc_col-sm-9 { float: right; }
+}
+html[dir="rtl"] .salam-layout { font-family: Frutigerlt, "Codec Pro", system-ui, sans-serif; }
+</style>
+
+<div id="@sectionId">
+    <div class="user-rights-container">
+        <div class="user-rights-container-wrapper">
+            @if (!string.IsNullOrEmpty(Model.CurrentBlock.Heading))
+            {
+                <h2>@Html.PropertyFor(m => m.CurrentBlock.Heading)</h2>
+            }
+            @if (!string.IsNullOrEmpty(Model.CurrentBlock.Section1Title) || (Model.CurrentBlock.Section1Content != null && !string.IsNullOrWhiteSpace(Model.CurrentBlock.Section1Content.ToString())))
+            {
+                <div class="rights-section">
+                    @if (!string.IsNullOrEmpty(Model.CurrentBlock.Section1Title))
+                    {
+                        <h3>@Model.CurrentBlock.Section1Title</h3>
+                    }
+                    @if (Model.CurrentBlock.Section1Content != null && !string.IsNullOrWhiteSpace(Model.CurrentBlock.Section1Content.ToString()))
+                    {
+                        @Html.Raw(Model.CurrentBlock.Section1Content)
+                    }
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.CurrentBlock.Section2Title) || (Model.CurrentBlock.Section2Content != null && !string.IsNullOrWhiteSpace(Model.CurrentBlock.Section2Content.ToString())))
+            {
+                <div class="rights-section">
+                    @if (!string.IsNullOrEmpty(Model.CurrentBlock.Section2Title))
+                    {
+                        <h3>@Model.CurrentBlock.Section2Title</h3>
+                    }
+                    @if (Model.CurrentBlock.Section2Content != null && !string.IsNullOrWhiteSpace(Model.CurrentBlock.Section2Content.ToString()))
+                    {
+                        @Html.Raw(Model.CurrentBlock.Section2Content)
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

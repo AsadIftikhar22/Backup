@@ -1,0 +1,24 @@
+﻿@using Salam.Cms.Shared.Models.Catalogue.Models
+@using Salam.Cms.Web.Features.Common.Helpers
+@using static Salam.Cms.Shared.Models.SalamConstants
+
+@model ProductSku
+
+@if (Model.eligible_for != null)
+{
+    <div class="plan-info-card plan-info-card--featured plan-info-card-theme--tertiary">
+        <div class="plan-info-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" viewBox="0 0 16 24" fill="none">
+                <path d="M16 24V3C16 1.34 14.66 0 13 0H3C1.34 0 0 1.34 0 3V24H16ZM4 18H12V20H4V18Z" fill="currentColor" />
+            </svg>
+        </div>
+        <div class="plan-info-card__header">
+            <h4 class="plan-info-card__header__featured-title">
+                @ContentHelper.GetDefaultFrontendLabel(Model, CatalogueAPIfields.eligible_for)
+            </h4>
+            <div class="plan-info-card__header__title">
+                @Model.eligible_for
+            </div>
+        </div>
+    </div>
+}
