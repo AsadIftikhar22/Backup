@@ -36,7 +36,6 @@
         showSiteTitle = true
         })
     @await Component.InvokeAsync(typeof(SocialMetaDataViewComponent), Model.CurrentPage)
-    @await Html.PartialAsync("_Hreflang", Model.CurrentPage)
     <style nonce>
         @Html.RenderCssInline("critical-*.css")
     </style>

@@ -1,37 +1,52 @@
 ﻿@using Salam.Cms.Core.Settings.Abstract
 @using Salam.Cms.Web.Features.Settings.Models
+
 @{
     Layout = "_Layout";
 }
 
- <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll('a[href]').forEach(link => {
-            const href = link.getAttribute('href');
+@inject ISettingsManager _settingsManager
 
-            if (
-                href &&
-                href.startsWith('/') &&
-                (
-                    href.includes('/en/consumer/') ||
-                    href.includes('/ar/consumer/') ||
-                    href === '/en/consumer' ||
-                    href === '/ar/consumer' ||
-                    href.includes('/en/business2/') ||
-                    href.includes('/ar/business2/') ||
-                    href === '/en/business2' ||
-                    href === '/ar/business2'||
-                    href.includes('/en/business/') ||
-                    href.includes('/ar/business/') ||
-                    href === '/en/business' ||
-                    href === '/ar/business'
-                ) &&
-                !href.startsWith('/dxp/')
-            ) {
-                link.setAttribute('href', '/dxp' + href);
-            }
+@{
+    var DXPSlugOptimizelySource =
+        _settingsManager.GetSettings<WebLayoutSettings>()?.DXPSlugOptimizelySource;
+}
+
+@if (DXPSlugOptimizelySource != null && DXPSlugOptimizelySource.Any())
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const dxpSlugs = @Html.Raw(
+                            System.Text.Json.JsonSerializer.Serialize(DXPSlugOptimizelySource)
+                    );
+
+        if (!Array.isArray(dxpSlugs) || dxpSlugs.length === 0) {
+            return;
+        }
+
+            document.querySelectorAll('a[href]').forEach(link => {
+                const href = link.getAttribute('href');
+
+                if (!href || !href.startsWith('/') || href.startsWith('/dxp/')) {
+                    return;
+                }
+
+                const shouldMapToDxp = dxpSlugs.some(slug => {
+
+                    if (!slug) {
+                        return false;
+                    }
+
+                    slug = slug.replace(/\/$/, '');
+
+                    return href === slug || href.startsWith(slug + '/');
+                });
+
+                if (shouldMapToDxp) {
+                    link.setAttribute('href', '/dxp' + href);
+                }
+            });
         });
-    });
-</script>
-
-
+    </script>
+}

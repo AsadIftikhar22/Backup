@@ -8,10 +8,18 @@
         justify-content: center;
         flex-wrap: wrap; /* wrap on smaller screens */
         border-bottom: 2px solid #eee;
-        margin-bottom: 20px;
+        margin-bottom: 0px;
         gap: 64px;
     }
 
+    .EPiServerForms .Form__Element .Form__Element__Caption {
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 140%;
+        color: #80909a;
+        margin-bottom: 10px;
+        width: 100%;
+    }
     /* Individual tab */
     .tab {
         flex: 0 0 auto;
@@ -24,7 +32,7 @@
         position: relative;
         transition: all 0.3s;
         border-radius: 8px 8px 0 0;
-        font-size: 25px;
+        font-size: 28px;
     }
 
         .tab.active {
@@ -67,11 +75,28 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
 
+    .section-container {
+        padding: 50px 0 0;
+    }
+
     /* Responsive adjustments */
     @@media (max-width: 768px) {
         .tab {
             flex: 1 1 100%;
             margin-bottom: 10px;
+            width: 100%;
+            max-width: 100%;
+            font-weight: 300;
+            font-size: 18px;
+            line-height: 120%;
+            text-align: center;
+            color: #00b140;
+            border: 1px solid #00b140;
+            height: 48px;
+            margin-bottom: 8px;
+            justify-content: center;
+            align-items: center;
+            display: flex;
         }
     }
 
@@ -80,28 +105,51 @@
         padding: 0px 20px 40px;
         display: flex;
         flex-direction: column;
+        gap: unset;
     }
 
     .page-title {
-        font-size: 48px;
-        font-weight: 700;
+        font-size: 36px;
+        font-weight: 600;
         color: #0b2b3c;
-        margin-bottom: 20px;
+        margin-bottom: 40px;
     }
 
     .page-desc {
-        font-size: 20px;
+        font-style: normal;
+        font-weight: 300;
+        font-size: 22px;
+        line-height: 120%;
+        text-align: center;
         color: #000;
-        margin: 5px 0;
+        max-width: 1120px;
+    }
+
+    .page-header > p {
+        font-style: normal;
+        font-weight: 300;
+        font-size: 22px;
+        line-height: 120%;
+        text-align: center;
+        color: #000;
+        max-width: 1120px;
     }
 
     @@media (max-width:768px) {
         .page-title {
-            font-size: 32px;
+            font-size: 40px;
         }
 
         .page-desc {
             font-size: 16px;
+        }
+
+        .page-header > p {
+            font-weight: 300;
+            font-size: 16px;
+            line-height: 120%;
+            max-width: 90%;
+            margin: 0 auto 50px;
         }
 
         .page-header {
@@ -111,11 +159,11 @@
 
     .navigation-circle {
         display: flex;
-        flex-direction:row;
+        flex-direction: row;
         align-items: center;
         justify-content: center;
         width: 25%;
-        margin: 0px auto 70px auto;
+        margin: 40px auto 78px auto;
     }
 
     .step-circle {
@@ -167,8 +215,36 @@
 
     @@media (max-width: 768px) {
         .navigation-circle {
-            width: 30%;
+            width: 87%;
             margin: 33px 30px 0px 30px;
+        }
+
+        .tab.active {
+            color: #fff !important;
+            background: #00b140 !important;
+        }
+
+        .EPiServerForms .Form__Element .Form__Element__Caption {
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 140%;
+            color: #80909a;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .block.wpotpelementblock > p {
+            font-size: 17px;
+        }
+
+        .form-input {
+            height: 56px;
+            max-width: 560px;
+            border: 2px solid #80909a;
+            color: #002035;
+            border-radius: 8px;
+            padding: 0 16px;
+            font-weight: 500;
         }
 
         .step-circle {
@@ -223,66 +299,66 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function () {
 
-        function updateTabsByStep(stepIndex) {
-            if (stepIndex >= 2) {
-                disableTabs();
-            } else {
-                enableTabs();
+            function updateTabsByStep(stepIndex) {
+                if (stepIndex >= 2) {
+                    disableTabs();
+                } else {
+                    enableTabs();
+                }
             }
-        }
 
-        function disableTabs() {
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.add('disabled-tab');
-                tab.style.pointerEvents = 'none';
-                tab.style.opacity = '0.8';
-                tab.style.cursor = 'not-allowed';
-            });
-        }
+            function disableTabs() {
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.classList.add('disabled-tab');
+                    tab.style.pointerEvents = 'none';
+                    tab.style.opacity = '0.8';
+                    tab.style.cursor = 'not-allowed';
+                });
+            }
 
-        function enableTabs() {
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('disabled-tab');
-                tab.style.pointerEvents = 'auto';
-                tab.style.opacity = '1';
-                tab.style.cursor = 'pointer';
-            });
-        }
+            function enableTabs() {
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.classList.remove('disabled-tab');
+                    tab.style.pointerEvents = 'auto';
+                    tab.style.opacity = '1';
+                    tab.style.cursor = 'pointer';
+                });
+            }
 
-         document.addEventListener("click", function (e) {
-        const btn = e.target;
-        if (btn.classList.contains("btnNext")) {
-            disableTabs();
-        }
-    });
-+
-        const tabs = document.querySelectorAll(".tab");
-        const contents = document.querySelectorAll(".tab-content");
-
-        tabs.forEach(tab => {
-            tab.addEventListener("click", function () {
-                tabs.forEach(t => t.classList.remove("active"));
-                contents.forEach(c => c.classList.remove("active"));
-                this.classList.add("active");
-                const contentId = this.dataset.tab;
-                document.getElementById(contentId)?.classList.add("active");
-            });
+             document.addEventListener("click", function (e) {
+            const btn = e.target;
+            if (btn.classList.contains("btnNext")) {
+                disableTabs();
+            }
         });
+    +
+            const tabs = document.querySelectorAll(".tab");
+            const contents = document.querySelectorAll(".tab-content");
 
-    const formSection = document.querySelector(".form-section");
-
-    if (formSection) {
-        function removeClassesRecursively(element) {
-            element.removeAttribute("class");
-            element.querySelectorAll("*").forEach(child => {
-                child.removeAttribute("class");
+            tabs.forEach(tab => {
+                tab.addEventListener("click", function () {
+                    tabs.forEach(t => t.classList.remove("active"));
+                    contents.forEach(c => c.classList.remove("active"));
+                    this.classList.add("active");
+                    const contentId = this.dataset.tab;
+                    document.getElementById(contentId)?.classList.add("active");
+                });
             });
-        }
 
-        // Remove all classes from formSection and its children
-        removeClassesRecursively(formSection);
-    }
-    });
+        const formSection = document.querySelector(".form-section");
+
+        if (formSection) {
+            function removeClassesRecursively(element) {
+                element.removeAttribute("class");
+                element.querySelectorAll("*").forEach(child => {
+                    child.removeAttribute("class");
+                });
+            }
+
+            // Remove all classes from formSection and its children
+            removeClassesRecursively(formSection);
+        }
+        });
 </script>

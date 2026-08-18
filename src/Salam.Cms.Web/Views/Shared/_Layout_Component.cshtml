@@ -36,7 +36,6 @@
         showSiteTitle = false
         })
     @await Component.InvokeAsync(typeof(SocialMetaDataViewComponent), Model.CurrentPage)
-    @await Html.PartialAsync("_Hreflang", Model.CurrentPage)
     @if (Model.CurrentPage is not FinanceInvestorSitePageData && Model.CurrentPage is not B2bSupportPageData)
     {
         <style nonce>

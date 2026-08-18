@@ -125,6 +125,25 @@ public class MetaDataViewComponent : ViewComponent
         }
         //Code Added by Asif for Canonical urls on 04/08/2026 Start 
         var usingAlternateCanonicalLink = !ContentReference.IsNullOrEmpty(sitePageData.AlternateCanonicalLink);
+        //Code Added by Asif for Hreflang urls Start
+        var hrefLangRelativeUrl = _urlResolver.GetUrl(sitePageData.ContentLink)?.TrimStart('/') ?? string.Empty;
+        var hrefLangCulture = sitePageData.Language?.Name;
+        if (!string.IsNullOrWhiteSpace(hrefLangCulture) &&
+            hrefLangRelativeUrl.StartsWith($"{hrefLangCulture}/", StringComparison.OrdinalIgnoreCase))
+        {
+            hrefLangRelativeUrl = hrefLangRelativeUrl[(hrefLangCulture.Length + 1)..];
+        }
+
+        var enHrefLangBase = webLayoutSettings.HreflangInitialUrl;
+        var arHrefLangBase = webLayoutSettings.HreflangInitialUrlAr;
+
+        var hrefLangEnUrl = !string.IsNullOrWhiteSpace(enHrefLangBase)
+            ? $"{enHrefLangBase.TrimEnd('/')}/{hrefLangRelativeUrl}"
+            : string.Empty;
+        var hrefLangArUrl = !string.IsNullOrWhiteSpace(arHrefLangBase)
+            ? $"{arHrefLangBase.TrimEnd('/')}/{hrefLangRelativeUrl}"
+            : string.Empty;
+        //Code Added by Asif for Hreflang urls End
 
         var action = GetAction(_httpContextAccessor.HttpContext);
 
@@ -139,6 +158,8 @@ public class MetaDataViewComponent : ViewComponent
             Action = action,
             CanonicalLink = canonicalLink,
             CanonicalUrl = canonicalUrl,
+            HrefLangEnUrl = hrefLangEnUrl,
+            HrefLangArUrl = hrefLangArUrl,
             UsingAlternativeCanonicalLink = usingAlternateCanonicalLink,
             RenderAlternativeLinks = sitePageData.RenderAlternativeLinks,
             Categories = GetCategories(sitePageData).ToList(),

@@ -35,7 +35,6 @@
         currentPage = Model.CurrentPage,
         showSiteTitle = true
         })
-    @await Html.PartialAsync("_Hreflang", Model.CurrentPage)
     @if (Model.CurrentPage is not FinanceInvestorSitePageData && Model.CurrentPage is not B2bSupportPageData)
     {
         <style nonce>

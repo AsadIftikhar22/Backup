@@ -1,6 +1,5 @@
 ﻿@using EPiServer
 @using EPiServer.Core
-@using EPiServer.Filters
 @using EPiServer.Web.Routing
 @using EPiServer.Globalization
 @using Salam.Cms.Shared.Models.Pages.Container
@@ -9,47 +8,61 @@
 @inject IContentLoader ContentLoader
 @inject IContentRouteHelper ContentRouteHelper
 @inject IContentLanguageAccessor ContentLanguageAccessor
-@{
-    var currentPage = ContentRouteHelper.Content as PageData;
 
-    if (currentPage == null)
+@{
+    var currentContent = ContentRouteHelper.Content;
+
+    if (currentContent == null)
     {
         return;
     }
 
-    var filter = new FilterContentForVisitor();
     var culture = ContentLanguageAccessor.Language;
+
+    // Load current page in the current language
+    if (!ContentLoader.TryGet<PageData>(
+            currentContent.ContentLink,
+            culture,
+            out var currentPage))
+    {
+        return;
+    }
+
     var breadcrumbs = new List<PageData>();
 
-    foreach (var ancestor in ContentLoader.GetAncestors(currentPage.ContentLink))
-    {
-        if (ContentLoader.TryGet<PageData>(ancestor.ContentLink, culture, out var page))
-        {
-            breadcrumbs.Add(page);
-        }
-    }
-    // breadcrumbs = breadcrumbs
-    // .Reverse<PageData>()
-    //  .SkipWhile(x => !x.ContentLink.CompareToIgnoreWorkID(ContentReference.StartPage))
-    //  .Where(x => //x.VisibleInMenu &&
-    //      x is not ContainerPage
-    // //&& !filter.ShouldFilter(x)
-    // )
-
-    var ancestors = ContentLoader.GetAncestors(currentPage.ContentLink)
+    // Get ancestors
+    var ancestors = ContentLoader
+        .GetAncestors(currentPage.ContentLink)
         .OfType<PageData>()
         .Reverse()
-        .SkipWhile(x => !x.ContentLink.CompareToIgnoreWorkID(ContentReference.StartPage))
-        .Skip(1);
+        .SkipWhile(x =>
+            !x.ContentLink.CompareToIgnoreWorkID(ContentReference.StartPage))
+        .Skip(1)
+        .ToList();
 
-     breadcrumbs = new List<PageData>();
-
-    foreach (var page in ancestors)
+    foreach (var ancestor in ancestors)
     {
+        // Explicitly load ancestor in current culture
+        if (!ContentLoader.TryGet<PageData>(
+                ancestor.ContentLink,
+                culture,
+                out var page))
+        {
+            // Do NOT fall back to English
+            continue;
+        }
+
         if (page is ContainerPage)
         {
-            var child = ContentLoader.GetChildren<PageData>(page.ContentLink)
-                .FirstOrDefault(x => x.ContentLink.CompareToIgnoreWorkID(currentPage.ContentLink));
+            // Get children using the current culture
+            var children = ContentLoader
+                .GetChildren<PageData>(
+                    page.ContentLink,
+                    culture)
+                .ToList();
+
+            var child = children.FirstOrDefault(x =>
+                x.ContentLink.CompareToIgnoreWorkID(currentPage.ContentLink));
 
             if (child != null)
             {
@@ -61,21 +74,26 @@
             breadcrumbs.Add(page);
         }
     }
+
+    // If there is only one breadcrumb, don't show it
     var items = breadcrumbs.Count == 1
-     ? new List<PageData>()
-     : breadcrumbs;
+        ? new List<PageData>()
+        : breadcrumbs;
 }
+
 @if (items.Any())
 {
     <nav class="breadcrumb" aria-label="breadcrumb">
 
-        @for (int i = 0; i < items.Count-1; i++)
+        @for (var i = 0; i < items.Count - 1; i++)
         {
             var item = items[i];
 
             <a href="@Url.ContentUrl(item.ContentLink)"
                class="button button-theme--transparent-secondary breadcrumb__link">
+
                 @item.Name
+
                 <div class="arrow">
                     <span></span>
                     <span></span>
@@ -85,12 +103,14 @@
                 </div>
             </a>
         }
+
         <a class="button button-theme--transparent-secondary breadcrumb__link">
             @currentPage.Name
         </a>
 
     </nav>
 }
+
 <style>
     .breadcrumb {
         padding: var(--spacing-4);
@@ -99,7 +119,7 @@
         flex-wrap: wrap;
         margin: auto;
         max-width: 1312.67px;
-        padding-left:96px;
+        padding-left: 96px;
     }
 
     .breadcrumb__link {
@@ -108,7 +128,8 @@
         padding-left: 3px;
     }
 
-    .button-theme--transparent-primary, .button-theme--transparent-secondary {
+    .button-theme--transparent-primary,
+    .button-theme--transparent-secondary {
         flex-direction: row;
     }
 
@@ -121,7 +142,8 @@
         margin: 0 8px;
     }
 
-    .button-theme--transparent-primary .arrow, .button-theme--transparent-secondary .arrow {
+    .button-theme--transparent-primary .arrow,
+    .button-theme--transparent-secondary .arrow {
         margin: 0;
     }
 
@@ -129,8 +151,8 @@
         color: #74C947;
     }
 
-
-    .breadcrumb .button-theme--transparent-primary .arrow, .button-theme--transparent-secondary .arrow {
+    .breadcrumb .button-theme--transparent-primary .arrow,
+    .breadcrumb .button-theme--transparent-secondary .arrow {
         margin: 0;
         margin-left: 10px;
     }

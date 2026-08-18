@@ -801,4 +801,25 @@ public class WebLayoutSettings : SettingsBase
     GroupName = SystemTabNames.Settings,
     Order = 900)]
     public virtual string CanonicalBaseUrl { get; set; }
+
+    [CultureSpecific]
+    [Display(
+    Name = "Hreflang Initial URL",
+    GroupName = SystemTabNames.Settings,
+    Order = 910)]
+    public virtual string HreflangInitialUrl { get; set; }
+
+    [CultureSpecific]
+    [Display(
+        Name = "Hreflang Initial URL (AR)",
+        GroupName = SystemTabNames.Settings,
+        Order = 920)]
+    public virtual string HreflangInitialUrlAr { get; set; }
+
+    [Display(
+        Name = "DXP Slug Optimizely Source List",
+        Description = "DXP Slug Optimizely Source List",
+        GroupName = GroupNames.Settings,
+        Order = 980)]
+    public virtual IList<string>? DXPSlugOptimizelySource { get; set; }
 }

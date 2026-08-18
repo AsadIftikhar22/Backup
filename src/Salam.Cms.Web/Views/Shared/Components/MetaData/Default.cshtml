@@ -70,3 +70,15 @@
         ;
     }
 }
+@if (!string.IsNullOrWhiteSpace(Model.HrefLangEnUrl))
+{
+    <link rel="hreflang" hreflang="en-SA" href="@Model.HrefLangEnUrl" />
+}
+@if (!string.IsNullOrWhiteSpace(Model.HrefLangArUrl))
+{
+    <link rel="hreflang" hreflang="ar-SA" href="@Model.HrefLangArUrl" />
+}
+@if (!string.IsNullOrWhiteSpace(Model.HrefLangEnUrl))
+{
+    <link rel="hreflang" hreflang="x-default" href="@Model.HrefLangEnUrl" />
+}

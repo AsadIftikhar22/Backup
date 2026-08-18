@@ -75,9 +75,10 @@
         border: none !important;
     }
 
-    .EPiServerForms .Form__NavigationBar .Form__NavigationBar__Action:disabled{
-        opacity:unset;
+    .EPiServerForms .Form__NavigationBar .Form__NavigationBar__Action:disabled {
+        opacity: unset;
     }
+
     .form-input {
         text-decoration: none;
         outline: none !important;
@@ -154,12 +155,12 @@
     }
 
     /*
-                                        .EPiServerForms > div > section + nav,
-                                        .EPiServerForms > div {
-                                            display: flex;
-                                            align-items: flex-end;
-                                            gap: 356px;
-                                        } */
+                                            .EPiServerForms > div > section + nav,
+                                            .EPiServerForms > div {
+                                                display: flex;
+                                                align-items: flex-end;
+                                                gap: 356px;
+                                            } */
 
     .EPiServerForms .FormTextbox {
         flex: 1;
@@ -292,11 +293,12 @@
             flex-direction: column; /* optional: stack vertically */
         }
 
-        .EPiServerForms .Form__NavigationBar .Form__NavigationBar__Action {
+            .EPiServerForms .Form__NavigationBar .Form__NavigationBar__Action {
                 margin: 0.5rem 0; /* spacing between buttons */
                 width: 100%; /* optional: full width on mobile */
                 max-width: 300px; /* optional limit */
-        }
+            }
+
         .form-header p {
             font-size: @MobileParagraphFontSize;
         }
@@ -447,8 +449,8 @@
     }
 
     /*     .block .b2bselectdependentdropdownblock{
-                                    width: 33%;
-                                } */
+                                        width: 33%;
+                                    } */
     .half-width {
         margin-right: unset;
     }
@@ -617,6 +619,39 @@
             transform: rotate(360deg);
         }
     }
+
+    form:has(input.mobilenumber) nav.Form__NavigationBar button.form-submit-btn.Form__NavigationBar__Action.FormExcludeDataRebind.btnNext.disabled {
+        font-size: 20px !important;
+        color: #fff !important;
+    }
+
+    @@media(min-width: 1200px) {
+        .EPiServerForms .Form__NavigationBar {
+            position: relative !important;
+            top: -96px !important;
+            margin-left: 950px !important;
+            width: 160px !important;
+        }
+
+        html [dir=rtl] .Form__NavigationBar {
+            margin-right: 950px !important;
+            margin-left: 0px;
+        }
+    }
+
+    @@media(min-width: 901px) and (max-width: 1199px) {
+        .EPiServerForms .Form__NavigationBar {
+            position: relative !important;
+            top: -96px !important;
+            margin-left: 700px !important;
+            width: 160px !important;
+        }
+
+        html [dir=rtl] .Form__NavigationBar {
+            margin-right: 700px !important;
+            margin-left: 0px;
+        }
+    }
 </style>
 
 @{
@@ -640,15 +675,12 @@
         {
             statusDisplay = "Form__Warning__Message";
         }
-
         <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormGuid" value="@Model.Form.FormGuid" data-f-type="hidden" />
-
         <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormHostedPage" value="@FormsExtensions.GetCurrentPageLink()?.ToString()" data-f-type="hidden" />
         <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormLanguage" value="@FormsExtensions.GetCurrentFormLanguage(Model)" data-f-type="hidden" />
         <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormCurrentStepIndex" value="@(ViewBag.CurrentStepIndex ?? " ")" data-f-type="hidden" />
         <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormSubmissionId" value="@ViewBag.FormSubmissionId" data-f-type="hidden" />
         @Html.GenerateAntiForgeryToken(Model)
-
         if (ViewBag.IsReadOnlyMode && !string.IsNullOrWhiteSpace(readOnlyModeMessage))
         {
             <div class="Form__Status">
@@ -664,7 +696,6 @@
             </div>
         </div>
         <div>
-
             @{
                 var currentStepIndex = ViewBag.CurrentStepIndex == null ? -1 : (int)ViewBag.CurrentStepIndex;
                 string stepDisplaying;
@@ -677,7 +708,7 @@
                 var stepFormBlock = step.value.SourceContent as WPFormStepBlock;
                 btnText = stepBlock != null && !string.IsNullOrEmpty(stepFormBlock?.btnTextNew)
                 ? stepFormBlock.btnTextNew
-                : (lang == "en" ? "Continue" : "ارسال");
+                : (lang == "en" ? "Send OTP" : "ارسال");
 
                 <section id="@step.value.ElementName"
                          data-f-type="step"
@@ -888,7 +919,7 @@ else
                 });
             }
 
-            
+
        function MobilePhoneComparison(){
             const verifiedMobileNum = document.querySelector(".salam_mobile_number.form-input");
             const SalamMobileNum = document.querySelector(".mobilenumber.form-input");
@@ -1059,7 +1090,7 @@ else
                 setTimeout(() => {
                     updateNextState();
                     updateNavigationCircles();
-                }, 50); 
+                }, 50);
             });
         });
 

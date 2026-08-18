@@ -34,4 +34,6 @@ public class MetaDataViewModel
 
     public bool HasCategoryRouting { get; set; } = false;
     public string CanonicalUrl { get; set; } = string.Empty;
+    public string HrefLangEnUrl { get; set; } = string.Empty;
+    public string HrefLangArUrl { get; set; } = string.Empty;
 }
