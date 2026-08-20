@@ -267,7 +267,7 @@
                         @Html.PropertyFor(model => model.Description)
                     </p>
                 </div>
-                <nav class="tabs-navigation">
+                <nav class="tabs-navigation @(Model.IsMultipleTabNavigation ? "tabs-navigation--multiple" : string.Empty)">
                     <div class="tabs-navigation__labels-wrapper">
                         <div class="tabs-navigation__labels">
                             @{

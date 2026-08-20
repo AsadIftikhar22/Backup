@@ -58,6 +58,8 @@ public class ProductSelectorBlockViewModel : BlockViewModel<ProductSelectorBlock
     public string? CallAmountText { get; set; }
     public string? BuyButtonRedirection { get; set; }
 
+    public bool IsMultipleTabNavigation { get; set; }
+
     public ProductSelectorBlockViewModel(ProductSelectorBlock currentBlock) : base(currentBlock)
     {
         Products = new List<ProductSku>();

@@ -2,7 +2,7 @@ $ErrorActionPreference = "Stop"
 
 # Configuration - Update these values as needed
 
-$packageVersion = "08-17-2026-081720261601-081720261601"
+$packageVersion = "08-19-2026-081920261728-081920261728"
 $publishPath = "publish"
 $zipPackageName = "Salam.cms.app.$packageVersion.zip"
 $packageName = "Salam.cms.app.$packageVersion.nupkg"

@@ -12,6 +12,7 @@ using Salam.Cms.Shared.Models.Pages;
 using Salam.Cms.Shared.Models.Pages.Container;
 using Salam.Cms.Web.Features.Common.Interfaces;
 using Salam.Cms.Web.Features.Common.Models;
+using Salam.Cms.Web.Features.Home.Models;
 using System.ComponentModel.DataAnnotations;
 
 [ContentType(
@@ -25,7 +26,8 @@ using System.ComponentModel.DataAnnotations;
     {
    typeof(ContainerPage),
         typeof(Salam.Cms.Web.Features.B2bSearchPage.Models.B2bSearchPage),
-        typeof(B2BComponentContentPage)
+        typeof(B2BComponentContentPage),
+        typeof(InvestorRelationPage)
     })]
 public class B2BComponentContentPage : B2BSitePageData, INavigationItem, IPageNavigatorEnabled
 {

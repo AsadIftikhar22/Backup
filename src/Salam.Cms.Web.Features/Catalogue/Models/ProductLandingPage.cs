@@ -249,4 +249,11 @@ public class ProductLandingPage : SitePageData, IPageNavigatorEnabled
             Order = 175)]
     [CultureSpecific]
     public virtual string? BuyButtonRedirection { get; set; }
+
+    [Display(
+   Name = "Enable Is Multiple Tab Navigation",
+   Description = "Enable Is Multiple Tab Navigation",
+   GroupName = GroupNames.Navigation,
+   Order = 180)]
+    public virtual bool IsMultipleTabNavigation { get; set; }
 }

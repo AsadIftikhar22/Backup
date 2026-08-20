@@ -147,6 +147,7 @@ public sealed class ProductSelectorBlockViewComponent : AsyncBlockComponent<Prod
                 BadgeText = currentPage.BadgeText,
                 BuyButtonRedirection = currentPage.BuyButtonRedirection,
                 BuyNowStaticURL = currentContent?.BuyNowStaticURL,
+                IsMultipleTabNavigation = currentPage.IsMultipleTabNavigation
             };
 
             return View(overrideModel);
@@ -196,6 +197,7 @@ public sealed class ProductSelectorBlockViewComponent : AsyncBlockComponent<Prod
                 CallAmountText = currentPage.CallAmountText,
                 BuyButtonRedirection = currentPage.BuyButtonRedirection,
                 BuyNowStaticURL = currentContent?.BuyNowStaticURL,
+                IsMultipleTabNavigation = currentPage.IsMultipleTabNavigation
             };
 
             return View(model);
@@ -244,7 +246,8 @@ public sealed class ProductSelectorBlockViewComponent : AsyncBlockComponent<Prod
                 DataText = currentPage.DataText,
                 CallLabel = currentPage.CallLabel,
                 CallAmountText = currentPage.CallAmountText,
-                BuyButtonRedirection = currentPage.BuyButtonRedirection
+                BuyButtonRedirection = currentPage.BuyButtonRedirection,
+                IsMultipleTabNavigation=currentPage.IsMultipleTabNavigation
             };
 
             return View(model);
